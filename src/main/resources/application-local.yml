@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    password: ${DB_PASSWORD:test1234}
+
+cors:
+  allowed-origins: http://localhost:3000
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+
+management:
+  endpoint:
+    health:
+      show-details: always

@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+cors:
+  allowed-origins: https://swmaestro.ai
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false
+
+management:
+  endpoint:
+    health:
+      show-details: when-authorized

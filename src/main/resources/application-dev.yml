@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
