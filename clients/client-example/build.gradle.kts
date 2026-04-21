@@ -1,1 +1,5 @@
-// Add external client integrations here when remote service adapters are introduced.
+dependencies {
+    add("implementation", "org.springframework.cloud:spring-cloud-starter-openfeign")
+    add("implementation", "io.github.openfeign:feign-hc5")
+    add("implementation", "io.github.openfeign:feign-micrometer")
+}

@@ -1,6 +1,9 @@
 spring:
   application:
     name: teams
+  config:
+    import:
+      - optional:classpath:client-example.yml
   jpa:
     defer-datasource-initialization: true
     hibernate:

@@ -1,1 +1,4 @@
-// Add shared REST Docs test support here when API documentation is introduced.
+dependencies {
+    add("implementation", "org.springframework.boot:spring-boot-starter-test")
+    add("implementation", "org.springframework.restdocs:spring-restdocs-mockmvc")
+}

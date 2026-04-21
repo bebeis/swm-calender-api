@@ -1,1 +1,1 @@
-// Add shared enums here as the service surface grows.
+// Shared enums live here and can be consumed by external modules.

@@ -1,5 +1,6 @@
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.testing.Test
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 
 plugins {
@@ -42,12 +43,20 @@ subprojects {
         }
     }
 
+    extensions.configure<DependencyManagementExtension> {
+        imports {
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudDependenciesVersion")}")
+        }
+    }
+
     dependencies {
         add("implementation", "org.jetbrains.kotlin:kotlin-reflect")
         add("implementation", "com.fasterxml.jackson.module:jackson-module-kotlin")
         add("annotationProcessor", "org.springframework.boot:spring-boot-configuration-processor")
         add("testImplementation", "org.springframework.boot:spring-boot-starter-test")
         add("testImplementation", "org.jetbrains.kotlin:kotlin-test-junit5")
+        add("testImplementation", "org.springframework.restdocs:spring-restdocs-mockmvc")
+        add("testImplementation", "com.ninja-squad:springmockk:${property("springMockkVersion")}")
     }
 
     tasks.withType<Test>().configureEach {
