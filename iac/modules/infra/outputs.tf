@@ -3,7 +3,7 @@ output "public_ip" {
 }
 
 output "ssh_command" {
-  value = "ssh -i ${local.prefix}-key.pem ubuntu@${aws_eip.app.public_ip}"
+  value = "ssh -i ${local.ssh_private_key_path} ubuntu@${aws_eip.app.public_ip}"
 }
 
 output "instance_id" {

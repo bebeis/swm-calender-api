@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: backend-swm-calender
+  ECR_REPOSITORY: backend-swm-teams
 
 jobs:
   deploy:
@@ -55,11 +55,11 @@ jobs:
             --document-name "AWS-RunShellScript" \
             --parameters '{
               "commands": [
-                "docker stop swm-calender-app || true",
-                "docker rm swm-calender-app || true",
+                "docker stop swm-teams-app || true",
+                "docker rm swm-teams-app || true",
                 "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin '"$REGISTRY"'",
                 "docker pull '"$REGISTRY"'/'"$ECR_REPOSITORY"':'"$IMAGE_TAG"'",
-                "docker run -d --name swm-calender-app --restart unless-stopped -p 8080:8080 -e JAVA_OPTS=\"-Xmx256m\" -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=3306 -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} -e GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }} -e CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }} '"$REGISTRY"'/'"$ECR_REPOSITORY"':'"$IMAGE_TAG"'"
+                "docker run -d --name swm-teams-app --restart unless-stopped -p 8080:8080 -e JAVA_OPTS=\"-Xmx256m\" -e DB_HOST=${{ secrets.DB_HOST }} -e DB_PORT=3306 -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} -e GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }} -e CORS_ALLOWED_ORIGINS=${{ secrets.CORS_ALLOWED_ORIGINS }} '"$REGISTRY"'/'"$ECR_REPOSITORY"':'"$IMAGE_TAG"'"
               ]
             }' \
             --query 'Command.CommandId' \
@@ -127,12 +127,12 @@ jobs:
                 "  scrape_interval: 15s",
                 "",
                 "scrape_configs:",
-                "  - job_name: '\''swm-calender-api'\''",
+                "  - job_name: '\''swm-teams-api'\''",
                 "    metrics_path: '\''/actuator/prometheus'\''",
                 "    static_configs:",
                 "      - targets: ['\''host.docker.internal:8080'\'']",
                 "        labels:",
-                "          app: '\''swm-calender'\''",
+                "          app: '\''swm-teams'\''",
                 "",
                 "remote_write:",
                 "  - url: '\''${{ secrets.GRAFANA_REMOTE_WRITE_URL }}'\''",

@@ -8,15 +8,26 @@ terraform {
 }
 
 provider "aws" {
-  region = "ap-northeast-2"
+  region = var.aws_region
 }
 
 module "infra" {
-  source          = "../modules/infra"
-  env             = "dev"
-  instance_type   = "t3.micro"
-  db_password     = var.db_password
-  public_key_path = "${path.module}/swm-calender-dev-key.pub"
+  source = "../modules/infra"
+
+  project_name         = var.project_name
+  env                  = var.env
+  instance_type        = var.instance_type
+  ami_id               = var.ami_id
+  public_key_path      = abspath(var.public_key_path)
+  ssh_private_key_path = abspath(var.ssh_private_key_path)
+  db_password          = var.db_password
+
+  vpc_cidr_block       = var.vpc_cidr_block
+  availability_zones   = var.availability_zones
+  public_subnet_cidrs  = var.public_subnet_cidrs
+  private_subnet_cidrs = var.private_subnet_cidrs
+  db_instance_class    = var.db_instance_class
+  tags                 = var.tags
 }
 
 output "public_ip" {

@@ -1,62 +1,60 @@
+data "aws_region" "current" {}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 locals {
-  prefix      = var.env == "prod" ? "swm-calender" : "swm-calender-${var.env}"
-  db_name     = var.env == "prod" ? "swm_calender" : "swm_calender_${var.env}"
-  db_username = var.env == "prod" ? "swm_calender_user" : "swm_calender_${var.env}_user"
+  normalized_project_name = lower(var.project_name)
+  normalized_db_base_name = replace(local.normalized_project_name, "-", "_")
+  required_az_count       = max(length(var.public_subnet_cidrs), length(var.private_subnet_cidrs))
+  availability_zones      = length(var.availability_zones) > 0 ? var.availability_zones : slice(data.aws_availability_zones.available.names, 0, local.required_az_count)
+  name_prefix             = coalesce(var.name_prefix, var.env == "prod" ? local.normalized_project_name : "${local.normalized_project_name}-${var.env}")
+  db_name                 = coalesce(var.db_name, var.env == "prod" ? local.normalized_db_base_name : "${local.normalized_db_base_name}_${var.env}")
+  db_username             = coalesce(var.db_username, var.env == "prod" ? "${local.normalized_db_base_name}_user" : "${local.normalized_db_base_name}_${var.env}_user")
+  ssh_private_key_path    = coalesce(var.ssh_private_key_path, replace(basename(var.public_key_path), ".pub", ".pem"))
+  ecr_repository_name     = coalesce(var.ecr_repository_name, "backend-${local.name_prefix}")
 }
 
 # ──────────────────────────────────────────────
 # VPC
 # ──────────────────────────────────────────────
 resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  tags = { Name = "${local.prefix}-vpc" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-vpc" })
 }
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
-  tags   = { Name = "${local.prefix}-igw" }
+  tags   = merge(var.tags, { Name = "${local.name_prefix}-igw" })
 }
 
 # ──────────────────────────────────────────────
 # Subnets
 # ──────────────────────────────────────────────
-resource "aws_subnet" "public_1" {
+resource "aws_subnet" "public" {
+  count = length(var.public_subnet_cidrs)
+
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.3.0/24"
-  availability_zone       = "ap-northeast-2a"
+  cidr_block              = var.public_subnet_cidrs[count.index]
+  availability_zone       = local.availability_zones[count.index]
   map_public_ip_on_launch = true
 
-  tags = { Name = "${local.prefix}-public-1" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-public-${count.index + 1}" })
 }
 
-resource "aws_subnet" "public_2" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.4.0/24"
-  availability_zone       = "ap-northeast-2c"
-  map_public_ip_on_launch = true
+resource "aws_subnet" "private" {
+  count = length(var.private_subnet_cidrs)
 
-  tags = { Name = "${local.prefix}-public-2" }
-}
-
-resource "aws_subnet" "private_1" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.1.0/24"
-  availability_zone       = "ap-northeast-2a"
+  cidr_block              = var.private_subnet_cidrs[count.index]
+  availability_zone       = local.availability_zones[count.index]
   map_public_ip_on_launch = false
 
-  tags = { Name = "${local.prefix}-private-1" }
-}
-
-resource "aws_subnet" "private_2" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.2.0/24"
-  availability_zone       = "ap-northeast-2c"
-  map_public_ip_on_launch = false
-
-  tags = { Name = "${local.prefix}-private-2" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-private-${count.index + 1}" })
 }
 
 # ──────────────────────────────────────────────
@@ -70,16 +68,13 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.main.id
   }
 
-  tags = { Name = "${local.prefix}-public-rt" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-public-rt" })
 }
 
-resource "aws_route_table_association" "public_1" {
-  subnet_id      = aws_subnet.public_1.id
-  route_table_id = aws_route_table.public.id
-}
+resource "aws_route_table_association" "public" {
+  count = length(aws_subnet.public)
 
-resource "aws_route_table_association" "public_2" {
-  subnet_id      = aws_subnet.public_2.id
+  subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public.id
 }
 
@@ -87,37 +82,20 @@ resource "aws_route_table_association" "public_2" {
 # Security Groups
 # ──────────────────────────────────────────────
 resource "aws_security_group" "ec2" {
-  name        = "${local.prefix}-ec2-sg"
+  name        = "${local.name_prefix}-ec2-sg"
   description = "Security group for EC2"
   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow Spring Boot application"
-  }
+  dynamic "ingress" {
+    for_each = var.ec2_ingress_rules
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 9090
-    to_port     = 9090
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 3000
-    to_port     = 3000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    content {
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+      description = ingress.value.description
+    }
   }
 
   egress {
@@ -127,21 +105,21 @@ resource "aws_security_group" "ec2" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = { Name = "${local.prefix}-ec2-sg" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-ec2-sg" })
 }
 
 resource "aws_security_group" "rds" {
-  name        = "${local.prefix}-rds-sg"
+  name        = "${local.name_prefix}-rds-sg"
   description = "Security group for RDS"
   vpc_id      = aws_vpc.main.id
 
-  tags = { Name = "${local.prefix}-rds-sg" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-rds-sg" })
 }
 
 resource "aws_security_group_rule" "rds_from_ec2" {
   type                     = "ingress"
-  from_port                = 3306
-  to_port                  = 3306
+  from_port                = var.db_port
+  to_port                  = var.db_port
   protocol                 = "tcp"
   security_group_id        = aws_security_group.rds.id
   source_security_group_id = aws_security_group.ec2.id
@@ -151,7 +129,7 @@ resource "aws_security_group_rule" "rds_from_ec2" {
 # IAM — EC2
 # ──────────────────────────────────────────────
 resource "aws_iam_role" "ec2_role" {
-  name = "${local.prefix}-ec2-role"
+  name = "${local.name_prefix}-ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -199,7 +177,7 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent" {
 }
 
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "${local.prefix}-ec2-profile"
+  name = "${local.name_prefix}-ec2-profile"
   role = aws_iam_role.ec2_role.name
 }
 
@@ -207,7 +185,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 # Key Pair
 # ──────────────────────────────────────────────
 resource "aws_key_pair" "main" {
-  key_name   = "${local.prefix}-key"
+  key_name   = "${local.name_prefix}-key"
   public_key = file(var.public_key_path)
 }
 
@@ -215,18 +193,18 @@ resource "aws_key_pair" "main" {
 # EC2
 # ──────────────────────────────────────────────
 resource "aws_instance" "app" {
-  ami           = "ami-0e9bfdb247cc8de84"
+  ami           = var.ami_id
   instance_type = var.instance_type
-  subnet_id     = aws_subnet.public_1.id
-  monitoring    = true
+  subnet_id     = aws_subnet.public[0].id
+  monitoring    = var.enable_detailed_monitoring
 
   vpc_security_group_ids = [aws_security_group.ec2.id]
   key_name               = aws_key_pair.main.key_name
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
   root_block_device {
-    volume_size = 30
-    volume_type = "gp3"
+    volume_size = var.ec2_root_volume_size
+    volume_type = var.ec2_root_volume_type
   }
 
   user_data = <<-EOF
@@ -258,7 +236,7 @@ resource "aws_instance" "app" {
               sudo systemctl enable docker
 
               # Docker Compose
-              sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+              sudo curl -L "https://github.com/docker/compose/releases/download/v${var.docker_compose_version}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
               sudo chmod +x /usr/local/bin/docker-compose
 
               # CloudWatch Agent
@@ -296,26 +274,26 @@ resource "aws_instance" "app" {
               sudo systemctl enable amazon-cloudwatch-agent
               EOF
 
-  tags = { Name = "${local.prefix}-app" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-app" })
 }
 
 resource "aws_eip" "app" {
   instance = aws_instance.app.id
-  tags     = { Name = "${local.prefix}-app-eip" }
+  tags     = merge(var.tags, { Name = "${local.name_prefix}-app-eip" })
 }
 
 # ──────────────────────────────────────────────
 # ECR
 # ──────────────────────────────────────────────
 resource "aws_ecr_repository" "app" {
-  name         = "backend-${local.prefix}"
-  force_delete = true
+  name         = local.ecr_repository_name
+  force_delete = var.ecr_force_delete
 
   image_scanning_configuration {
-    scan_on_push = true
+    scan_on_push = var.ecr_scan_on_push
   }
 
-  tags = { Name = "backend-${local.prefix}" }
+  tags = merge(var.tags, { Name = local.ecr_repository_name })
 }
 
 resource "aws_ecr_repository_policy" "app_policy" {
@@ -348,14 +326,16 @@ resource "aws_ecr_repository_policy" "app_policy" {
 # RDS
 # ──────────────────────────────────────────────
 resource "aws_db_subnet_group" "rds" {
-  name       = "${local.prefix}-rds-subnet-group"
-  subnet_ids = [aws_subnet.private_1.id, aws_subnet.private_2.id]
+  name       = "${local.name_prefix}-rds-subnet-group"
+  subnet_ids = aws_subnet.private[*].id
 
-  tags = { Name = "${local.prefix}-rds-subnet-group" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-rds-subnet-group" })
 }
 
 resource "aws_iam_role" "rds_enhanced_monitoring" {
-  name = "${local.prefix}-rds-enhanced-monitoring"
+  count = var.db_monitoring_interval > 0 ? 1 : 0
+
+  name = "${local.name_prefix}-rds-enhanced-monitoring"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -372,17 +352,20 @@ resource "aws_iam_role" "rds_enhanced_monitoring" {
 }
 
 resource "aws_iam_role_policy_attachment" "rds_enhanced_monitoring" {
-  role       = aws_iam_role.rds_enhanced_monitoring.name
+  count = var.db_monitoring_interval > 0 ? 1 : 0
+
+  role       = aws_iam_role.rds_enhanced_monitoring[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
 }
 
 resource "aws_db_instance" "main" {
-  identifier        = "${local.prefix}-db"
-  engine            = "mysql"
-  engine_version    = "8.0"
-  instance_class    = "db.t3.micro"
-  allocated_storage = 20
-  storage_type      = "gp2"
+  identifier        = "${local.name_prefix}-db"
+  engine            = var.db_engine
+  engine_version    = var.db_engine_version
+  instance_class    = var.db_instance_class
+  allocated_storage = var.db_allocated_storage
+  storage_type      = var.db_storage_type
+  port              = var.db_port
 
   db_name  = local.db_name
   username = local.db_username
@@ -391,20 +374,20 @@ resource "aws_db_instance" "main" {
   vpc_security_group_ids = [aws_security_group.rds.id]
   db_subnet_group_name   = aws_db_subnet_group.rds.name
 
-  skip_final_snapshot = true
-  publicly_accessible = false
+  skip_final_snapshot = var.db_skip_final_snapshot
+  publicly_accessible = var.db_publicly_accessible
 
-  monitoring_interval = 60
-  monitoring_role_arn = aws_iam_role.rds_enhanced_monitoring.arn
+  monitoring_interval = var.db_monitoring_interval
+  monitoring_role_arn = var.db_monitoring_interval > 0 ? aws_iam_role.rds_enhanced_monitoring[0].arn : null
 
-  tags = { Name = "${local.prefix}-db" }
+  tags = merge(var.tags, { Name = "${local.name_prefix}-db" })
 }
 
 # ──────────────────────────────────────────────
 # CloudWatch Dashboard
 # ──────────────────────────────────────────────
 resource "aws_cloudwatch_dashboard" "main" {
-  dashboard_name = "${local.prefix}-dashboard"
+  dashboard_name = "${local.name_prefix}-dashboard"
 
   dashboard_body = jsonencode({
     widgets = [
@@ -420,7 +403,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           metrics = [
             ["AWS/EC2", "CPUUtilization", "InstanceId", aws_instance.app.id]
           ]
-          region = "ap-northeast-2"
+          region = data.aws_region.current.name
           title  = "EC2 CPU (%)"
           period = 300
           stat   = "Average"
@@ -439,7 +422,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           metrics = [
             ["CWAgent", "mem_used_percent", "InstanceId", aws_instance.app.id, "InstanceType", aws_instance.app.instance_type]
           ]
-          region = "ap-northeast-2"
+          region = data.aws_region.current.name
           title  = "EC2 Memory (%)"
           period = 300
           stat   = "Average"
@@ -458,7 +441,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           metrics = [
             ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", aws_db_instance.main.identifier]
           ]
-          region = "ap-northeast-2"
+          region = data.aws_region.current.name
           title  = "RDS CPU (%)"
           period = 300
           stat   = "Average"
@@ -479,7 +462,7 @@ resource "aws_cloudwatch_dashboard" "main" {
             ["AWS/RDS", "FreeableMemory", "DBInstanceIdentifier", aws_db_instance.main.identifier],
             ["AWS/RDS", "FreeStorageSpace", "DBInstanceIdentifier", aws_db_instance.main.identifier]
           ]
-          region = "ap-northeast-2"
+          region = data.aws_region.current.name
           title  = "RDS Status"
           period = 300
           stat   = "Average"

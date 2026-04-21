@@ -1,0 +1,16 @@
+aws_region           = "ap-northeast-2"
+project_name         = "swm-teams"
+env                  = "dev"
+instance_type        = "t3.micro"
+ami_id               = "ami-0e9bfdb247cc8de84"
+public_key_path      = "./swm-teams-dev-key.pub"
+ssh_private_key_path = "./swm-teams-dev-key"
+availability_zones   = ["ap-northeast-2a", "ap-northeast-2c"]
+
+db_password = "replace-with-secure-password"
+
+tags = {
+  Environment = "dev"
+  ManagedBy   = "Terraform"
+  Project     = "swm-teams"
+}

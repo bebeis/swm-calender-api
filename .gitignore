@@ -247,6 +247,10 @@ crash.*.log
 *.tfvars
 *.tfvars.json
 
+# Local SSH keys used by Terraform environments
+iac/**/*.pem
+iac/**/*.pub
+
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
 override.tf

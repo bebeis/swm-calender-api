@@ -1,6 +1,6 @@
 spring:
   application:
-    name: calender
+    name: teams
   jpa:
     defer-datasource-initialization: true
     hibernate:
@@ -12,8 +12,8 @@ spring:
         show_sql: false
     open-in-view: false
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/swm-calender?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
-    username: ${DB_USERNAME:swm_calender_user}
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/swm-teams?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    username: ${DB_USERNAME:swm_teams_user}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
