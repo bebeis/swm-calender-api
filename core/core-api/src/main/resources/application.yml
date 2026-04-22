@@ -3,6 +3,8 @@ spring:
     name: teams
   config:
     import:
+      - optional:classpath:monitoring.yml
+      - optional:classpath:logging.yml
       - optional:classpath:client-example.yml
   jpa:
     defer-datasource-initialization: true

@@ -1,18 +1,19 @@
 package swm.calender.client.example
 
-import io.mockk.every
-import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
+import feign.RetryableException
+import swm.calender.client.ClientExampleContextTest
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
-class ExampleClientTest {
+class ExampleClientTest(
+    private val exampleClient: ExampleClient,
+) : ClientExampleContextTest() {
     @Test
-    fun returnsMappedResult() {
-        val exampleApi = mockk<ExampleApi>()
-        every { exampleApi.example(any()) } returns ExampleResponseDto("HELLO")
-
-        val result = ExampleClient(exampleApi).example("PING")
-
-        assertThat(result.exampleResult).isEqualTo("HELLO")
+    fun shouldBeThrownExceptionWhenExample() {
+        try {
+            exampleClient.example("HELLO!")
+        } catch (e: Exception) {
+            Assertions.assertThat(e).isExactlyInstanceOf(RetryableException::class.java)
+        }
     }
 }

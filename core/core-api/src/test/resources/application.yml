@@ -14,3 +14,9 @@ spring:
 example:
   api:
     url: https://default.example.example
+
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: false

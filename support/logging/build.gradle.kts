@@ -1,3 +1,4 @@
 dependencies {
-    add("implementation", "com.github.gavlyukovskiy:p6spy-spring-boot-starter:${property("p6spySpringBootStarterVersion")}")
+    add("implementation", "org.springframework.boot:spring-boot-starter-opentelemetry")
+    add("implementation", "io.sentry:sentry-logback:${property("sentryVersion")}")
 }
