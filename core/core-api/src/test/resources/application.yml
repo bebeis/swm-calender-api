@@ -16,6 +16,8 @@ example:
     url: https://default.example.example
 
 management:
+  tracing:
+    enabled: false
   otlp:
     metrics:
       export:

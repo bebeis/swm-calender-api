@@ -1,3 +1,23 @@
-logging.config: classpath:logback/logback-${spring.profiles.active}.xml
+logging:
+  config: classpath:logback/logback-${spring.profiles.active:local}.xml
+  structured:
+    format:
+      console: ${CONSOLE_LOG_STRUCTURED_FORMAT:logstash}
 
-management.otlp.metrics.export.enabled: false
+management:
+  tracing:
+    sampling:
+      probability: ${TRACING_SAMPLING_PROBABILITY:1.0}
+  opentelemetry:
+    resource-attributes:
+      service.namespace: swm
+      deployment.environment.name: ${spring.profiles.active:local}
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:http://localhost:4318/v1/traces}
+          transport: ${OTEL_EXPORTER_OTLP_TRACES_TRANSPORT:http/protobuf}
+  otlp:
+    metrics:
+      export:
+        enabled: false

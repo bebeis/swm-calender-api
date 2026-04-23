@@ -12,7 +12,7 @@
     <appender name="SLACK" class="swm.calender.support.logging.logback.SlackWebhookAppender">
         <webhookUrl>${SLACK_ERROR_WEBHOOK_URL:-}</webhookUrl>
         <serviceName>teams</serviceName>
-        <environment>dev</environment>
+        <environment>prod</environment>
         <minimumEventLevel>${SLACK_ERROR_MIN_LEVEL:-WARN}</minimumEventLevel>
     </appender>
 

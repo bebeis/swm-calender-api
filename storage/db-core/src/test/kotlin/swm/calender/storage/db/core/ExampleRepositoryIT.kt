@@ -13,6 +13,9 @@ class ExampleRepositoryIT {
     @Autowired
     private lateinit var exampleRepository: ExampleRepository
 
+    @Autowired
+    private lateinit var exampleQueryRepository: ExampleQueryRepository
+
     @Test
     fun testShouldBeSavedAndFound() {
         val saved = exampleRepository.save(ExampleEntity("SPRING_BOOT"))
@@ -20,5 +23,9 @@ class ExampleRepositoryIT {
 
         val found = exampleRepository.findById(saved.id).get()
         assertThat(found.exampleColumn).isEqualTo("SPRING_BOOT")
+
+        val foundByQuerydsl = exampleQueryRepository.findByExampleColumn("SPRING_BOOT")
+        assertThat(foundByQuerydsl).isNotNull
+        assertThat(foundByQuerydsl!!.id).isEqualTo(saved.id)
     }
 }

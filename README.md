@@ -76,4 +76,5 @@ swm-teams (root)
 
 - PRD: [`docs/v1/plan/PRD.md`](docs/v1/plan/PRD.md)
 - 코드 아키텍처 가이드: [`docs/code-style/CODE_ARCHITECTURE_GUIDE.md`](docs/code-style/CODE_ARCHITECTURE_GUIDE.md)
+- 모듈 구조: [`docs/module-structure/README.md`](docs/module-structure/README.md)
 - IaC: [`iac/README.md`](iac/README.md)
