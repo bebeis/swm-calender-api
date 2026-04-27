@@ -1,18 +1,17 @@
 package swm.calender.storage.db.core
 
-import com.querydsl.jpa.impl.JPAQueryFactory
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.stereotype.Repository
 
 @Repository
-class ExampleQueryRepository(
-    private val jpaQueryFactory: JPAQueryFactory,
-) {
-    fun findByExampleColumn(exampleColumn: String): ExampleEntity? {
-        val exampleEntity = QExampleEntity.exampleEntity
-
-        return jpaQueryFactory
-            .selectFrom(exampleEntity)
-            .where(exampleEntity.exampleColumn.eq(exampleColumn))
-            .fetchOne()
+class ExampleQueryRepository {
+    fun findByExampleColumn(exampleColumn: String): ExampleEntity? = transaction {
+        ExampleTable
+            .selectAll()
+            .where { ExampleTable.exampleColumn eq exampleColumn }
+            .singleOrNull()
+            ?.toExampleEntity()
     }
 }
