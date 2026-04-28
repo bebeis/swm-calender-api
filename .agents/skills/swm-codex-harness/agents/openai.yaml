@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: SWM Codex Harness
+  short_description: Orchestrates swm-teams Codex workflows with AGENTS compliance gates.
+  default_prompt: Use $swm-codex-harness to plan, implement, review, and verify this swm-teams change.

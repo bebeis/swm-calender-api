@@ -1,0 +1,5 @@
+version: 1
+interface:
+  display_name: SWM AGENTS Compliance
+  short_description: Reviews swm-teams diffs against AGENTS.md rules.
+  default_prompt: Use $swm-agents-compliance to review this diff for AGENTS.md compliance.

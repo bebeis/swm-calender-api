@@ -11,11 +11,16 @@
 ## Project Agent Assets
 
 - 프로젝트 전용 Codex skills는 `.agents/skills/`에 둔다.
+  - `harness`: Meta Harness 호환 기본 하네스를 설계하거나 수정할 때 사용한다.
+  - `swm-codex-harness`: 큰 작업의 단계, handoff, 검증 흐름을 조율할 때 사용한다.
+  - `swm-agents-compliance`: 변경사항이 이 파일의 규칙을 지키는지 검토할 때 사용한다.
   - `swm-teams-architecture`: API, DTO, 도메인, 모듈 경계 작업에 사용한다.
   - `swm-teams-exposed-storage`: Exposed/Flyway 기반 storage 작업에 사용한다.
   - `swm-teams-testing`: Kotest/mockk/RestDocs/Repository 테스트 작업에 사용한다.
 - 프로젝트 전용 Codex subagent는 `.codex/agents/`에 둔다.
 - subagent는 자동 실행을 전제로 하지 않는다. 큰 작업에서 명시적으로 역할을 나눌 때 사용한다.
+- Codex harness 문서는 `docs/harness/`에 둔다.
+- harness 또는 agent 지침을 수정하면 `python3 scripts/validate_codex_harness.py`를 실행한다.
 
 ## DTO Boundaries
 
