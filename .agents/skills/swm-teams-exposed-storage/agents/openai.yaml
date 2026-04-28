@@ -1,0 +1,4 @@
+interface:
+  display_name: "SWM Teams Exposed Storage"
+  short_description: "Exposed repositories and migrations"
+  default_prompt: "Use $swm-teams-exposed-storage to implement or review Exposed persistence work."

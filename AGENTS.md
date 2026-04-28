@@ -8,6 +8,15 @@
 - Kotlin 코드는 JetBrains Kotlin coding conventions를 기본으로 하되, 프로젝트의 우테코 스타일 변형을 따른다.
 - 기존 코드 스타일, 패키지 구조, 네이밍, 테스트 작성 방식과 충돌하지 않게 작성한다.
 
+## Project Agent Assets
+
+- 프로젝트 전용 Codex skills는 `.agents/skills/`에 둔다.
+  - `swm-teams-architecture`: API, DTO, 도메인, 모듈 경계 작업에 사용한다.
+  - `swm-teams-exposed-storage`: Exposed/Flyway 기반 storage 작업에 사용한다.
+  - `swm-teams-testing`: Kotest/mockk/RestDocs/Repository 테스트 작업에 사용한다.
+- 프로젝트 전용 Codex subagent는 `.codex/agents/`에 둔다.
+- subagent는 자동 실행을 전제로 하지 않는다. 큰 작업에서 명시적으로 역할을 나눌 때 사용한다.
+
 ## DTO Boundaries
 
 - Web <-> ApiController 경계에는 controller request/response DTO가 필요하다.

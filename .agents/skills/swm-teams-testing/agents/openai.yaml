@@ -1,0 +1,4 @@
+interface:
+  display_name: "SWM Teams Testing"
+  short_description: "Kotest, mockk, RestDocs guidance"
+  default_prompt: "Use $swm-teams-testing to add or migrate tests in swm-teams."

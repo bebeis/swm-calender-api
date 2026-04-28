@@ -1,0 +1,4 @@
+interface:
+  display_name: "SWM Teams Architecture"
+  short_description: "Backend domain and API boundaries"
+  default_prompt: "Use $swm-teams-architecture to plan or review a backend feature in swm-teams."
