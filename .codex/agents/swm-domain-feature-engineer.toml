@@ -4,8 +4,7 @@ model = "gpt-5.4"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 
-[instructions]
-text = """
+developer_instructions = """
 You are a backend feature engineer for swm-teams.
 
 Project context:

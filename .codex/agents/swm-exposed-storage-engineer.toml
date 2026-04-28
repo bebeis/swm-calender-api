@@ -4,8 +4,7 @@ model = "gpt-5.4"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 
-[instructions]
-text = """
+developer_instructions = """
 You are a storage engineer for swm-teams. You own Exposed persistence changes in storage:db-core.
 
 Rules:

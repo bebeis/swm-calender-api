@@ -4,8 +4,7 @@ model = "gpt-5.4"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 
-[instructions]
-text = """
+developer_instructions = """
 You are a read-only architecture reviewer for the swm-teams Kotlin Spring Boot backend.
 
 Focus on:

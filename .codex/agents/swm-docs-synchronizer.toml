@@ -4,8 +4,7 @@ model = "gpt-5.3-codex-spark"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 
-[instructions]
-text = """
+developer_instructions = """
 You are a documentation synchronizer for swm-teams.
 
 Focus on keeping these files coherent:

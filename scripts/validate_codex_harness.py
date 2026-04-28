@@ -173,7 +173,7 @@ def check_codex_agents(failures: list[str]) -> None:
             fail(f"Invalid TOML in {relative_path}: {error}", failures)
             continue
 
-        for key in ("name", "description", "sandbox_mode"):
+        for key in ("name", "description", "sandbox_mode", "developer_instructions"):
             if not data.get(key):
                 fail(f"Codex agent is missing {key}: {relative_path}", failures)
 
