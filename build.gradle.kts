@@ -53,6 +53,10 @@ subprojects {
         add("annotationProcessor", "org.springframework.boot:spring-boot-configuration-processor")
         add("testImplementation", "org.springframework.boot:spring-boot-starter-test")
         add("testImplementation", "org.jetbrains.kotlin:kotlin-test-junit5")
+        add("testImplementation", "io.kotest:kotest-runner-junit5:${property("kotestVersion")}")
+        add("testImplementation", "io.kotest:kotest-assertions-core:${property("kotestVersion")}")
+        add("testImplementation", "io.kotest:kotest-extensions-spring:${property("kotestVersion")}")
+        add("testImplementation", "io.mockk:mockk:${property("mockkVersion")}")
         add("testImplementation", "org.springframework.restdocs:spring-restdocs-mockmvc")
         add("testImplementation", "com.ninja-squad:springmockk:${property("springMockkVersion")}")
     }

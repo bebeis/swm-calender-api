@@ -32,18 +32,16 @@
   - 예: 주문 수량이 재고보다 많은지 확인하는 로직.
 - DTO 검증과 도메인 비즈니스 검증을 섞지 않는다.
 
-## Entity Relationships And Schema
+## Table Relationships And Schema
 
-- 같은 Aggregate 안의 Entity는 연관관계 매핑을 사용할 수 있다.
-- 다른 Aggregate의 Entity는 연관관계 매핑하지 않고 id로 참조한다.
-- 연관관계 매핑이 필요하면 양방향보다 단방향을 선호한다.
-- Aggregate Root에 종속적인 관계를 제외하면 양방향 매핑은 지양한다.
-- Entity 연관관계 fetch 전략은 기본적으로 `LAZY`를 사용한다.
-  - 예: `@ManyToOne(fetch = FetchType.LAZY)`
-- N+1 문제가 생기면 fetch join으로 조회한다.
+- `storage-db` 모듈의 DB 모델은 Exposed `Table`과 명시적인 row mapping 객체로 표현한다.
+- 같은 Aggregate 안의 Table은 필요한 경우 FK 제약과 명시적인 join으로 함께 조회할 수 있다.
+- 다른 Aggregate의 Table은 연관관계처럼 직접 결합하지 않고 id 값으로 참조한다.
+- Aggregate Root에 종속적인 관계를 제외하면 Table 간 join은 필요한 조회에서만 명시적으로 사용한다.
+- N+1 문제가 생기지 않도록 필요한 데이터는 Exposed DSL의 명시적인 join이나 별도 read model로 조회한다.
 - NOT NULL, unique 등 구체적인 제약조건은 DB schema에서 관리한다.
-- 운영 기준은 `ddl-auto: none`이다.
-- Schema 관리는 Flyway를 사용한다.
+- 운영 schema 변경은 Flyway migration으로만 관리한다.
+- Exposed `SchemaUtils`는 테스트 보조 용도 외에는 사용하지 않는다.
 
 ## Domain Package Boundaries
 
@@ -80,11 +78,12 @@
 
 ## Tests
 
-- Controller 테스트는 RestDocs를 활용해 API 문서와 함께 작성한다.
-- Service 테스트는 Mockito를 활용한 단위 테스트로 작성한다.
+- 모든 테스트는 Kotest를 사용해 작성한다.
+- Controller 테스트는 Kotest 기반으로 RestDocs를 활용해 API 문서와 함께 작성한다.
+- Service 테스트는 Kotest와 mockk를 활용한 단위 테스트로 작성한다.
   - Repository는 mock 객체로 주입한다.
   - 실제 동작보다 행동 검증에 초점을 맞춘 mockistic 테스트를 작성한다.
-- Repository 테스트는 H2 DB와 `@DataJpaTest`를 사용한다.
+- Repository 테스트는 H2 DB와 Spring test context 또는 Exposed transaction test 설정을 사용한다.
 - 가능하면 given-when-then 패턴을 사용한다.
   - 주석은 `// given`, `// when`, `// then`으로 구분한다.
 
@@ -118,8 +117,9 @@
 ## Naming And Domain Model Rules
 
 - Domain module의 순수 Repository interface는 `[도메인명]Repository`로 명명한다.
-- `storage-db` module에서 `JpaRepository`를 상속하는 interface는 `[도메인명]JpaRepository`로 명명한다.
-- `storage-db` module에서 사용하는 entity는 `XXXEntity`로 명명한다.
+- `storage-db` module에서 Exposed로 Domain Repository를 구현하는 class는 `[도메인명]ExposedRepository`로 명명한다.
+- `storage-db` module에서 사용하는 Exposed Table object는 `XXXTable`로 명명한다.
+- `storage-db` module에서 사용하는 row mapping 객체는 필요하면 `XXXEntity`로 명명한다.
 - Domain object는 DB table을 그대로 반영하는 객체가 아니라 개념 객체이다.
   - Domain object와 Entity가 반드시 1:1일 필요는 없다.
 - Setter method는 지양한다.
@@ -144,6 +144,7 @@
 
 - Repository 조회 로직이 복잡하거나 재사용 가능하면 Service와 Repository 사이에 Implement Layer를 둔다.
   - 예: `OrderReader`, `OrderWriter`
-- `JpaRepository` query method 이름이 너무 길어지면 Querydsl을 사용한다.
+- 복잡한 조건, 동적 쿼리, projection 조회는 Exposed DSL로 명시적으로 작성한다.
+- Raw SQL은 Exposed DSL로 표현하기 어렵거나 성능상 필요할 때만 제한적으로 사용한다.
 - Repository에서 DTO projection을 사용할 때 projection DTO는 Repository package 내부에 둔다.
   - 레이어 간 단방향 의존관계를 유지하기 위함이다.
