@@ -162,3 +162,8 @@
 - Raw SQL은 Exposed DSL로 표현하기 어렵거나 성능상 필요할 때만 제한적으로 사용한다.
 - Repository에서 DTO projection을 사용할 때 projection DTO는 Repository package 내부에 둔다.
   - 레이어 간 단방향 의존관계를 유지하기 위함이다.
+
+<!-- SPECKIT START -->
+For Spec Kit governance, read `.specify/memory/constitution.md`.
+For the active SWM Teams MVP feature plan, read `specs/001-swm-teams-mvp/plan.md`.
+<!-- SPECKIT END -->

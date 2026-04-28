@@ -1,0 +1,1053 @@
+openapi: 3.1.0
+info:
+  title: SWM Teams MVP API
+  version: 0.1.0
+  description: REST contract for the SWM Teams MVP backend.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Teams
+  - name: Calendar
+  - name: Match
+  - name: Notifications
+paths:
+  /teams:
+    post:
+      tags: [Teams]
+      summary: Create team
+      operationId: createTeam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamCreateRequest'
+      responses:
+        '200':
+          description: Team created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponseEnvelope'
+  /teams/join:
+    post:
+      tags: [Teams]
+      summary: Join team by invite code
+      operationId: joinTeam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamJoinRequest'
+      responses:
+        '200':
+          description: Team joined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResponseEnvelope'
+  /teams/{teamId}/members:
+    get:
+      tags: [Teams]
+      summary: List team members
+      operationId: listTeamMembers
+      parameters:
+        - $ref: '#/components/parameters/teamId'
+      responses:
+        '200':
+          description: Team members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMemberListEnvelope'
+  /teams/{teamId}/members/{memberId}/role:
+    patch:
+      tags: [Teams]
+      summary: Change member role
+      operationId: changeMemberRole
+      parameters:
+        - $ref: '#/components/parameters/teamId'
+        - $ref: '#/components/parameters/memberId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMemberRoleChangeRequest'
+      responses:
+        '200':
+          description: Role changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMemberResponseEnvelope'
+  /teams/{teamId}/sub-services/{subService}:
+    patch:
+      tags: [Teams]
+      summary: Enable or disable a team sub-service
+      operationId: updateSubServiceActivation
+      parameters:
+        - $ref: '#/components/parameters/teamId'
+        - name: subService
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SubService'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubServiceActivationRequest'
+      responses:
+        '200':
+          description: Activation updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubServiceActivationEnvelope'
+  /calendar/mentoring-schedules:bulk-push:
+    post:
+      tags: [Calendar]
+      summary: Bulk push mentoring schedules to team calendar
+      operationId: bulkPushMentoringSchedules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MentoringScheduleBulkPushRequest'
+      responses:
+        '200':
+          description: Bulk push result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentoringScheduleBulkPushEnvelope'
+  /calendar/when2meet-link:
+    put:
+      tags: [Calendar]
+      summary: Register or replace When2meet link
+      operationId: putWhen2meetLink
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/When2meetLinkRequest'
+      responses:
+        '200':
+          description: Link registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/When2meetLinkEnvelope'
+  /calendar/availability:
+    get:
+      tags: [Calendar]
+      summary: Get unified team availability
+      operationId: getUnifiedAvailability
+      parameters:
+        - name: startsAt
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endsAt
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Unified availability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnifiedAvailabilityEnvelope'
+  /match/service-profiles:
+    post:
+      tags: [Match]
+      summary: Create service profile
+      operationId: createServiceProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceProfileCreateRequest'
+      responses:
+        '200':
+          description: Service profile created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceProfileEnvelope'
+  /match/campaigns:
+    get:
+      tags: [Match]
+      summary: Search campaigns
+      operationId: searchCampaigns
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CampaignCategory'
+        - name: platform
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Platform'
+        - name: reciprocalAvailable
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [latest, deadline]
+      responses:
+        '200':
+          description: Campaign search result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignSearchEnvelope'
+    post:
+      tags: [Match]
+      summary: Create campaign
+      operationId: createCampaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignCreateRequest'
+      responses:
+        '200':
+          description: Campaign created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignEnvelope'
+  /match/campaigns/{campaignId}/status:
+    patch:
+      tags: [Match]
+      summary: Change campaign status
+      operationId: changeCampaignStatus
+      parameters:
+        - $ref: '#/components/parameters/campaignId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignStatusChangeRequest'
+      responses:
+        '200':
+          description: Campaign status changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignEnvelope'
+  /match/campaigns/{campaignId}/requests:
+    post:
+      tags: [Match]
+      summary: Send beta request
+      operationId: createMatchRequest
+      parameters:
+        - $ref: '#/components/parameters/campaignId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchRequestCreateRequest'
+      responses:
+        '200':
+          description: Request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchRequestEnvelope'
+  /match/requests/{requestId}/status:
+    patch:
+      tags: [Match]
+      summary: Change request status
+      operationId: changeMatchRequestStatus
+      parameters:
+        - $ref: '#/components/parameters/requestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchRequestStatusChangeRequest'
+      responses:
+        '200':
+          description: Request status changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchRequestStatusChangeEnvelope'
+  /match/assignments/{assignmentId}:
+    get:
+      tags: [Match]
+      summary: Get assignment detail
+      operationId: getAssignment
+      parameters:
+        - $ref: '#/components/parameters/assignmentId'
+      responses:
+        '200':
+          description: Assignment detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentEnvelope'
+  /match/assignments/{assignmentId}/feedback:
+    post:
+      tags: [Match]
+      summary: Submit feedback
+      operationId: submitFeedback
+      parameters:
+        - $ref: '#/components/parameters/assignmentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackSubmitRequest'
+      responses:
+        '200':
+          description: Feedback submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackEnvelope'
+  /match/test-history:
+    get:
+      tags: [Match]
+      summary: Get my team's test history
+      operationId: getTeamTestHistory
+      responses:
+        '200':
+          description: Team test history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamTestHistoryEnvelope'
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: List notifications for my team
+      operationId: listNotifications
+      responses:
+        '200':
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationListEnvelope'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    teamId:
+      name: teamId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    memberId:
+      name: memberId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    campaignId:
+      name: campaignId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    requestId:
+      name: requestId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+    assignmentId:
+      name: assignmentId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+  schemas:
+    ApiResult:
+      type: string
+      enum: [SUCCESS, ERROR]
+    ErrorBody:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          nullable: true
+    TeamRole:
+      type: string
+      enum: [OWNER, MEMBER]
+    SubService:
+      type: string
+      enum: [calendar, match]
+    CampaignCategory:
+      type: string
+      enum: [PRODUCTIVITY, EDUCATION, COMMUNITY, HEALTH, FINANCE, DEVELOPER_TOOL, ENTERTAINMENT, LIFESTYLE, OTHER]
+    Platform:
+      type: string
+      enum: [WEB, ANDROID, IOS, CHROME_EXTENSION, DESKTOP, API, OTHER]
+    CampaignStatus:
+      type: string
+      enum: [DRAFT, OPEN, CLOSED]
+    MatchRequestType:
+      type: string
+      enum: [ONE_WAY, RECIPROCAL]
+    MatchRequestStatus:
+      type: string
+      enum: [PENDING, ACCEPTED, REJECTED, CANCELED]
+    AssignmentStatus:
+      type: string
+      enum: [ASSIGNED, FEEDBACK_SUBMITTED, CLOSED]
+    FeedbackScores:
+      type: object
+      required: [usability, value, reliability, recommendation]
+      properties:
+        usability:
+          type: integer
+          minimum: 1
+          maximum: 5
+        value:
+          type: integer
+          minimum: 1
+          maximum: 5
+        reliability:
+          type: integer
+          minimum: 1
+          maximum: 5
+        recommendation:
+          type: integer
+          minimum: 1
+          maximum: 5
+    TeamCreateRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          maxLength: 500
+    TeamJoinRequest:
+      type: object
+      required: [inviteCode]
+      properties:
+        inviteCode:
+          type: string
+          minLength: 1
+          maxLength: 64
+    TeamMemberRoleChangeRequest:
+      type: object
+      required: [role]
+      properties:
+        role:
+          $ref: '#/components/schemas/TeamRole'
+    SubServiceActivationRequest:
+      type: object
+      required: [enabled]
+      properties:
+        enabled:
+          type: boolean
+    TeamResponse:
+      type: object
+      required: [teamId, name, inviteCode, calendarEnabled, matchEnabled]
+      properties:
+        teamId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        inviteCode:
+          type: string
+        calendarEnabled:
+          type: boolean
+        matchEnabled:
+          type: boolean
+    TeamMemberResponse:
+      type: object
+      required: [memberId, userId, name, email, role]
+      properties:
+        memberId:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          $ref: '#/components/schemas/TeamRole'
+    SubServiceActivationResponse:
+      type: object
+      required: [teamId, calendarEnabled, matchEnabled]
+      properties:
+        teamId:
+          type: integer
+          format: int64
+        calendarEnabled:
+          type: boolean
+        matchEnabled:
+          type: boolean
+    MentoringScheduleBulkPushRequest:
+      type: object
+      required: [schedules]
+      properties:
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/MentoringScheduleRequestItem'
+    MentoringScheduleRequestItem:
+      type: object
+      required: [externalSourceId, title, startsAt, endsAt]
+      properties:
+        externalSourceId:
+          type: string
+        title:
+          type: string
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        location:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+    MentoringScheduleBulkPushResponse:
+      type: object
+      required: [createdCount, skippedDuplicateCount]
+      properties:
+        createdCount:
+          type: integer
+          minimum: 0
+        skippedDuplicateCount:
+          type: integer
+          minimum: 0
+    When2meetLinkRequest:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+    When2meetLinkResponse:
+      type: object
+      required: [url, status]
+      properties:
+        url:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, PARSED, FAILED]
+        failureReason:
+          type: string
+          nullable: true
+    AvailabilitySlotResponse:
+      type: object
+      required: [startsAt, endsAt, availableMemberCount, busyMemberCount]
+      properties:
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        availableMemberCount:
+          type: integer
+          minimum: 0
+        busyMemberCount:
+          type: integer
+          minimum: 0
+    UnifiedAvailabilityResponse:
+      type: object
+      required: [slots, generatedAt]
+      properties:
+        slots:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilitySlotResponse'
+        generatedAt:
+          type: string
+          format: date-time
+    ServiceProfileCreateRequest:
+      type: object
+      required: [name, summary, description, category, platforms]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 80
+        summary:
+          type: string
+          minLength: 1
+          maxLength: 120
+        description:
+          type: string
+          minLength: 1
+          maxLength: 3000
+        category:
+          $ref: '#/components/schemas/CampaignCategory'
+        platforms:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Platform'
+        screenshotUrls:
+          type: array
+          items:
+            type: string
+            format: uri
+        demoUrl:
+          type: string
+          format: uri
+          nullable: true
+        public:
+          type: boolean
+    ServiceProfileResponse:
+      type: object
+      required: [serviceProfileId, teamId, active, public, name, summary, category, platforms]
+      properties:
+        serviceProfileId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+        active:
+          type: boolean
+        public:
+          type: boolean
+        name:
+          type: string
+        summary:
+          type: string
+        category:
+          $ref: '#/components/schemas/CampaignCategory'
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+    CampaignCreateRequest:
+      type: object
+      required: [title, description, targetTeamCount, deadline, reciprocalAvailable]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          minLength: 1
+          maxLength: 3000
+        targetTeamCount:
+          type: integer
+          minimum: 1
+        deadline:
+          type: string
+          format: date-time
+        reciprocalAvailable:
+          type: boolean
+        requirements:
+          type: string
+          maxLength: 2000
+          nullable: true
+    CampaignStatusChangeRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: '#/components/schemas/CampaignStatus'
+    CampaignResponse:
+      type: object
+      required: [campaignId, serviceProfileId, title, targetTeamCount, deadline, reciprocalAvailable, status]
+      properties:
+        campaignId:
+          type: integer
+          format: int64
+        serviceProfileId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        targetTeamCount:
+          type: integer
+        deadline:
+          type: string
+          format: date-time
+        reciprocalAvailable:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/CampaignStatus'
+    CampaignSearchItem:
+      type: object
+      required: [campaignId, teamId, teamName, serviceName, serviceSummary, category, platforms, reciprocalAvailable, deadline, status]
+      properties:
+        campaignId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+        teamName:
+          type: string
+        serviceName:
+          type: string
+        serviceSummary:
+          type: string
+        category:
+          $ref: '#/components/schemas/CampaignCategory'
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+        reciprocalAvailable:
+          type: boolean
+        deadline:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/CampaignStatus'
+    MatchRequestCreateRequest:
+      type: object
+      required: [type]
+      properties:
+        type:
+          $ref: '#/components/schemas/MatchRequestType'
+        message:
+          type: string
+          maxLength: 1000
+          nullable: true
+    MatchRequestStatusChangeRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ACCEPTED, REJECTED, CANCELED]
+    MatchRequestResponse:
+      type: object
+      required: [requestId, campaignId, requestingTeamId, targetTeamId, type, status]
+      properties:
+        requestId:
+          type: integer
+          format: int64
+        campaignId:
+          type: integer
+          format: int64
+        requestingTeamId:
+          type: integer
+          format: int64
+        targetTeamId:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/MatchRequestType'
+        status:
+          $ref: '#/components/schemas/MatchRequestStatus'
+    MatchRequestStatusChangeResponse:
+      type: object
+      required: [request, assignmentCreated]
+      properties:
+        request:
+          $ref: '#/components/schemas/MatchRequestResponse'
+        assignmentId:
+          type: integer
+          format: int64
+          nullable: true
+        assignmentCreated:
+          type: boolean
+    AssignmentResponse:
+      type: object
+      required: [assignmentId, requestId, testerTeamId, targetTeamId, status]
+      properties:
+        assignmentId:
+          type: integer
+          format: int64
+        requestId:
+          type: integer
+          format: int64
+        testerTeamId:
+          type: integer
+          format: int64
+        targetTeamId:
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/AssignmentStatus'
+        feedback:
+          $ref: '#/components/schemas/FeedbackResponse'
+          nullable: true
+    FeedbackSubmitRequest:
+      type: object
+      required: [scores, summary]
+      properties:
+        scores:
+          $ref: '#/components/schemas/FeedbackScores'
+        summary:
+          type: string
+          minLength: 10
+          maxLength: 1000
+        improvementSuggestion:
+          type: string
+          maxLength: 1000
+          nullable: true
+    FeedbackResponse:
+      type: object
+      required: [feedbackId, assignmentId, submittedByTeamId, scores, summary, submittedAt]
+      properties:
+        feedbackId:
+          type: integer
+          format: int64
+        assignmentId:
+          type: integer
+          format: int64
+        submittedByTeamId:
+          type: integer
+          format: int64
+        scores:
+          $ref: '#/components/schemas/FeedbackScores'
+        summary:
+          type: string
+        improvementSuggestion:
+          type: string
+          nullable: true
+        submittedAt:
+          type: string
+          format: date-time
+    TeamTestHistoryItem:
+      type: object
+      required: [assignmentId, campaignId, serviceName, testerTeamId, targetTeamId, assignmentStatus]
+      properties:
+        assignmentId:
+          type: integer
+          format: int64
+        campaignId:
+          type: integer
+          format: int64
+        serviceName:
+          type: string
+        testerTeamId:
+          type: integer
+          format: int64
+        targetTeamId:
+          type: integer
+          format: int64
+        assignmentStatus:
+          $ref: '#/components/schemas/AssignmentStatus'
+        feedbackSubmittedAt:
+          type: string
+          format: date-time
+          nullable: true
+        feedbackSummary:
+          type: string
+          nullable: true
+    NotificationResponse:
+      type: object
+      required: [notificationId, type, message, read, createdAt]
+      properties:
+        notificationId:
+          type: integer
+          format: int64
+        type:
+          type: string
+        message:
+          type: string
+        read:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    TeamResponseEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/TeamResponse'
+    TeamMemberResponseEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/TeamMemberResponse'
+    TeamMemberListEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TeamMemberResponse'
+    SubServiceActivationEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/SubServiceActivationResponse'
+    MentoringScheduleBulkPushEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MentoringScheduleBulkPushResponse'
+    When2meetLinkEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/When2meetLinkResponse'
+    UnifiedAvailabilityEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/UnifiedAvailabilityResponse'
+    ServiceProfileEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ServiceProfileResponse'
+    CampaignEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/CampaignResponse'
+    CampaignSearchEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CampaignSearchItem'
+    MatchRequestEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MatchRequestResponse'
+    MatchRequestStatusChangeEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MatchRequestStatusChangeResponse'
+    AssignmentEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AssignmentResponse'
+    FeedbackEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/FeedbackResponse'
+    TeamTestHistoryEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TeamTestHistoryItem'
+    NotificationListEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/NotificationResponse'
+    EnvelopeBase:
+      type: object
+      required: [result, error]
+      properties:
+        result:
+          $ref: '#/components/schemas/ApiResult'
+        error:
+          oneOf:
+            - $ref: '#/components/schemas/ErrorBody'
+            - type: 'null'
