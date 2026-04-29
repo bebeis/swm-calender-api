@@ -34,6 +34,9 @@ Use OWNER as the default mutation authority and MEMBER as a scoped contributor.
 | Register or replace When2meet link | Yes | No |
 | Bulk push mentoring schedules | Yes | Yes |
 | Create or edit service profile | Yes | No |
+| Create candidate idea | Yes | No |
+| View own team's candidate ideas | Yes | Yes |
+| Run duplicate analysis | Yes | No |
 | Create or edit campaign | Yes | No |
 | Search campaigns | Yes | Yes |
 | Send beta request | Yes | Yes |
@@ -43,8 +46,9 @@ Use OWNER as the default mutation authority and MEMBER as a scoped contributor.
 | Change roles or remove members | Yes | No |
 
 **Rationale**: Mutations that change team identity, external integrations, public campaign content, or membership
-should be controlled by OWNER. MEMBER can still perform normal collaboration workflows such as schedule push,
-request sending, and feedback submission.
+should be controlled by OWNER. Candidate ideas are pre-release strategy data, so MEMBER can view them inside the
+team but OWNER controls creation and duplicate-analysis execution. MEMBER can still perform normal
+collaboration workflows such as schedule push, request sending, and feedback submission.
 
 **Alternatives considered**:
 
@@ -126,6 +130,32 @@ or mutating them on disable would create data loss and make reactivation risky.
 - Hard delete data on disable: rejected because it can destroy campaign/request/feedback history.
 - Keep everything active but deny new writes only: rejected because disabled services should not appear enabled
   to users.
+
+## Decision: Candidate Idea Privacy And AI Duplicate Analysis
+
+Candidate ideas are private team-scoped records. Duplicate analysis runs on demand for a candidate idea, compares
+it against active public service profiles/campaign descriptions and all private candidate ideas, and returns a
+redacted result when a match source is another team's private candidate idea.
+
+**Result disclosure policy**:
+
+- Released service match: may include public service name, public team/service identifiers, and overlap summary.
+- Other-team private candidate idea match: may include similarity level and overlap dimensions, but must not include raw
+  candidate text, title, owning team identity, or source id.
+- Own-team candidate match: may include the team's own candidate fields with `OWN_TEAM` disclosure because the
+  requester already has access.
+- Failed or low-confidence analysis: returns status/failure metadata without exposing private corpus content.
+
+**Rationale**: The feature needs to compare about 100 teams' released services and in-progress ideas, but exposing
+another team's candidate idea would violate the privacy requirement and discourage early idea entry. Redacted
+private matches give teams useful collision signals without turning the feature into a private idea search tool.
+
+**Alternatives considered**:
+
+- Compare only public service profiles: rejected because it misses the user's requested candidate-idea corpus.
+- Expose matched private candidate details to explain the overlap: rejected because it violates candidate privacy.
+- Auto-block profile publishing when a duplicate is found: rejected because AI duplicate analysis is advisory and
+  may produce false positives.
 
 ## Decision: API Response Shape
 

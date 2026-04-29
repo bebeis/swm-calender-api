@@ -8,7 +8,7 @@ Exposed tables and repository adapters in `storage:db-core`.
 
 ## Shared Value Objects
 
-### UserId, TeamId, CampaignId, RequestId, AssignmentId, FeedbackId
+### UserId, TeamId, CampaignId, CandidateIdeaId, DuplicateAnalysisId, RequestId, AssignmentId, FeedbackId
 
 - Type: opaque identifier
 - Validation: must refer to an existing aggregate when used in commands
@@ -203,6 +203,75 @@ Exposed tables and repository adapters in `storage:db-core`.
   - `draft/non-public -> public`
   - `active -> archived` when a new profile becomes active
 
+### CandidateIdea
+
+- Fields:
+  - `id`
+  - `teamId`
+  - `title`
+  - `summary`
+  - `problem`
+  - `targetUsers`
+  - `solution`
+  - `category`
+  - `platforms`
+  - `visibility`: `PRIVATE`
+  - `createdByUserId`
+  - `createdAt`
+  - `updatedAt`
+- Validation:
+  - team must have `matchEnabled = true`
+  - `title`, `summary`, `problem`, `targetUsers`, and `solution` are required
+  - `platforms` is not empty
+  - `visibility` is always `PRIVATE` in the MVP
+- Behavior:
+  - visible only to active members of the owning team
+  - excluded from public campaign search and service profile discovery
+  - available as private corpus input for duplicate analysis with redacted cross-team output
+
+### DuplicateAnalysis
+
+- Fields:
+  - `id`
+  - `candidateIdeaId`
+  - `requestedByTeamId`
+  - `requestedByUserId`
+  - `status`: `COMPLETED` or `FAILED`
+  - `scannedReleasedServiceCount`
+  - `scannedCandidateIdeaCount`
+  - `failureReason`
+  - `generatedAt`
+- Validation:
+  - requester must be an active member of `requestedByTeamId`
+  - `candidateIdeaId` must belong to `requestedByTeamId`
+  - scanned counts are zero or positive
+- Behavior:
+  - compares the candidate idea against active public service profiles/campaign descriptions and private candidate ideas
+  - stores summarized result metadata, not raw AI prompts or provider responses
+  - failed analyses preserve failure reason without exposing private corpus content
+
+### DuplicateAnalysisMatch
+
+- Fields:
+  - `analysisId`
+  - `sourceType`: `RELEASED_SERVICE` or `PRIVATE_CANDIDATE_IDEA`
+  - `sourceId`
+  - `sourceTeamId`
+  - `sourceTitle`
+  - `sourceDisclosure`: `PUBLIC`, `OWN_TEAM`, or `REDACTED`
+  - `similarityLevel`: `LOW`, `MEDIUM`, or `HIGH`
+  - `overlapDimensions`
+  - `overlapSummary`
+- Validation:
+  - `overlapDimensions` is not empty
+  - released service matches may include public `sourceId`, `sourceTeamId`, and `sourceTitle`
+  - own-team candidate idea matches may use `sourceDisclosure = OWN_TEAM`
+  - other-team private candidate idea matches must use `sourceDisclosure = REDACTED`
+  - redacted matches must not include `sourceId`, `sourceTeamId`, or another team's raw candidate title/content
+- Behavior:
+  - summarizes overlap by dimensions such as problem, target users, solution, feature, platform, or business model
+  - provides decision-support signals only; it does not block campaign creation or profile publishing
+
 ### BetaCampaign
 
 - Fields:
@@ -330,13 +399,27 @@ Exposed tables and repository adapters in `storage:db-core`.
   - `feedbackSubmittedAt`
   - `feedbackSummary`
 
+### DuplicateAnalysisResult
+
+- Fields:
+  - `analysisId`
+  - `candidateIdeaId`
+  - `status`
+  - `scannedReleasedServiceCount`
+  - `scannedCandidateIdeaCount`
+  - `matches`
+  - `generatedAt`
+- Behavior:
+  - public released service matches include public source labels
+  - private candidate idea matches are redacted and never reveal another team identity or candidate text
+
 ## Aggregate Ownership
 
 | Aggregate | Root | Contains |
 |-----------|------|----------|
 | Team | `Team` | `TeamMember`, `SubServiceActivation` |
 | Calendar | `TeamCalendar` | `MentoringSchedule`, `When2meetLink`, `AvailabilitySlot` |
-| Match | `ServiceProfile` / `BetaCampaign` / `MatchRequest` | `Assignment`, `Feedback`, `Notification` |
+| Match | `ServiceProfile` / `BetaCampaign` / `CandidateIdea` / `DuplicateAnalysis` / `MatchRequest` | `DuplicateAnalysisMatch`, `Assignment`, `Feedback`, `Notification` |
 
 Implementation may split Match repositories by aggregate roots only if the aggregate boundary is explicit and
 does not produce duplicate repositories for the same root.

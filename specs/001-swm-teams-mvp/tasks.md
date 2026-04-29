@@ -104,11 +104,14 @@ the foundational phase.
 
 **Checkpoint**: US2 works independently for Calendar-enabled teams and protects team scope.
 
-## Phase 5: User Story 3 - Service Profile And Campaign Discovery (Priority: P1)
+## Phase 5: User Story 3 - Service Profile, Candidate Ideas, And Duplicate Discovery (Priority: P1)
 
-**Goal**: Match-enabled teams can publish service profiles, open campaigns, and search public campaigns.
+**Goal**: Match-enabled teams can publish service profiles, keep candidate ideas private, run duplicate analysis
+against released services and candidate ideas, open campaigns, and search public campaigns.
 
-**Independent Test**: Publish a profile, create/open a campaign, and find it through filters from another team.
+**Independent Test**: Publish a profile, create a private candidate idea, run duplicate analysis, verify private
+candidate redaction for other teams, create/open a campaign, and find only the public campaign through filters
+from another team.
 
 ### Tests for User Story 3
 
@@ -117,22 +120,39 @@ the foundational phase.
 - [ ] T056 [P] [US3] Add MatchService campaign tests in `match/match-domain/src/test/kotlin/swm/calender/match/service/MatchCampaignServiceTest.kt`
 - [ ] T057 [P] [US3] Add MatchController profile/campaign RestDocs tests in `core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/MatchCampaignControllerTest.kt`
 - [ ] T058 [P] [US3] Add Match campaign repository integration tests in `storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/MatchCampaignExposedRepositoryIT.kt`
+- [ ] T059 [P] [US3] Add CandidateIdea domain tests in `match/match-domain/src/test/kotlin/swm/calender/match/domain/CandidateIdeaTest.kt`
+- [ ] T060 [P] [US3] Add DuplicateAnalysis service tests with redacted private-source results in `match/match-domain/src/test/kotlin/swm/calender/match/service/DuplicateAnalysisServiceTest.kt`
+- [ ] T061 [P] [US3] Add CandidateIdeaController RestDocs tests for candidate ideas and duplicate analysis in `core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/CandidateIdeaControllerTest.kt`
+- [ ] T062 [P] [US3] Add candidate idea and duplicate analysis repository integration tests in `storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/CandidateIdeaExposedRepositoryIT.kt`
 
 ### Implementation for User Story 3
 
-- [ ] T059 [P] [US3] Add ServiceProfile model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/ServiceProfile.kt`
-- [ ] T060 [P] [US3] Add BetaCampaign model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/BetaCampaign.kt`
-- [ ] T061 [US3] Add MatchCampaignRepository interface in `match/match-domain/src/main/kotlin/swm/calender/match/domain/MatchCampaignRepository.kt`
-- [ ] T062 [US3] Add MatchCampaignReader and MatchCampaignWriter in `match/match-domain/src/main/kotlin/swm/calender/match/implement/MatchCampaignReader.kt`
-- [ ] T063 [US3] Add MatchCampaignService in `match/match-domain/src/main/kotlin/swm/calender/match/service/MatchCampaignService.kt`
-- [ ] T064 [US3] Add Match campaign request DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/CampaignCreateRequest.kt`
-- [ ] T065 [US3] Add Match campaign response DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/CampaignResponse.kt`
-- [ ] T066 [US3] Add MatchCampaignController endpoints in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/MatchCampaignController.kt`
-- [ ] T067 [US3] Add Match campaign Exposed tables in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchCampaignTable.kt`
-- [ ] T068 [US3] Add MatchCampaignExposedRepository in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchCampaignExposedRepository.kt`
-- [ ] T069 [US3] Add match campaign Flyway migration in `storage/db-core/src/main/resources/db/migration/V4__create_match_campaign_tables.sql`
+- [ ] T063 [P] [US3] Add ServiceProfile model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/ServiceProfile.kt`
+- [ ] T064 [P] [US3] Add BetaCampaign model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/BetaCampaign.kt`
+- [ ] T065 [P] [US3] Add CandidateIdea model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/CandidateIdea.kt`
+- [ ] T066 [P] [US3] Add DuplicateAnalysis and DuplicateAnalysisMatch models in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/DuplicateAnalysis.kt`
+- [ ] T067 [US3] Add MatchCampaignRepository interface in `match/match-domain/src/main/kotlin/swm/calender/match/domain/MatchCampaignRepository.kt`
+- [ ] T068 [US3] Add CandidateIdeaRepository and DuplicateAnalysisRepository interfaces in `match/match-domain/src/main/kotlin/swm/calender/match/domain/`
+- [ ] T069 [US3] Add MatchCampaignReader and MatchCampaignWriter in `match/match-domain/src/main/kotlin/swm/calender/match/implement/MatchCampaignReader.kt`
+- [ ] T070 [US3] Add CandidateIdeaReader/Writer and DuplicateAnalysisReader/Writer implement-layer components in `match/match-domain/src/main/kotlin/swm/calender/match/implement/`
+- [ ] T071 [US3] Add AI duplicate analyzer port in `match/match-domain/src/main/kotlin/swm/calender/match/implement/DuplicateIdeaAnalyzer.kt`
+- [ ] T072 [US3] Add MatchCampaignService in `match/match-domain/src/main/kotlin/swm/calender/match/service/MatchCampaignService.kt`
+- [ ] T073 [US3] Add CandidateIdeaService and DuplicateAnalysisService in `match/match-domain/src/main/kotlin/swm/calender/match/service/`
+- [ ] T074 [US3] Add Match campaign request DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/CampaignCreateRequest.kt`
+- [ ] T075 [US3] Add Match campaign response DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/CampaignResponse.kt`
+- [ ] T076 [US3] Add candidate idea and duplicate analysis DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/`
+- [ ] T077 [US3] Add MatchCampaignController endpoints in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/MatchCampaignController.kt`
+- [ ] T078 [US3] Add CandidateIdeaController endpoints for create/list and duplicate analysis in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/CandidateIdeaController.kt`
+- [ ] T079 [US3] Add Match campaign Exposed tables in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchCampaignTable.kt`
+- [ ] T080 [US3] Add CandidateIdeaTable and DuplicateAnalysisTable in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/CandidateIdeaTable.kt`
+  and `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/DuplicateAnalysisTable.kt`
+- [ ] T081 [US3] Add MatchCampaignExposedRepository in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchCampaignExposedRepository.kt`
+- [ ] T082 [US3] Add CandidateIdeaExposedRepository and DuplicateAnalysisExposedRepository in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/`
+- [ ] T083 [US3] Add match campaign Flyway migration in `storage/db-core/src/main/resources/db/migration/V4__create_match_campaign_tables.sql`
+- [ ] T084 [US3] Add candidate idea and duplicate analysis Flyway migration in `storage/db-core/src/main/resources/db/migration/V5__create_candidate_idea_tables.sql`
 
-**Checkpoint**: US3 works independently for profile publishing and public campaign discovery.
+**Checkpoint**: US3 works independently for profile publishing, private candidate ideas, duplicate analysis, and
+public campaign discovery.
 
 ## Phase 6: User Story 4 - Beta Request And Assignment Lifecycle (Priority: P2)
 
@@ -142,26 +162,26 @@ the foundational phase.
 
 ### Tests for User Story 4
 
-- [ ] T070 [P] [US4] Add MatchRequest domain tests in `match/match-domain/src/test/kotlin/swm/calender/match/domain/MatchRequestTest.kt`
-- [ ] T071 [P] [US4] Add Assignment domain tests in `match/match-domain/src/test/kotlin/swm/calender/match/domain/AssignmentTest.kt`
-- [ ] T072 [P] [US4] Add MatchRequestService mockk tests in `match/match-domain/src/test/kotlin/swm/calender/match/service/MatchRequestServiceTest.kt`
-- [ ] T073 [P] [US4] Add MatchRequestController RestDocs tests in `core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/MatchRequestControllerTest.kt`
-- [ ] T074 [P] [US4] Add Match request repository integration tests in `storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/MatchRequestExposedRepositoryIT.kt`
+- [ ] T085 [P] [US4] Add MatchRequest domain tests in `match/match-domain/src/test/kotlin/swm/calender/match/domain/MatchRequestTest.kt`
+- [ ] T086 [P] [US4] Add Assignment domain tests in `match/match-domain/src/test/kotlin/swm/calender/match/domain/AssignmentTest.kt`
+- [ ] T087 [P] [US4] Add MatchRequestService mockk tests in `match/match-domain/src/test/kotlin/swm/calender/match/service/MatchRequestServiceTest.kt`
+- [ ] T088 [P] [US4] Add MatchRequestController RestDocs tests in `core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/MatchRequestControllerTest.kt`
+- [ ] T089 [P] [US4] Add Match request repository integration tests in `storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/MatchRequestExposedRepositoryIT.kt`
 
 ### Implementation for User Story 4
 
-- [ ] T075 [P] [US4] Add MatchRequest model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/MatchRequest.kt`
-- [ ] T076 [P] [US4] Add Assignment model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Assignment.kt`
-- [ ] T077 [P] [US4] Add Notification model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Notification.kt`
-- [ ] T078 [US4] Add MatchRequestRepository interface in `match/match-domain/src/main/kotlin/swm/calender/match/domain/MatchRequestRepository.kt`
-- [ ] T079 [US4] Add MatchRequestReader and MatchRequestWriter in `match/match-domain/src/main/kotlin/swm/calender/match/implement/MatchRequestReader.kt`
-- [ ] T080 [US4] Add MatchRequestService in `match/match-domain/src/main/kotlin/swm/calender/match/service/MatchRequestService.kt`
-- [ ] T081 [US4] Add Match request DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/MatchRequestCreateRequest.kt`
-- [ ] T082 [US4] Add Match request response DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/MatchRequestResponse.kt`
-- [ ] T083 [US4] Add MatchRequestController endpoints in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/MatchRequestController.kt`
-- [ ] T084 [US4] Add Match request Exposed tables in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchRequestTable.kt`
-- [ ] T085 [US4] Add MatchRequestExposedRepository in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchRequestExposedRepository.kt`
-- [ ] T086 [US4] Add match request Flyway migration in `storage/db-core/src/main/resources/db/migration/V5__create_match_request_tables.sql`
+- [ ] T090 [P] [US4] Add MatchRequest model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/MatchRequest.kt`
+- [ ] T091 [P] [US4] Add Assignment model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Assignment.kt`
+- [ ] T092 [P] [US4] Add Notification model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Notification.kt`
+- [ ] T093 [US4] Add MatchRequestRepository interface in `match/match-domain/src/main/kotlin/swm/calender/match/domain/MatchRequestRepository.kt`
+- [ ] T094 [US4] Add MatchRequestReader and MatchRequestWriter in `match/match-domain/src/main/kotlin/swm/calender/match/implement/MatchRequestReader.kt`
+- [ ] T095 [US4] Add MatchRequestService in `match/match-domain/src/main/kotlin/swm/calender/match/service/MatchRequestService.kt`
+- [ ] T096 [US4] Add Match request DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/MatchRequestCreateRequest.kt`
+- [ ] T097 [US4] Add Match request response DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/MatchRequestResponse.kt`
+- [ ] T098 [US4] Add MatchRequestController endpoints in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/MatchRequestController.kt`
+- [ ] T099 [US4] Add Match request Exposed tables in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchRequestTable.kt`
+- [ ] T100 [US4] Add MatchRequestExposedRepository in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchRequestExposedRepository.kt`
+- [ ] T101 [US4] Add match request Flyway migration in `storage/db-core/src/main/resources/db/migration/V6__create_match_request_tables.sql`
 
 **Checkpoint**: US4 request lifecycle works and accepted requests create assignments exactly once.
 
@@ -173,23 +193,23 @@ the foundational phase.
 
 ### Tests for User Story 5
 
-- [ ] T087 [P] [US5] Add Feedback domain tests in `match/match-domain/src/test/kotlin/swm/calender/match/domain/FeedbackTest.kt`
-- [ ] T088 [P] [US5] Add FeedbackService mockk tests in `match/match-domain/src/test/kotlin/swm/calender/match/service/FeedbackServiceTest.kt`
-- [ ] T089 [P] [US5] Add FeedbackController RestDocs tests in `core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/FeedbackControllerTest.kt`
-- [ ] T090 [P] [US5] Add feedback repository integration tests in `storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/FeedbackExposedRepositoryIT.kt`
+- [ ] T102 [P] [US5] Add Feedback domain tests in `match/match-domain/src/test/kotlin/swm/calender/match/domain/FeedbackTest.kt`
+- [ ] T103 [P] [US5] Add FeedbackService mockk tests in `match/match-domain/src/test/kotlin/swm/calender/match/service/FeedbackServiceTest.kt`
+- [ ] T104 [P] [US5] Add FeedbackController RestDocs tests in `core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/FeedbackControllerTest.kt`
+- [ ] T105 [P] [US5] Add feedback repository integration tests in `storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/FeedbackExposedRepositoryIT.kt`
 
 ### Implementation for User Story 5
 
-- [ ] T091 [P] [US5] Add Feedback model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Feedback.kt`
-- [ ] T092 [US5] Add FeedbackRepository interface in `match/match-domain/src/main/kotlin/swm/calender/match/domain/FeedbackRepository.kt`
-- [ ] T093 [US5] Add FeedbackReader and FeedbackWriter in `match/match-domain/src/main/kotlin/swm/calender/match/implement/FeedbackReader.kt`
-- [ ] T094 [US5] Add FeedbackService in `match/match-domain/src/main/kotlin/swm/calender/match/service/FeedbackService.kt`
-- [ ] T095 [US5] Add feedback request DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/FeedbackSubmitRequest.kt`
-- [ ] T096 [US5] Add feedback response DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/FeedbackResponse.kt`
-- [ ] T097 [US5] Add FeedbackController endpoints in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/FeedbackController.kt`
-- [ ] T098 [US5] Add FeedbackTable in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/FeedbackTable.kt`
-- [ ] T099 [US5] Add FeedbackExposedRepository in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/FeedbackExposedRepository.kt`
-- [ ] T100 [US5] Add feedback Flyway migration in `storage/db-core/src/main/resources/db/migration/V6__create_feedback_tables.sql`
+- [ ] T106 [P] [US5] Add Feedback model in `match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Feedback.kt`
+- [ ] T107 [US5] Add FeedbackRepository interface in `match/match-domain/src/main/kotlin/swm/calender/match/domain/FeedbackRepository.kt`
+- [ ] T108 [US5] Add FeedbackReader and FeedbackWriter in `match/match-domain/src/main/kotlin/swm/calender/match/implement/FeedbackReader.kt`
+- [ ] T109 [US5] Add FeedbackService in `match/match-domain/src/main/kotlin/swm/calender/match/service/FeedbackService.kt`
+- [ ] T110 [US5] Add feedback request DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/FeedbackSubmitRequest.kt`
+- [ ] T111 [US5] Add feedback response DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/FeedbackResponse.kt`
+- [ ] T112 [US5] Add FeedbackController endpoints in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/FeedbackController.kt`
+- [ ] T113 [US5] Add FeedbackTable in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/FeedbackTable.kt`
+- [ ] T114 [US5] Add FeedbackExposedRepository in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/FeedbackExposedRepository.kt`
+- [ ] T115 [US5] Add feedback Flyway migration in `storage/db-core/src/main/resources/db/migration/V7__create_feedback_tables.sql`
 
 **Checkpoint**: US5 feedback and test history work without exposing other teams' private data.
 
@@ -201,18 +221,18 @@ the foundational phase.
 
 ### Tests for User Story 6
 
-- [ ] T101 [P] [US6] Add service profile pivot tests in `match/match-domain/src/test/kotlin/swm/calender/match/service/ServiceProfilePivotServiceTest.kt`
-- [ ] T102 [P] [US6] Add team administration tests in `core/core-team-domain/src/test/kotlin/swm/calender/core/team/service/TeamAdministrationServiceTest.kt`
-- [ ] T103 [P] [US6] Add administration RestDocs tests in `core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/team/TeamAdministrationControllerTest.kt`
+- [ ] T116 [P] [US6] Add service profile pivot tests in `match/match-domain/src/test/kotlin/swm/calender/match/service/ServiceProfilePivotServiceTest.kt`
+- [ ] T117 [P] [US6] Add team administration tests in `core/core-team-domain/src/test/kotlin/swm/calender/core/team/service/TeamAdministrationServiceTest.kt`
+- [ ] T118 [P] [US6] Add administration RestDocs tests in `core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/team/TeamAdministrationControllerTest.kt`
 
 ### Implementation for User Story 6
 
-- [ ] T104 [US6] Add service profile active replacement behavior in `match/match-domain/src/main/kotlin/swm/calender/match/service/ServiceProfilePivotService.kt`
-- [ ] T105 [US6] Add team member removal and role-change behavior in `core/core-team-domain/src/main/kotlin/swm/calender/core/team/service/TeamAdministrationService.kt`
-- [ ] T106 [US6] Add administration request DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/request/TeamAdministrationRequest.kt`
-- [ ] T107 [US6] Add TeamAdministrationController endpoints in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/TeamAdministrationController.kt`
-- [ ] T108 [US6] Add membership history persistence support in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/team/TeamMemberHistoryTable.kt`
-- [ ] T109 [US6] Add team administration Flyway migration in `storage/db-core/src/main/resources/db/migration/V7__create_team_member_history_tables.sql`
+- [ ] T119 [US6] Add service profile active replacement behavior in `match/match-domain/src/main/kotlin/swm/calender/match/service/ServiceProfilePivotService.kt`
+- [ ] T120 [US6] Add team member removal and role-change behavior in `core/core-team-domain/src/main/kotlin/swm/calender/core/team/service/TeamAdministrationService.kt`
+- [ ] T121 [US6] Add administration request DTOs in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/request/TeamAdministrationRequest.kt`
+- [ ] T122 [US6] Add TeamAdministrationController endpoints in `core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/TeamAdministrationController.kt`
+- [ ] T123 [US6] Add membership history persistence support in `storage/db-core/src/main/kotlin/swm/calender/storage/db/core/team/TeamMemberHistoryTable.kt`
+- [ ] T124 [US6] Add team administration Flyway migration in `storage/db-core/src/main/resources/db/migration/V8__create_team_member_history_tables.sql`
 
 **Checkpoint**: US6 preserves profile and membership history while enforcing OWNER safety rules.
 
@@ -220,11 +240,11 @@ the foundational phase.
 
 **Purpose**: Validate contracts, docs, security, and performance across all selected stories.
 
-- [ ] T110 Update generated API docs index in `core/core-api/src/docs/asciidoc/index.adoc`
-- [ ] T111 Validate OpenAPI contract against implemented DTOs in `specs/001-swm-teams-mvp/contracts/openapi.yaml`
-- [ ] T112 Add quickstart validation notes in `specs/001-swm-teams-mvp/quickstart.md`
-- [ ] T113 Run full test suite with `./gradlew test` and record result in `specs/001-swm-teams-mvp/quickstart.md`
-- [ ] T114 Run ktlint with `./gradlew ktlintCheck` and record result in `specs/001-swm-teams-mvp/quickstart.md`
+- [ ] T125 Update generated API docs index in `core/core-api/src/docs/asciidoc/index.adoc`
+- [ ] T126 Validate OpenAPI contract against implemented DTOs in `specs/001-swm-teams-mvp/contracts/openapi.yaml`
+- [ ] T127 Add quickstart validation notes in `specs/001-swm-teams-mvp/quickstart.md`
+- [ ] T128 Run full test suite with `./gradlew test` and record result in `specs/001-swm-teams-mvp/quickstart.md`
+- [ ] T129 Run ktlint with `./gradlew ktlintCheck` and record result in `specs/001-swm-teams-mvp/quickstart.md`
 
 ## Dependencies And Execution Order
 
@@ -234,7 +254,8 @@ the foundational phase.
 - Foundational must complete before any user story.
 - P1 stories are US1, US2, and US3.
 - US2 and US3 both require US1 team activation and team-scope authorization.
-- US4 requires US3 campaigns.
+- US4 requires US3 campaigns and team-scope authorization. Duplicate analysis itself does not block request
+  lifecycle, but the same private-data authorization rules must be in place first.
 - US5 requires US4 assignments.
 - US6 can start after US1 and US3.
 - Final phase runs after the selected stories are complete.
@@ -242,7 +263,7 @@ the foundational phase.
 ### Story Dependency Order
 
 1. US1 Team onboarding and sub-service activation
-2. US2 Calendar availability and US3 Match campaign discovery can proceed after US1
+2. US2 Calendar availability and US3 Match campaign/candidate discovery can proceed after US1
 3. US4 request lifecycle after US3
 4. US5 feedback and test history after US4
 5. US6 service pivot and team administration after US1 and US3
@@ -268,7 +289,7 @@ the foundational phase.
 
 1. US1 delivers the common team root.
 2. US2 delivers Calendar value without Match dependency.
-3. US3 delivers Match discovery without request lifecycle dependency.
+3. US3 delivers Match discovery, private candidate ideas, and duplicate analysis without request lifecycle dependency.
 4. US4 adds request and assignment workflow.
 5. US5 adds structured feedback and test history.
 6. US6 adds lower-priority lifecycle administration.

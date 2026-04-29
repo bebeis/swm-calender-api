@@ -50,21 +50,28 @@
 ### 5. Validate Match MVP
 
 1. As OWNER, create and publish a service profile through `POST /api/v1/match/service-profiles`.
-2. Create a campaign through `POST /api/v1/match/campaigns`.
-3. Open the campaign through `PATCH /api/v1/match/campaigns/{campaignId}/status`.
-4. As another team member, search campaigns through `GET /api/v1/match/campaigns`.
-5. Send a beta request through `POST /api/v1/match/campaigns/{campaignId}/requests`.
-6. As target OWNER, accept the request through `PATCH /api/v1/match/requests/{requestId}/status`.
-7. Confirm an assignment exists through `GET /api/v1/match/assignments/{assignmentId}`.
-8. Submit feedback through `POST /api/v1/match/assignments/{assignmentId}/feedback`.
-9. Confirm team test history includes the assignment and feedback summary through `GET /api/v1/match/test-history`.
+2. Create a private candidate idea through `POST /api/v1/match/candidate-ideas`.
+3. Confirm the same team can list it through `GET /api/v1/match/candidate-ideas`.
+4. Run duplicate analysis through `POST /api/v1/match/candidate-ideas/{candidateIdeaId}/duplicate-analysis`.
+5. Confirm the result includes scanned released-service and candidate-idea counts, overlap dimensions, and redacted
+   source fields for private candidate matches.
+6. Create a campaign through `POST /api/v1/match/campaigns`.
+7. Open the campaign through `PATCH /api/v1/match/campaigns/{campaignId}/status`.
+8. As another team member, search campaigns through `GET /api/v1/match/campaigns`.
+9. Send a beta request through `POST /api/v1/match/campaigns/{campaignId}/requests`.
+10. As target OWNER, accept the request through `PATCH /api/v1/match/requests/{requestId}/status`.
+11. Confirm an assignment exists through `GET /api/v1/match/assignments/{assignmentId}`.
+12. Submit feedback through `POST /api/v1/match/assignments/{assignmentId}/feedback`.
+13. Confirm team test history includes the assignment and feedback summary through `GET /api/v1/match/test-history`.
 
 ### 6. Validate Security And Isolation
 
 1. Call protected endpoints without authentication and expect 401.
 2. Try to mutate another team's private resource and expect authorization failure.
-3. Try to parse a non-When2meet URL and expect validation failure.
-4. Try to submit feedback from a team that is not assigned and expect validation failure.
+3. Try to read another team's candidate idea directly and expect authorization failure.
+4. Confirm candidate ideas never appear in campaign search results.
+5. Try to parse a non-When2meet URL and expect validation failure.
+6. Try to submit feedback from a team that is not assigned and expect validation failure.
 
 ## Done Criteria
 

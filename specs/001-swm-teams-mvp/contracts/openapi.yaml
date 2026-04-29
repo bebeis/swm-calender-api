@@ -188,6 +188,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceProfileEnvelope'
+  /match/candidate-ideas:
+    get:
+      tags: [Match]
+      summary: List my team's private candidate ideas
+      operationId: listCandidateIdeas
+      responses:
+        '200':
+          description: Private candidate ideas for the authenticated user's team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidateIdeaListEnvelope'
+    post:
+      tags: [Match]
+      summary: Create private candidate idea
+      operationId: createCandidateIdea
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidateIdeaCreateRequest'
+      responses:
+        '200':
+          description: Candidate idea created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidateIdeaEnvelope'
+  /match/candidate-ideas/{candidateIdeaId}/duplicate-analysis:
+    post:
+      tags: [Match]
+      summary: Run duplicate analysis for a private candidate idea
+      operationId: runDuplicateAnalysis
+      parameters:
+        - $ref: '#/components/parameters/candidateIdeaId'
+      responses:
+        '200':
+          description: Duplicate analysis result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DuplicateAnalysisEnvelope'
   /match/campaigns:
     get:
       tags: [Match]
@@ -385,6 +428,13 @@ components:
       schema:
         type: integer
         format: int64
+    candidateIdeaId:
+      name: candidateIdeaId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
     requestId:
       name: requestId
       in: path
@@ -428,6 +478,24 @@ components:
     CampaignStatus:
       type: string
       enum: [DRAFT, OPEN, CLOSED]
+    CandidateIdeaVisibility:
+      type: string
+      enum: [PRIVATE]
+    DuplicateAnalysisStatus:
+      type: string
+      enum: [COMPLETED, FAILED]
+    DuplicateSourceType:
+      type: string
+      enum: [RELEASED_SERVICE, PRIVATE_CANDIDATE_IDEA]
+    DuplicateSourceDisclosure:
+      type: string
+      enum: [PUBLIC, OWN_TEAM, REDACTED]
+    SimilarityLevel:
+      type: string
+      enum: [LOW, MEDIUM, HIGH]
+    OverlapDimension:
+      type: string
+      enum: [PROBLEM, TARGET_USER, SOLUTION, FEATURE, PLATFORM, BUSINESS_MODEL]
     MatchRequestType:
       type: string
       enum: [ONE_WAY, RECIPROCAL]
@@ -675,6 +743,127 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Platform'
+    CandidateIdeaCreateRequest:
+      type: object
+      required: [title, summary, problem, targetUsers, solution, category, platforms]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 100
+        summary:
+          type: string
+          minLength: 1
+          maxLength: 300
+        problem:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        targetUsers:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        solution:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        category:
+          $ref: '#/components/schemas/CampaignCategory'
+        platforms:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Platform'
+    CandidateIdeaResponse:
+      type: object
+      required: [candidateIdeaId, teamId, title, summary, problem, targetUsers, solution, category, platforms, visibility, createdAt, updatedAt]
+      properties:
+        candidateIdeaId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        summary:
+          type: string
+        problem:
+          type: string
+        targetUsers:
+          type: string
+        solution:
+          type: string
+        category:
+          $ref: '#/components/schemas/CampaignCategory'
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Platform'
+        visibility:
+          $ref: '#/components/schemas/CandidateIdeaVisibility'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    DuplicateAnalysisMatchItem:
+      type: object
+      required: [sourceType, sourceDisclosure, similarityLevel, overlapDimensions, overlapSummary]
+      properties:
+        sourceType:
+          $ref: '#/components/schemas/DuplicateSourceType'
+        sourceDisclosure:
+          $ref: '#/components/schemas/DuplicateSourceDisclosure'
+        sourceId:
+          type: integer
+          format: int64
+          nullable: true
+        sourceTeamId:
+          type: integer
+          format: int64
+          nullable: true
+        sourceTitle:
+          type: string
+          nullable: true
+        similarityLevel:
+          $ref: '#/components/schemas/SimilarityLevel'
+        overlapDimensions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/OverlapDimension'
+        overlapSummary:
+          type: string
+    DuplicateAnalysisResponse:
+      type: object
+      required: [analysisId, candidateIdeaId, status, scannedReleasedServiceCount, scannedCandidateIdeaCount, matches, generatedAt]
+      properties:
+        analysisId:
+          type: integer
+          format: int64
+        candidateIdeaId:
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/DuplicateAnalysisStatus'
+        scannedReleasedServiceCount:
+          type: integer
+          minimum: 0
+        scannedCandidateIdeaCount:
+          type: integer
+          minimum: 0
+        matches:
+          type: array
+          items:
+            $ref: '#/components/schemas/DuplicateAnalysisMatchItem'
+        failureReason:
+          type: string
+          nullable: true
+        generatedAt:
+          type: string
+          format: date-time
     CampaignCreateRequest:
       type: object
       required: [title, description, targetTeamCount, deadline, reciprocalAvailable]
@@ -967,6 +1156,33 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/ServiceProfileResponse'
+    CandidateIdeaEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/CandidateIdeaResponse'
+    CandidateIdeaListEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CandidateIdeaResponse'
+    DuplicateAnalysisEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/EnvelopeBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DuplicateAnalysisResponse'
     CampaignEnvelope:
       allOf:
         - $ref: '#/components/schemas/EnvelopeBase'
