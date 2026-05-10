@@ -13,6 +13,7 @@ enum class TeamErrorMessage(
     TEAM_MEMBER_REQUIRED("Only an active team member can perform this action."),
     TEAM_MEMBER_NOT_FOUND("Team member not found."),
     TEAM_MEMBER_INACTIVE("Inactive team members cannot be changed."),
+    TEAM_MEMBER_HISTORY_ROLE_REQUIRED("Team member history role state is invalid."),
     TEAM_ALREADY_EXISTS_FOR_USER("User already belongs to an active team."),
     TEAM_NOT_FOUND("Team not found."),
     INVALID_INVITE_CODE("Invite code is invalid."),

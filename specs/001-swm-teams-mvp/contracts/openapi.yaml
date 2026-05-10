@@ -63,6 +63,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TeamMemberListEnvelope'
+  /teams/{teamId}/members/{memberId}:
+    delete:
+      tags: [Teams]
+      summary: Remove team member
+      operationId: removeTeamMember
+      parameters:
+        - $ref: '#/components/parameters/teamId'
+        - $ref: '#/components/parameters/memberId'
+      responses:
+        '200':
+          description: Team member removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMemberResponseEnvelope'
   /teams/{teamId}/members/{memberId}/role:
     patch:
       tags: [Teams]
@@ -173,7 +188,7 @@ paths:
   /match/service-profiles:
     post:
       tags: [Match]
-      summary: Create service profile
+      summary: Create or replace active service profile
       operationId: createServiceProfile
       requestBody:
         required: true

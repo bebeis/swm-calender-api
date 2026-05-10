@@ -20,6 +20,7 @@ import swm.calender.match.domain.model.DuplicateAnalysis
 import swm.calender.match.domain.model.DuplicateAnalysisMatch
 import swm.calender.storage.db.core.RepositoryTestSupport
 import swm.calender.storage.db.core.team.SubServiceActivationTable
+import swm.calender.storage.db.core.team.TeamMemberHistoryTable
 import swm.calender.storage.db.core.team.TeamMemberTable
 import swm.calender.storage.db.core.team.TeamTable
 import java.time.Instant
@@ -121,6 +122,7 @@ class CandidateIdeaExposedRepositoryIT : RepositoryTestSupport() {
             ServiceProfileScreenshotTable.deleteAll()
             ServiceProfilePlatformTable.deleteAll()
             ServiceProfileTable.deleteAll()
+            TeamMemberHistoryTable.deleteAll()
             TeamMemberTable.deleteAll()
             SubServiceActivationTable.deleteAll()
             TeamTable.deleteAll()

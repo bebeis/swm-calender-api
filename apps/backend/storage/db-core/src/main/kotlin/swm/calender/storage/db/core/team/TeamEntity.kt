@@ -7,6 +7,8 @@ import swm.calender.core.enums.TeamMemberRole
 import swm.calender.core.team.domain.model.SubServiceActivation
 import swm.calender.core.team.domain.model.Team
 import swm.calender.core.team.domain.model.TeamMember
+import swm.calender.core.team.domain.model.TeamMemberHistory
+import swm.calender.core.team.domain.model.TeamMemberHistoryAction
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -66,6 +68,30 @@ internal data class TeamMemberEntity(
             role = role,
             joinedAt = joinedAt.toInstant(),
             removedAt = removedAt?.toInstant(),
+        )
+    }
+}
+
+internal data class TeamMemberHistoryEntity(
+    val id: Long,
+    val teamId: Long,
+    val memberId: Long,
+    val actorUserId: Long,
+    val action: TeamMemberHistoryAction,
+    val previousRole: TeamMemberRole,
+    val changedRole: TeamMemberRole?,
+    val occurredAt: LocalDateTime,
+) {
+    fun toDomain(): TeamMemberHistory {
+        return TeamMemberHistory(
+            id = id,
+            teamId = TeamId(teamId),
+            memberId = TeamMemberId(memberId),
+            actorUserId = UserId(actorUserId),
+            action = action,
+            previousRole = previousRole,
+            changedRole = changedRole,
+            occurredAt = occurredAt.toInstant(),
         )
     }
 }

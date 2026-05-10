@@ -6,6 +6,8 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import swm.calender.core.common.id.TeamId
+import swm.calender.core.common.id.TeamMemberId
 import swm.calender.core.common.id.UserId
 import swm.calender.core.enums.SubService
 import swm.calender.core.enums.TeamMemberRole
@@ -159,4 +161,87 @@ class TeamTest :
             // then
             exception.errorMessage shouldBe TeamErrorMessage.TEAM_OWNER_REQUIRED
         }
+
+        test("owner can remove an active member while preserving membership history state") {
+            // given
+            val removedAt = Instant.parse("2026-05-10T05:00:00Z")
+            val team = persistedTeamWithOwnerAndMember()
+
+            // when
+            val updatedTeam = team.removeMember(
+                memberId = TeamMemberId(2L),
+                actorUserId = UserId(1L),
+                occurredAt = removedAt,
+            )
+
+            // then
+            updatedTeam.getMember(TeamMemberId(2L)).isActive().shouldBeFalse()
+            updatedTeam.getMember(TeamMemberId(2L)).removedAt shouldBe removedAt
+            updatedTeam.members.single { it.isActiveOwner() }.userId shouldBe UserId(1L)
+            updatedTeam.updatedAt shouldBe removedAt
+        }
+
+        test("removing the last active owner is rejected") {
+            // given
+            val team = persistedTeamWithOwnerAndMember()
+
+            // when
+            val exception = shouldThrow<TeamDomainException> {
+                team.removeMember(
+                    memberId = TeamMemberId(1L),
+                    actorUserId = UserId(1L),
+                    occurredAt = Instant.parse("2026-05-10T05:00:00Z"),
+                )
+            }
+
+            // then
+            exception.errorMessage shouldBe TeamErrorMessage.TEAM_ACTIVE_OWNER_REQUIRED
+        }
+
+        test("changing a member role to the same value is treated as an existing member update") {
+            // given
+            val changedAt = Instant.parse("2026-05-10T05:00:00Z")
+            val team = persistedTeamWithOwnerAndMember()
+
+            // when
+            val updatedTeam = team.changeMemberRole(
+                memberId = TeamMemberId(2L),
+                role = TeamMemberRole.MEMBER,
+                actorUserId = UserId(1L),
+                occurredAt = changedAt,
+            )
+
+            // then
+            updatedTeam.getMember(TeamMemberId(2L)).role shouldBe TeamMemberRole.MEMBER
+            updatedTeam.updatedAt shouldBe changedAt
+        }
     })
+
+private fun persistedTeamWithOwnerAndMember(): Team {
+    val createdAt = Instant.parse("2026-05-10T00:00:00Z")
+    val teamId = TeamId(1L)
+    return Team.create(
+        name = "Team Rocket",
+        description = null,
+        inviteCode = "INVITE123",
+        ownerUserId = UserId(1L),
+        ownerName = "Owner",
+        ownerEmail = "owner@swm.app",
+        createdAt = createdAt,
+    ).addMember(
+        userId = UserId(2L),
+        name = "Member",
+        email = "member@swm.app",
+        joinedAt = createdAt.plusSeconds(60),
+    ).let { team ->
+        team.copy(
+            id = teamId,
+            members = team.members.mapIndexed { index, member ->
+                member.copy(
+                    id = TeamMemberId(index + 1L),
+                    teamId = teamId,
+                )
+            },
+        )
+    }
+}

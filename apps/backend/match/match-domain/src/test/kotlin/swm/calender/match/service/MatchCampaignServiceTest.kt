@@ -36,63 +36,57 @@ class MatchCampaignServiceTest :
         lateinit var teamReader: TeamReader
         lateinit var matchCampaignReader: MatchCampaignReader
         lateinit var matchCampaignWriter: MatchCampaignWriter
+        lateinit var serviceProfilePivotService: ServiceProfilePivotService
         lateinit var matchCampaignService: MatchCampaignService
 
         beforeTest {
             teamReader = mockk()
             matchCampaignReader = mockk()
             matchCampaignWriter = mockk()
+            serviceProfilePivotService = mockk()
             matchCampaignService = MatchCampaignService(
                 teamReader = teamReader,
                 matchCampaignReader = matchCampaignReader,
                 matchCampaignWriter = matchCampaignWriter,
+                serviceProfilePivotService = serviceProfilePivotService,
                 clock = fixedClock,
             )
         }
 
-        test("createServiceProfile archives the current active profile and saves a new active version") {
+        test("createServiceProfile delegates active replacement to the pivot service") {
             // given
-            val teamId = TeamId(1L)
             val ownerUserId = UserId(10L)
-            val existingProfile = activeProfile(
-                id = 5L,
-                teamId = teamId,
-                version = 1,
-                createdAt = fixedInstant.minusSeconds(3600),
+            val request = ServiceProfileCreateRequest(
+                actorUserId = ownerUserId,
+                name = "New Service",
+                summary = "New summary",
+                description = "New description",
+                category = CampaignCategory.PRODUCTIVITY,
+                platforms = listOf(Platform.WEB),
+                screenshotUrls = emptyList(),
+                demoUrl = null,
+                isPublic = true,
             )
-            val savedProfiles = mutableListOf<ServiceProfile>()
-            every { teamReader.getActiveByUserId(ownerUserId) } returns matchEnabledTeam(teamId, ownerUserId)
-            every { matchCampaignReader.getActiveServiceProfile(teamId) } returns existingProfile
-            every { matchCampaignReader.getNextServiceProfileVersion(teamId) } returns 2
-            every { matchCampaignWriter.saveServiceProfile(any()) } answers {
-                firstArg<ServiceProfile>().let {
-                    savedProfiles += it
-                    if (it.id == null) it.copy(id = 6L) else it
-                }
-            }
-
-            // when
-            val response = matchCampaignService.createServiceProfile(
-                ServiceProfileCreateRequest(
-                    actorUserId = ownerUserId,
+            every { serviceProfilePivotService.replaceActiveProfile(request) } returns
+                swm.calender.match.service.response.ServiceProfileResponse(
+                    serviceProfileId = 6L,
+                    teamId = TeamId(1L),
+                    active = true,
+                    isPublic = true,
                     name = "New Service",
                     summary = "New summary",
-                    description = "New description",
                     category = CampaignCategory.PRODUCTIVITY,
                     platforms = listOf(Platform.WEB),
-                    screenshotUrls = emptyList(),
-                    demoUrl = null,
-                    isPublic = true,
-                ),
-            )
+                )
+
+            // when
+            val response = matchCampaignService.createServiceProfile(request)
 
             // then
             response.serviceProfileId shouldBe 6L
             response.active shouldBe true
             response.name shouldBe "New Service"
-            savedProfiles[0].active shouldBe false
-            savedProfiles[1].version shouldBe 2
-            verify(exactly = 2) { matchCampaignWriter.saveServiceProfile(any()) }
+            verify(exactly = 1) { serviceProfilePivotService.replaceActiveProfile(request) }
         }
 
         test("createCampaign opens a campaign for the active service profile") {

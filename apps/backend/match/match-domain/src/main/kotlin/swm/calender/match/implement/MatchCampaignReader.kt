@@ -21,6 +21,10 @@ class MatchCampaignReader(
             ?: throw MatchDomainException(MatchErrorMessage.SERVICE_PROFILE_NOT_FOUND)
     }
 
+    fun findActiveServiceProfile(teamId: TeamId): ServiceProfile? {
+        return matchCampaignRepository.findActiveServiceProfileByTeamId(teamId)
+    }
+
     fun getNextServiceProfileVersion(teamId: TeamId): Int {
         return matchCampaignRepository.countServiceProfilesByTeamId(teamId) + 1
     }

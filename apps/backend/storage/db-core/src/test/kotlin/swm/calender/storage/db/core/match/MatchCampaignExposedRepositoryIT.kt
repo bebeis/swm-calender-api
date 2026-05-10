@@ -17,6 +17,7 @@ import swm.calender.match.domain.model.BetaCampaign
 import swm.calender.match.domain.model.ServiceProfile
 import swm.calender.storage.db.core.RepositoryTestSupport
 import swm.calender.storage.db.core.team.SubServiceActivationTable
+import swm.calender.storage.db.core.team.TeamMemberHistoryTable
 import swm.calender.storage.db.core.team.TeamMemberTable
 import swm.calender.storage.db.core.team.TeamTable
 import java.time.Instant
@@ -144,6 +145,7 @@ class MatchCampaignExposedRepositoryIT : RepositoryTestSupport() {
             ServiceProfileScreenshotTable.deleteAll()
             ServiceProfilePlatformTable.deleteAll()
             ServiceProfileTable.deleteAll()
+            TeamMemberHistoryTable.deleteAll()
             TeamMemberTable.deleteAll()
             SubServiceActivationTable.deleteAll()
             TeamTable.deleteAll()

@@ -9,7 +9,6 @@ import swm.calender.core.team.exception.TeamErrorMessage
 import swm.calender.core.team.implement.TeamReader
 import swm.calender.match.domain.CampaignSearchFilter
 import swm.calender.match.domain.model.BetaCampaign
-import swm.calender.match.domain.model.ServiceProfile
 import swm.calender.match.exception.MatchDomainException
 import swm.calender.match.exception.MatchErrorMessage
 import swm.calender.match.implement.MatchCampaignReader
@@ -29,37 +28,11 @@ class MatchCampaignService(
     private val teamReader: TeamReader,
     private val matchCampaignReader: MatchCampaignReader,
     private val matchCampaignWriter: MatchCampaignWriter,
+    private val serviceProfilePivotService: ServiceProfilePivotService,
     private val clock: Clock = Clock.systemUTC(),
 ) {
-    @Transactional
     fun createServiceProfile(request: ServiceProfileCreateRequest): ServiceProfileResponse {
-        val team = getMatchEnabledTeam(request.actorUserId)
-        requireOwner(team, request.actorUserId)
-        val teamId = team.requireId()
-        val now = now()
-        val existingActiveProfile = runCatching {
-            matchCampaignReader.getActiveServiceProfile(teamId)
-        }.getOrNull()
-
-        existingActiveProfile?.let { matchCampaignWriter.saveServiceProfile(it.archive(now)) }
-
-        val savedProfile = matchCampaignWriter.saveServiceProfile(
-            ServiceProfile.createActive(
-                teamId = teamId,
-                nextVersion = matchCampaignReader.getNextServiceProfileVersion(teamId),
-                isPublic = request.isPublic,
-                name = request.name,
-                summary = request.summary,
-                description = request.description,
-                category = request.category,
-                platforms = request.platforms,
-                screenshotUrls = request.screenshotUrls,
-                demoUrl = request.demoUrl,
-                createdAt = now,
-            ),
-        )
-
-        return ServiceProfileResponse.from(savedProfile)
+        return serviceProfilePivotService.replaceActiveProfile(request)
     }
 
     @Transactional

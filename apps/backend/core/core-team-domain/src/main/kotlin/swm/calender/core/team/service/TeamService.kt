@@ -3,9 +3,7 @@ package swm.calender.core.team.service
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import swm.calender.core.common.id.TeamId
-import swm.calender.core.common.id.TeamMemberId
 import swm.calender.core.common.id.UserId
-import swm.calender.core.enums.TeamMemberRole
 import swm.calender.core.team.domain.model.Team
 import swm.calender.core.team.implement.TeamReader
 import swm.calender.core.team.implement.TeamWriter
@@ -80,28 +78,6 @@ class TeamService(
         return team.members
             .filter { it.isActive() }
             .map(TeamMemberResponse::from)
-    }
-
-    @Transactional
-    fun changeMemberRole(
-        teamId: TeamId,
-        memberId: TeamMemberId,
-        role: TeamMemberRole,
-        actorUserId: UserId,
-    ): TeamMemberResponse {
-        val team = teamReader.getById(teamId)
-            .changeMemberRole(
-                memberId = memberId,
-                role = role,
-                actorUserId = actorUserId,
-                occurredAt = now(),
-            )
-
-        return TeamMemberResponse.from(
-            teamWriter.save(team)
-                .members
-                .single { it.id == memberId },
-        )
     }
 
     private fun now(): Instant = Instant.now(clock)

@@ -221,18 +221,18 @@ public campaign discovery.
 
 ### Tests for User Story 6
 
-- [ ] T116 [P] [US6] Add service profile pivot tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/ServiceProfilePivotServiceTest.kt`
-- [ ] T117 [P] [US6] Add team administration tests in `apps/backend/core/core-team-domain/src/test/kotlin/swm/calender/core/team/service/TeamAdministrationServiceTest.kt`
-- [ ] T118 [P] [US6] Add administration RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/team/TeamAdministrationControllerTest.kt`
+- [X] T116 [P] [US6] Add service profile pivot tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/ServiceProfilePivotServiceTest.kt`
+- [X] T117 [P] [US6] Add team administration tests in `apps/backend/core/core-team-domain/src/test/kotlin/swm/calender/core/team/service/TeamAdministrationServiceTest.kt`
+- [X] T118 [P] [US6] Add administration RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/team/TeamAdministrationControllerTest.kt`
 
 ### Implementation for User Story 6
 
-- [ ] T119 [US6] Add service profile active replacement behavior in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/ServiceProfilePivotService.kt`
-- [ ] T120 [US6] Add team member removal and role-change behavior in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/service/TeamAdministrationService.kt`
-- [ ] T121 [US6] Add administration request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/request/TeamAdministrationRequest.kt`
-- [ ] T122 [US6] Add TeamAdministrationController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/TeamAdministrationController.kt`
-- [ ] T123 [US6] Add membership history persistence support in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/team/TeamMemberHistoryTable.kt`
-- [ ] T124 [US6] Add team administration Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V8__create_team_member_history_tables.sql`
+- [X] T119 [US6] Add service profile active replacement behavior in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/ServiceProfilePivotService.kt`
+- [X] T120 [US6] Add team member removal and role-change behavior in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/service/TeamAdministrationService.kt`
+- [X] T121 [US6] Add administration request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/request/TeamMemberRoleChangeRequest.kt`
+- [X] T122 [US6] Add TeamAdministrationController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/TeamAdministrationController.kt`
+- [X] T123 [US6] Add membership history persistence support in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/team/TeamMemberHistoryTable.kt`
+- [X] T124 [US6] Add team administration Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V8__create_team_member_history_tables.sql`
 
 **Checkpoint**: US6 preserves profile and membership history while enforcing OWNER safety rules.
 

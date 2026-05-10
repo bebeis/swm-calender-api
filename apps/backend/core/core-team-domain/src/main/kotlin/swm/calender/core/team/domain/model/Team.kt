@@ -73,14 +73,16 @@ data class Team(
     ): Team {
         requireOwner(actorUserId)
 
+        var targetFound = false
         val changedMembers = members.map { member ->
             if (member.id == memberId) {
+                targetFound = true
                 member.changeRole(role)
             } else {
                 member
             }
         }
-        if (changedMembers == members) {
+        if (!targetFound) {
             throw TeamDomainException(TeamErrorMessage.TEAM_MEMBER_NOT_FOUND)
         }
         validateOwners(changedMembers)
@@ -89,6 +91,38 @@ data class Team(
             members = changedMembers,
             updatedAt = occurredAt,
         )
+    }
+
+    fun removeMember(
+        memberId: TeamMemberId,
+        actorUserId: UserId,
+        occurredAt: Instant,
+    ): Team {
+        requireOwner(actorUserId)
+
+        var targetFound = false
+        val changedMembers = members.map { member ->
+            if (member.id == memberId) {
+                targetFound = true
+                member.remove(occurredAt)
+            } else {
+                member
+            }
+        }
+        if (!targetFound) {
+            throw TeamDomainException(TeamErrorMessage.TEAM_MEMBER_NOT_FOUND)
+        }
+        validateOwners(changedMembers)
+
+        return copy(
+            members = changedMembers,
+            updatedAt = occurredAt,
+        )
+    }
+
+    fun getMember(memberId: TeamMemberId): TeamMember {
+        return members.singleOrNull { it.id == memberId }
+            ?: throw TeamDomainException(TeamErrorMessage.TEAM_MEMBER_NOT_FOUND)
     }
 
     fun requireMember(userId: UserId) {

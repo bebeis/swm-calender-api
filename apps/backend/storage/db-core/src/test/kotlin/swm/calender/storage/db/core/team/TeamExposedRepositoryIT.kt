@@ -14,6 +14,8 @@ import swm.calender.core.common.id.UserId
 import swm.calender.core.enums.SubService
 import swm.calender.core.enums.TeamMemberRole
 import swm.calender.core.team.domain.model.Team
+import swm.calender.core.team.domain.model.TeamMemberHistory
+import swm.calender.core.team.domain.model.TeamMemberHistoryAction
 import swm.calender.core.team.exception.TeamDomainException
 import swm.calender.core.team.exception.TeamErrorMessage
 import swm.calender.storage.db.core.RepositoryTestSupport
@@ -38,6 +40,7 @@ class TeamExposedRepositoryIT : RepositoryTestSupport() {
                 MentoringScheduleTable.deleteAll()
                 When2meetLinkTable.deleteAll()
                 TeamCalendarTable.deleteAll()
+                TeamMemberHistoryTable.deleteAll()
                 TeamMemberTable.deleteAll()
                 SubServiceActivationTable.deleteAll()
                 TeamTable.deleteAll()
@@ -201,6 +204,53 @@ class TeamExposedRepositoryIT : RepositoryTestSupport() {
 
             // then
             persistedTeam.members.last().role shouldBe TeamMemberRole.OWNER
+        }
+
+        test("save persists member removal and team member history") {
+            // given
+            val savedTeam = teamExposedRepository.save(
+                Team.create(
+                    ownerUserId = UserId(501L),
+                    ownerName = "Owner Hotel",
+                    ownerEmail = "owner-hotel@swm.app",
+                    name = "Team Hotel",
+                    description = null,
+                    inviteCode = "HOTEL-CODE",
+                    createdAt = createdAt,
+                ).addMember(
+                    userId = UserId(502L),
+                    name = "Member Hotel",
+                    email = "member-hotel@swm.app",
+                    joinedAt = createdAt.plusSeconds(60),
+                ),
+            )
+            val memberId = requireNotNull(savedTeam.members.last().id)
+            val removedAt = createdAt.plusSeconds(120)
+
+            // when
+            val removedTeam = savedTeam.removeMember(
+                memberId = memberId,
+                actorUserId = UserId(501L),
+                occurredAt = removedAt,
+            )
+            val persistedTeam = teamExposedRepository.save(removedTeam)
+            val savedHistory = teamExposedRepository.saveMemberHistory(
+                TeamMemberHistory.memberRemoved(
+                    teamId = persistedTeam.requireId(),
+                    memberId = memberId,
+                    actorUserId = UserId(501L),
+                    previousRole = TeamMemberRole.MEMBER,
+                    occurredAt = removedAt,
+                ),
+            )
+            val histories = teamExposedRepository.findMemberHistoriesByTeamId(persistedTeam.requireId())
+
+            // then
+            persistedTeam.members.last().removedAt shouldBe removedAt
+            savedHistory.id shouldBe histories.single().id
+            histories.single().action shouldBe TeamMemberHistoryAction.MEMBER_REMOVED
+            histories.single().previousRole shouldBe TeamMemberRole.MEMBER
+            histories.single().changedRole.shouldBeNull()
         }
 
         test("save toggles calendar and match independently") {

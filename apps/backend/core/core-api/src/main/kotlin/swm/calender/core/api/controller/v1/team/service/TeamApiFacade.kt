@@ -5,7 +5,6 @@ import swm.calender.core.api.controller.v1.team.request.TeamCreateRequest
 import swm.calender.core.api.controller.v1.team.request.TeamJoinRequest
 import swm.calender.core.api.security.AuthenticatedUser
 import swm.calender.core.common.id.TeamId
-import swm.calender.core.common.id.TeamMemberId
 import swm.calender.core.enums.SubService
 import swm.calender.core.enums.TeamMemberRole
 import swm.calender.core.support.error.ErrorType
@@ -62,22 +61,6 @@ class TeamApiFacade(
             teamId = teamId,
             actorUserId = user.userId,
         ).map(TeamMemberSnapshot::from)
-    }
-
-    fun changeMemberRole(
-        user: AuthenticatedUser,
-        teamId: TeamId,
-        memberId: TeamMemberId,
-        role: TeamMemberRole,
-    ): TeamMemberSnapshot {
-        return TeamMemberSnapshot.from(
-            teamService.changeMemberRole(
-                teamId = teamId,
-                memberId = memberId,
-                role = role,
-                actorUserId = user.userId,
-            ),
-        )
     }
 
     fun updateSubServiceActivation(

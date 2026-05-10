@@ -26,9 +26,7 @@ class TeamRequestValidator(
     }
 
     fun validateRoleChange(request: TeamMemberRoleChangeRequest) {
-        if (request.role == null) {
-            throw TeamApiException.badRequest("role is required.")
-        }
+        validateBean(request)
     }
 
     fun validateSubServiceActivation(request: SubServiceActivationRequest) {

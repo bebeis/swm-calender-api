@@ -141,6 +141,7 @@ class CalendarController(
             TeamErrorMessage.TEAM_MEMBER_NAME_REQUIRED,
             TeamErrorMessage.TEAM_MEMBER_EMAIL_REQUIRED,
             TeamErrorMessage.TEAM_MEMBER_INACTIVE,
+            TeamErrorMessage.TEAM_MEMBER_HISTORY_ROLE_REQUIRED,
             TeamErrorMessage.TEAM_NOT_PERSISTED,
             -> ErrorType.VALIDATION_ERROR
         }

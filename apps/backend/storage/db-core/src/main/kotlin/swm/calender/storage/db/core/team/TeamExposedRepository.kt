@@ -1,6 +1,7 @@
 package swm.calender.storage.db.core.team
 
 import org.jetbrains.exposed.v1.core.JoinType
+import org.jetbrains.exposed.v1.core.SortOrder
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.insert
@@ -12,6 +13,7 @@ import swm.calender.core.common.id.UserId
 import swm.calender.core.team.domain.TeamRepository
 import swm.calender.core.team.domain.model.Team
 import swm.calender.core.team.domain.model.TeamMember
+import swm.calender.core.team.domain.model.TeamMemberHistory
 import swm.calender.core.team.exception.TeamDomainException
 import swm.calender.core.team.exception.TeamErrorMessage
 
@@ -25,8 +27,38 @@ class TeamExposedRepository : TeamRepository {
         }
     }
 
+    override fun saveMemberHistory(history: TeamMemberHistory): TeamMemberHistory {
+        val savedHistoryId = TeamMemberHistoryTable.insert {
+            it[TeamMemberHistoryTable.teamId] = history.teamId.value
+            it[memberId] = history.memberId.value
+            it[actorUserId] = history.actorUserId.value
+            it[action] = history.action
+            it[previousRole] = history.previousRole
+            it[changedRole] = history.changedRole
+            it[occurredAt] = history.occurredAt.toLocalDateTime()
+        }[TeamMemberHistoryTable.id]
+
+        return TeamMemberHistoryTable
+            .selectAll()
+            .where { TeamMemberHistoryTable.id eq savedHistoryId }
+            .single()
+            .toTeamMemberHistoryEntity()
+            .toDomain()
+    }
+
     override fun findById(teamId: TeamId): Team? {
         return findByIdInternal(teamId)
+    }
+
+    override fun findMemberHistoriesByTeamId(teamId: TeamId): List<TeamMemberHistory> {
+        return TeamMemberHistoryTable
+            .selectAll()
+            .where { TeamMemberHistoryTable.teamId eq teamId.value }
+            .orderBy(
+                TeamMemberHistoryTable.occurredAt to SortOrder.ASC,
+                TeamMemberHistoryTable.id to SortOrder.ASC,
+            )
+            .map { it.toTeamMemberHistoryEntity().toDomain() }
     }
 
     override fun findByInviteCode(inviteCode: String): Team? {

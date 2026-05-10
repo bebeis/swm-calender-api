@@ -19,6 +19,7 @@ import swm.calender.core.enums.CalendarStatus
 import swm.calender.core.enums.When2meetLinkStatus
 import swm.calender.storage.db.core.RepositoryTestSupport
 import swm.calender.storage.db.core.team.SubServiceActivationTable
+import swm.calender.storage.db.core.team.TeamMemberHistoryTable
 import swm.calender.storage.db.core.team.TeamMemberTable
 import swm.calender.storage.db.core.team.TeamTable
 import java.time.Instant
@@ -39,6 +40,7 @@ class CalendarExposedRepositoryIT : RepositoryTestSupport() {
                 MentoringScheduleTable.deleteAll()
                 When2meetLinkTable.deleteAll()
                 TeamCalendarTable.deleteAll()
+                TeamMemberHistoryTable.deleteAll()
                 TeamMemberTable.deleteAll()
                 SubServiceActivationTable.deleteAll()
                 TeamTable.deleteAll()

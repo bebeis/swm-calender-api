@@ -32,12 +32,10 @@ import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
 import swm.calender.core.api.controller.v1.team.request.SubServiceActivationRequest
 import swm.calender.core.api.controller.v1.team.request.TeamCreateRequest
 import swm.calender.core.api.controller.v1.team.request.TeamJoinRequest
-import swm.calender.core.api.controller.v1.team.request.TeamMemberRoleChangeRequest
 import swm.calender.core.api.controller.v1.team.service.TeamApiFacade
 import swm.calender.core.api.controller.v1.team.service.TeamRequestValidator
 import swm.calender.core.api.security.AuthenticatedUser
 import swm.calender.core.common.id.TeamId
-import swm.calender.core.common.id.TeamMemberId
 import swm.calender.core.common.id.UserId
 import swm.calender.core.enums.SubService
 import swm.calender.core.enums.TeamMemberRole
@@ -194,22 +192,8 @@ class TeamControllerTest : FunSpec() {
                 )
         }
 
-        test("owner can change a member role and toggle sub-services independently") {
+        test("owner can toggle sub-services independently") {
             // given
-            every {
-                teamService.changeMemberRole(
-                    teamId = TeamId(1L),
-                    memberId = TeamMemberId(2L),
-                    role = TeamMemberRole.OWNER,
-                    actorUserId = UserId(1L),
-                )
-            } returns TeamServiceMemberResponse(
-                memberId = 2L,
-                userId = 2L,
-                name = "Member",
-                email = "member@swm.app",
-                role = TeamMemberRole.OWNER,
-            )
             every {
                 teamService.changeSubServiceActivation(
                     TeamSubServiceActivationRequest(
@@ -226,37 +210,6 @@ class TeamControllerTest : FunSpec() {
             )
 
             // when & then
-            mockMvc.perform(
-                patch("/api/v1/teams/{teamId}/members/{memberId}/role", 1L, 2L)
-                    .principal(authenticatedUser(1L, "owner@swm.app", "Owner"))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(
-                        objectMapper.writeValueAsString(
-                            TeamMemberRoleChangeRequest(role = TeamMemberRole.OWNER),
-                        ),
-                    ),
-            )
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$.data.memberId").value(2L))
-                .andExpect(jsonPath("$.data.role").value("OWNER"))
-                .andDo(
-                    document(
-                        "teams-member-role-change",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                            parameterWithName("teamId").description("Team id"),
-                            parameterWithName("memberId").description("Team member id"),
-                        ),
-                        requestFields(
-                            fieldWithPath("role").type(JsonFieldType.STRING).description("Target team role"),
-                        ),
-                        responseFields(
-                            memberResponseFields(),
-                        ),
-                    ),
-                )
-
             mockMvc.perform(
                 patch("/api/v1/teams/{teamId}/sub-services/{subService}", 1L, "calendar")
                     .principal(authenticatedUser(1L, "owner@swm.app", "Owner"))
@@ -343,16 +296,6 @@ class TeamControllerTest : FunSpec() {
         fieldWithPath("data.inviteCode").type(JsonFieldType.STRING).description("Invite code"),
         fieldWithPath("data.calendarEnabled").type(JsonFieldType.BOOLEAN).description("Calendar activation status"),
         fieldWithPath("data.matchEnabled").type(JsonFieldType.BOOLEAN).description("Match activation status"),
-        fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
-    )
-
-    private fun memberResponseFields() = listOf(
-        fieldWithPath("result").type(JsonFieldType.STRING).description("API result"),
-        fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("Team member id"),
-        fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("User id"),
-        fieldWithPath("data.name").type(JsonFieldType.STRING).description("Member name"),
-        fieldWithPath("data.email").type(JsonFieldType.STRING).description("Member email"),
-        fieldWithPath("data.role").type(JsonFieldType.STRING).description("Updated team role"),
         fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
     )
 }
