@@ -33,7 +33,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 | --- | --- | --- | --- |
 | Harness orchestrator | Classify the request, choose project skills, preserve handoffs, and select validation commands. | `.agents/skills/swm-codex-harness/SKILL.md` | Optional `_workspace/00_input/request-summary.md` and `_workspace/final/result-summary.md` |
 | Domain/API engineer | Implement API, DTO, domain, service, implement-layer, and module-boundary changes. | `.agents/skills/swm-teams-architecture/SKILL.md`, `.codex/agents/swm-domain-feature-engineer.toml` | Source and test files in owned modules |
-| Storage engineer | Implement Exposed tables, repositories, queries, Flyway migrations, and repository tests. | `.agents/skills/swm-teams-exposed-storage/SKILL.md`, `.codex/agents/swm-exposed-storage-engineer.toml` | `storage/db-core/**` and migrations |
+| Storage engineer | Implement Exposed tables, repositories, queries, Flyway migrations, and repository tests. | `.agents/skills/swm-teams-exposed-storage/SKILL.md`, `.codex/agents/swm-exposed-storage-engineer.toml` | `apps/backend/storage/db-core/**` and migrations |
 | Test engineer | Add or update Kotest, mockk, RestDocs, and repository tests. | `.agents/skills/swm-teams-testing/SKILL.md`, `.codex/agents/swm-kotest-test-engineer.toml` | `**/src/test/**` and API docs tests |
 | AGENTS compliance reviewer | Review the diff against `AGENTS.md` before final verification. | `.agents/skills/swm-agents-compliance/SKILL.md`, `.codex/agents/swm-agents-compliance-reviewer.toml` | Optional `_workspace/03_review/agents-compliance.md` |
 | Verification runner | Run harness validation and relevant Gradle commands. | `scripts/run_codex_harness.py` | Terminal output summarized in final response |

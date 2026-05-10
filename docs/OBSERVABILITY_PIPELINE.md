@@ -36,9 +36,9 @@ Application
 - 애플리케이션은 OTLP metrics export를 사용하지 않습니다.
 
 관련 파일:
-- [support/monitoring/build.gradle.kts](/Users/luna/Desktop_nonsync/project/swm-calender/support/monitoring/build.gradle.kts)
-- [support/monitoring/src/main/resources/monitoring.yml](/Users/luna/Desktop_nonsync/project/swm-calender/support/monitoring/src/main/resources/monitoring.yml)
-- [core/core-api/src/main/resources/application.yml](/Users/luna/Desktop_nonsync/project/swm-calender/core/core-api/src/main/resources/application.yml)
+- [support/monitoring/build.gradle.kts](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/monitoring/build.gradle.kts)
+- [support/monitoring/src/main/resources/monitoring.yml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/monitoring/src/main/resources/monitoring.yml)
+- [apps/backend/core/core-api/src/main/resources/application.yml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/core/core-api/src/main/resources/application.yml)
 
 ### 2. Traces
 
@@ -47,8 +47,8 @@ Application
 - 기본 transport는 `http/protobuf`입니다.
 
 관련 파일:
-- [support/logging/build.gradle.kts](/Users/luna/Desktop_nonsync/project/swm-calender/support/logging/build.gradle.kts)
-- [support/logging/src/main/resources/logging.yml](/Users/luna/Desktop_nonsync/project/swm-calender/support/logging/src/main/resources/logging.yml)
+- [support/logging/build.gradle.kts](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/logging/build.gradle.kts)
+- [support/logging/src/main/resources/logging.yml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/logging/src/main/resources/logging.yml)
 
 ### 3. Logs
 
@@ -57,8 +57,8 @@ Application
 - `traceId`, `spanId`는 MDC에 들어가므로 로그와 trace를 Grafana에서 연결할 수 있습니다.
 
 관련 파일:
-- [support/logging/src/main/resources/logback/logback-dev.xml](/Users/luna/Desktop_nonsync/project/swm-calender/support/logging/src/main/resources/logback/logback-dev.xml)
-- [support/logging/src/main/resources/logback/logback-prod.xml](/Users/luna/Desktop_nonsync/project/swm-calender/support/logging/src/main/resources/logback/logback-prod.xml)
+- [support/logging/src/main/resources/logback/logback-dev.xml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/logging/src/main/resources/logback/logback-dev.xml)
+- [support/logging/src/main/resources/logback/logback-prod.xml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/logging/src/main/resources/logback/logback-prod.xml)
 
 ### 4. Errors
 
@@ -66,8 +66,8 @@ Application
 - 실제 전송 여부는 `SLACK_ERROR_WEBHOOK_URL` 설정에 달려 있습니다.
 
 관련 파일:
-- [support/logging/src/main/resources/logback/logback-dev.xml](/Users/luna/Desktop_nonsync/project/swm-calender/support/logging/src/main/resources/logback/logback-dev.xml)
-- [support/logging/src/main/resources/logback/logback-prod.xml](/Users/luna/Desktop_nonsync/project/swm-calender/support/logging/src/main/resources/logback/logback-prod.xml)
+- [support/logging/src/main/resources/logback/logback-dev.xml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/logging/src/main/resources/logback/logback-dev.xml)
+- [support/logging/src/main/resources/logback/logback-prod.xml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/logging/src/main/resources/logback/logback-prod.xml)
 
 ## 필요한 환경 변수
 
@@ -112,8 +112,8 @@ Application
 
 - 메트릭은 Prometheus scrape 방식이므로 애플리케이션에서 OTLP metrics exporter를 켜지 않습니다.
 - 로그는 Loki direct appender 대신 stdout 수집 방식을 유지합니다.
-- `prod` 프로필은 [logback-prod.xml](/Users/luna/Desktop_nonsync/project/swm-calender/support/logging/src/main/resources/logback/logback-prod.xml)을 사용합니다.
-- 테스트에서는 tracing export를 끄도록 [core/core-api/src/test/resources/application.yml](/Users/luna/Desktop_nonsync/project/swm-calender/core/core-api/src/test/resources/application.yml)을 분리해 두었습니다.
+- `prod` 프로필은 [logback-prod.xml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/support/logging/src/main/resources/logback/logback-prod.xml)을 사용합니다.
+- 테스트에서는 tracing export를 끄도록 [apps/backend/core/core-api/src/test/resources/application.yml](/Users/luna/Desktop_nonsync/project/swm-calender/apps/backend/core/core-api/src/test/resources/application.yml)을 분리해 두었습니다.
 
 ## 참고
 

@@ -63,11 +63,28 @@ swm-teams (root)
 - Terraform, AWS EC2, RDS, ECR, CloudWatch
 - GitHub Actions
 
+## Monorepo 구조
+
+```text
+swm-teams
+├── apps/
+│   ├── backend/    # Kotlin/Spring Boot API 서버
+│   ├── web/        # 웹 프론트엔드
+│   └── extension/  # 브라우저 확장 프론트엔드
+├── packages/       # 앱 간 공유 패키지
+├── docs/
+├── iac/
+└── specs/
+```
+
+백엔드는 `apps/backend` 아래에 모여 있지만 Gradle 프로젝트 경로는 기존처럼
+`:core:core-api`, `:storage:db-core`, `:support:logging` 등을 유지한다.
+
 ## 빌드 & 실행
 
 ```bash
 ./gradlew build        # 빌드
-./gradlew bootRun      # 실행
+./gradlew :core:core-api:bootRun  # 백엔드 API 실행
 ./gradlew test         # 전체 테스트
 ./gradlew clean build  # 클린 빌드
 ```

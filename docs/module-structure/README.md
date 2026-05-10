@@ -7,29 +7,40 @@
 
 이 문서는 현재 프로젝트의 권장 모듈 구조와 의존 방향을 정리한다.
 
-## 권장 모듈 구조
+## 권장 모노레포 구조
 
 ```text
 swm-teams
-├── app
-│   └── api
-├── core
-│   ├── core-common
-│   ├── core-team-domain
-│   └── core-enum
-├── calendar
-│   └── calendar-domain
-├── match
-│   └── match-domain
-├── storage
-│   └── db-core
-├── clients
-│   ├── google-calendar
-│   └── when2meet
-└── support
-    ├── logging
-    └── monitoring
+├── apps
+│   ├── backend
+│   │   ├── app
+│   │   │   └── api
+│   │   ├── core
+│   │   │   ├── core-common
+│   │   │   ├── core-team-domain
+│   │   │   └── core-enum
+│   │   ├── calendar
+│   │   │   └── calendar-domain
+│   │   ├── match
+│   │   │   └── match-domain
+│   │   ├── storage
+│   │   │   └── db-core
+│   │   ├── clients
+│   │   │   ├── google-calendar
+│   │   │   └── when2meet
+│   │   └── support
+│   │       ├── logging
+│   │       └── monitoring
+│   ├── web
+│   └── extension
+├── packages
+├── docs
+├── iac
+└── specs
 ```
+
+현재 Gradle 프로젝트 경로는 기존 호환성을 위해 `:core:core-api`, `:storage:db-core`처럼 유지한다.
+물리 파일 위치만 `apps/backend` 아래로 매핑한다.
 
 ## 모듈별 책임
 
@@ -67,8 +78,8 @@ swm-teams
 
 ### `storage:db-core`
 
-- JPA, Querydsl, Flyway, DataSource 공통 설정
-- 모든 JPA Entity, `JpaRepository` 인터페이스, Repository 구현체 보유
+- Exposed, Flyway, DataSource 공통 설정
+- Exposed `Table`, row mapping 객체, Repository 구현체 보유
 - 도메인 모듈의 persistence adapter 역할
 
 ### `clients:*`
@@ -95,16 +106,16 @@ swm-teams
 
 ### 2. `domain`은 순수 Kotlin만 가진다
 
-- `domain` 모듈에는 JPA Entity를 두지 않는다.
-- `domain` 모듈에는 `JpaRepository`를 두지 않는다.
+- `domain` 모듈에는 Exposed Table이나 row mapping 객체를 두지 않는다.
+- `domain` 모듈에는 persistence framework 의존성을 두지 않는다.
 - `domain` 모듈에는 비즈니스 모델, 정책, Repository interface만 둔다.
 
-### 3. JPA 관련 구현은 모두 `storage:db-core`에 둔다
+### 3. Exposed/Flyway 관련 구현은 모두 `storage:db-core`에 둔다
 
-- 모든 `@Entity`는 `storage:db-core`에 둔다.
-- `JpaRepository`를 상속한 인터페이스도 `storage:db-core`에 둔다.
-- 도메인 Repository 구현체도 `storage:db-core`에 둔다.
-- 구현체와 Entity는 외부에서 직접 쓰지 않도록 `internal`을 기본으로 한다.
+- 모든 Exposed `Table`은 `storage:db-core`에 둔다.
+- row mapping 객체와 도메인 Repository 구현체도 `storage:db-core`에 둔다.
+- 운영 schema 변경은 Flyway migration으로만 관리한다.
+- 구현체와 row mapping 객체는 외부에서 직접 쓰지 않도록 `internal`을 기본으로 한다.
 
 ### 4. 서비스 간 직접 참조 대신 공통 루트 ID를 사용한다
 
@@ -137,7 +148,7 @@ storage:db-core
  ├── compileOnly -> core:core-team-domain
  ├── compileOnly -> calendar:calendar-domain
  ├── compileOnly -> match:match-domain
- └── implementation -> JPA / Querydsl / Flyway
+ └── implementation -> Exposed / Flyway
 ```
 
 규칙:
@@ -160,7 +171,7 @@ Runnable(app:api)
  └── runtimeOnly    -> Storage
 
 Storage(db-core)
- ├── implementation -> JPA
+ ├── implementation -> Exposed
  └── compileOnly    -> Domain
 ```
 
@@ -172,37 +183,35 @@ Storage(db-core)
 `db-core` 하나에 엔티티를 모으더라도, 패키지 격벽은 강하게 유지한다.
 
 ```text
-storage/db-core/src/main/kotlin/.../storage/db/core
+apps/backend/storage/db-core/src/main/kotlin/.../storage/db/core
 ├── config
-│   ├── JpaConfig
-│   ├── QuerydslConfig
+│   ├── ExposedConfig
+│   ├── ExposedTransactionConfig
 │   └── DataSourceConfig
 ├── team
+│   ├── TeamTable
 │   ├── TeamEntity
-│   ├── TeamJpaRepository
-│   └── TeamRepositoryImpl
+│   └── TeamExposedRepository
 ├── calendar
-│   ├── TeamCalendarEntity
-│   ├── MentoringScheduleEntity
-│   ├── AvailabilityEntity
-│   ├── CalendarJpaRepository...
-│   └── CalendarRepositoryImpl
+│   ├── TeamCalendarTable
+│   ├── MentoringScheduleTable
+│   ├── AvailabilityTable
+│   └── CalendarExposedRepository
 └── match
-    ├── ServiceProfileEntity
-    ├── BetaCampaignEntity
-    ├── MatchRequestEntity
-    ├── AssignmentEntity
-    ├── FeedbackEntity
-    ├── MatchJpaRepository...
-    └── MatchRepositoryImpl
+    ├── ServiceProfileTable
+    ├── BetaCampaignTable
+    ├── MatchRequestTable
+    ├── AssignmentTable
+    ├── FeedbackTable
+    └── MatchExposedRepository
 ```
 
 규칙:
 
 - `db-core` 안에서도 `team`, `calendar`, `match` 패키지를 섞지 않는다.
 - 다른 도메인 데이터를 조회해야 하면 Entity 직접 참조보다 ID 기반 조회를 우선한다.
-- 복합 조회가 필요하면 Querydsl projection이나 전용 read model을 사용한다.
-- Entity <-> domain 변환은 별도 Mapper 클래스 대신 `RepositoryImpl` 내부에서 처리한다.
+- 복합 조회가 필요하면 Exposed DSL projection이나 전용 read model을 사용한다.
+- row <-> domain 변환은 별도 Mapper 클래스 대신 Repository 구현체 내부에서 처리한다.
 
 ## Repository 분리 기준
 
@@ -220,10 +229,7 @@ interface TeamCalendarRepository {
 
 ```kotlin
 // storage:db-core
-internal interface TeamCalendarJpaRepository : JpaRepository<TeamCalendarEntity, Long>
-
-internal class TeamCalendarRepositoryImpl(
-    private val teamCalendarJpaRepository: TeamCalendarJpaRepository,
+internal class TeamCalendarExposedRepository(
 ) : TeamCalendarRepository {
     ...
 }
@@ -238,7 +244,7 @@ internal class TeamCalendarRepositoryImpl(
 
 - `Calendar`와 `Match`의 비즈니스 변경이 서로를 직접 흔들지 않게 하기 위해
 - 공통 루트인 `Team`만 안정적으로 공유하기 위해
-- 도메인 모델을 JPA 기술 세부사항에서 분리하기 위해
+- 도메인 모델을 persistence 기술 세부사항에서 분리하기 위해
 - 현재는 단일 DB를 유지하면서도, 향후 서비스별 분리를 할 수 있게 하기 위해
 
 ## 현재 프로젝트에 적용할 때의 방향
@@ -247,11 +253,11 @@ internal class TeamCalendarRepositoryImpl(
 - `core` 내부의 공통 코드 중 도메인과 무관한 것은 `core-common`으로 이동한다.
 - 팀/사용자/권한 관련 모델은 `core-team-domain`으로 모은다.
 - `Calendar`, `Match` 비즈니스는 각각 `calendar-domain`, `match-domain`으로 분리한다.
-- JPA Entity, Flyway, Querydsl, `JpaRepository` 구현은 `storage:db-core`에 유지한다.
+- Exposed Table, row mapping 객체, Flyway migration, Repository 구현은 `storage:db-core`에 유지한다.
 
 ## 비권장 구조
 
 - `Calendar`와 `Match`가 서로의 도메인 모델을 직접 참조하는 구조
-- `domain` 모듈 안에 JPA Entity를 넣는 구조
+- `domain` 모듈 안에 Exposed Table이나 row mapping 객체를 넣는 구조
 - `db-core` 안에서 도메인 패키지 경계를 무시하고 모든 엔티티를 평평하게 두는 구조
 - 공통화 명목으로 `Match` 전용 개념을 `core`에 올리는 구조

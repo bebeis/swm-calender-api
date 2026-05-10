@@ -10,6 +10,19 @@ include(
     "clients:client-example",
 )
 
+project(":core").projectDir = file("apps/backend/core")
+project(":core:core-enum").projectDir = file("apps/backend/core/core-enum")
+project(":core:core-api").projectDir = file("apps/backend/core/core-api")
+project(":storage").projectDir = file("apps/backend/storage")
+project(":storage:db-core").projectDir = file("apps/backend/storage/db-core")
+project(":tests").projectDir = file("apps/backend/tests")
+project(":tests:api-docs").projectDir = file("apps/backend/tests/api-docs")
+project(":support").projectDir = file("apps/backend/support")
+project(":support:logging").projectDir = file("apps/backend/support/logging")
+project(":support:monitoring").projectDir = file("apps/backend/support/monitoring")
+project(":clients").projectDir = file("apps/backend/clients")
+project(":clients:client-example").projectDir = file("apps/backend/clients/client-example")
+
 pluginManagement {
     val kotlinVersion: String by settings
     val springBootVersion: String by settings

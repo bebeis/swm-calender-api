@@ -10,8 +10,8 @@ Use this skill for persistence work in `storage:db-core`.
 ## Load First
 
 - `AGENTS.md` for repository, schema, aggregate, and naming rules.
-- Existing files under `storage/db-core/src/main/kotlin` for local Exposed patterns.
-- Existing files under `storage/db-core/src/test/kotlin` for integration test setup.
+- Existing files under `apps/backend/storage/db-core/src/main/kotlin` for local Exposed patterns.
+- Existing files under `apps/backend/storage/db-core/src/test/kotlin` for integration test setup.
 
 ## Storage Shape
 
