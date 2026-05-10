@@ -79,28 +79,28 @@ the foundational phase.
 
 ### Tests for User Story 2
 
-- [ ] T035 [P] [US2] Add Calendar domain tests in `apps/backend/calendar/calendar-domain/src/test/kotlin/swm/calender/calendar/domain/CalendarDomainTest.kt`
-- [ ] T036 [P] [US2] Add CalendarService mockk tests in `apps/backend/calendar/calendar-domain/src/test/kotlin/swm/calender/calendar/service/CalendarServiceTest.kt`
-- [ ] T037 [P] [US2] Add CalendarController RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/calendar/CalendarControllerTest.kt`
-- [ ] T038 [P] [US2] Add Calendar repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/calendar/CalendarExposedRepositoryIT.kt`
-- [ ] T039 [P] [US2] Add When2meet parser tests in `apps/backend/clients/when2meet/src/test/kotlin/swm/calender/client/when2meet/When2meetParserTest.kt`
+- [X] T035 [P] [US2] Add Calendar domain tests in `apps/backend/calendar/calendar-domain/src/test/kotlin/swm/calender/calendar/domain/CalendarDomainTest.kt`
+- [X] T036 [P] [US2] Add CalendarService mockk tests in `apps/backend/calendar/calendar-domain/src/test/kotlin/swm/calender/calendar/service/CalendarServiceTest.kt`
+- [X] T037 [P] [US2] Add CalendarController RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/calendar/CalendarControllerTest.kt`
+- [X] T038 [P] [US2] Add Calendar repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/calendar/CalendarExposedRepositoryIT.kt`
+- [X] T039 [P] [US2] Add When2meet parser tests in `apps/backend/clients/when2meet/src/test/kotlin/swm/calender/client/when2meet/When2meetParserTest.kt`
 
 ### Implementation for User Story 2
 
-- [ ] T040 [P] [US2] Add Calendar domain models in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/domain/model/TeamCalendar.kt`
-- [ ] T041 [P] [US2] Add MentoringSchedule domain model in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/domain/model/MentoringSchedule.kt`
-- [ ] T042 [P] [US2] Add When2meetLink and AvailabilitySlot models in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/domain/model/When2meetLink.kt`
-- [ ] T043 [US2] Add CalendarRepository interface in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/domain/CalendarRepository.kt`
-- [ ] T044 [US2] Add CalendarReader and CalendarWriter in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/implement/CalendarReader.kt`
-- [ ] T045 [US2] Add CalendarService in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/service/CalendarService.kt`
-- [ ] T046 [US2] Add GoogleCalendarClient port in `apps/backend/clients/google-calendar/src/main/kotlin/swm/calender/client/google/calendar/GoogleCalendarClient.kt`
-- [ ] T047 [US2] Add When2meetParser client in `apps/backend/clients/when2meet/src/main/kotlin/swm/calender/client/when2meet/When2meetParser.kt`
-- [ ] T048 [US2] Add CalendarController request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/calendar/request/MentoringScheduleBulkPushRequest.kt`
-- [ ] T049 [US2] Add CalendarController response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/calendar/response/UnifiedAvailabilityResponse.kt`
-- [ ] T050 [US2] Add CalendarController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/calendar/CalendarController.kt`
-- [ ] T051 [US2] Add Calendar Exposed tables in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/calendar/CalendarTable.kt`
-- [ ] T052 [US2] Add CalendarExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/calendar/CalendarExposedRepository.kt`
-- [ ] T053 [US2] Add calendar Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V3__create_calendar_tables.sql`
+- [X] T040 [P] [US2] Add Calendar domain models in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/domain/model/TeamCalendar.kt`
+- [X] T041 [P] [US2] Add MentoringSchedule domain model in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/domain/model/MentoringSchedule.kt`
+- [X] T042 [P] [US2] Add When2meetLink and AvailabilitySlot models in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/domain/model/When2meetLink.kt`
+- [X] T043 [US2] Add CalendarRepository interface in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/domain/CalendarRepository.kt`
+- [X] T044 [US2] Add CalendarReader and CalendarWriter in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/implement/CalendarReader.kt`
+- [X] T045 [US2] Add CalendarService in `apps/backend/calendar/calendar-domain/src/main/kotlin/swm/calender/calendar/service/CalendarService.kt`
+- [X] T046 [US2] Add GoogleCalendarClient port in `apps/backend/clients/google-calendar/src/main/kotlin/swm/calender/client/google/calendar/GoogleCalendarClient.kt`
+- [X] T047 [US2] Add When2meetParser client in `apps/backend/clients/when2meet/src/main/kotlin/swm/calender/client/when2meet/When2meetParser.kt`
+- [X] T048 [US2] Add CalendarController request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/calendar/request/MentoringScheduleBulkPushRequest.kt`
+- [X] T049 [US2] Add CalendarController response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/calendar/response/UnifiedAvailabilityResponse.kt`
+- [X] T050 [US2] Add CalendarController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/calendar/CalendarController.kt`
+- [X] T051 [US2] Add Calendar Exposed tables in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/calendar/CalendarTable.kt`
+- [X] T052 [US2] Add CalendarExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/calendar/CalendarExposedRepository.kt`
+- [X] T053 [US2] Add calendar Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V3__create_calendar_tables.sql`
 
 **Checkpoint**: US2 works independently for Calendar-enabled teams and protects team scope.
 

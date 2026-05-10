@@ -47,6 +47,8 @@ AGENTS_REQUIRED_TOKENS = [
     "## Table Relationships And Schema",
     "Exposed",
     "Flyway",
+    "@Transactional",
+    "transaction {}",
     "Kotest",
     "mockk",
     "[도메인명]ExposedRepository",
@@ -83,12 +85,19 @@ TEAM_SPEC_REQUIRED_TOKENS = [
     "AGENTS.md",
     "_workspace/",
     "Exposed",
+    "@Transactional",
     "Kotest",
     "mockk",
     "Expert Pool",
     "apps/web",
     "apps/extension",
     "swm-fullstack-contract",
+]
+
+STORAGE_SKILL_REQUIRED_TOKENS = [
+    "@Transactional",
+    "transaction {}",
+    "Spring-managed",
 ]
 
 
@@ -170,9 +179,14 @@ def check_harness_docs(failures: list[str]) -> None:
     checklist = read_text(
         ".agents/skills/swm-codex-harness/references/agents-compliance-checklist.md"
     )
-    for token in ("Exposed", "Flyway", "Kotest", "mockk", "JpaRepository"):
+    for token in ("Exposed", "Flyway", "@Transactional", "transaction {}", "Kotest", "mockk", "JpaRepository"):
         if token not in checklist:
             fail(f"AGENTS compliance checklist is missing token: {token}", failures)
+
+    storage_skill = read_text(".agents/skills/swm-teams-exposed-storage/SKILL.md")
+    for token in STORAGE_SKILL_REQUIRED_TOKENS:
+        if token not in storage_skill:
+            fail(f"Storage skill is missing transaction guidance token: {token}", failures)
 
 
 def check_codex_agents(failures: list[str]) -> None:

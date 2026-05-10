@@ -56,7 +56,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 | Request surface | Primary skill | Review gate | Typical verification |
 | --- | --- | --- | --- |
 | Backend API, DTO, service, domain | `swm-teams-architecture` | `swm-agents-compliance` | `./gradlew :core:core-api:test`, then broader Gradle checks as needed |
-| Backend persistence | `swm-teams-exposed-storage` | `swm-agents-compliance` | `./gradlew :storage:db-core:test`, Flyway-aware checks |
+| Backend persistence | `swm-teams-exposed-storage` | `swm-agents-compliance` | `./gradlew :storage:db-core:test`, Flyway-aware checks, Spring `@Transactional` boundary review |
 | Backend tests and API docs | `swm-teams-testing` | `swm-agents-compliance` | Targeted Gradle test task |
 | Web frontend | `swm-frontend-web` | `swm-fullstack-contract` when API-dependent | Existing `apps/web/package.json` scripts |
 | Browser extension | `swm-browser-extension` | `swm-fullstack-contract` when API-dependent | Existing `apps/extension/package.json` scripts and permission review |
@@ -86,6 +86,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 
 - Implement the change using existing project patterns.
 - Keep persistence behind repository interfaces.
+- Keep Spring-managed Exposed transactions at the service or implement layer with `@Transactional`; avoid repository adapter `transaction {}` wrappers except in tests or standalone utilities.
 - Keep tests aligned with Kotest and mockk.
 - Keep web code in `apps/web`, extension code in `apps/extension`, and shared code in `packages` only when intentionally reused.
 - Keep frontend API clients aligned with backend DTOs and documented endpoint behavior.
@@ -116,6 +117,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 
 - No new JPA, `JpaRepository`, `@DataJpaTest`, Mockito, fetch join, or `ddl-auto` assumptions in active code or active agent guidance.
 - Persistence uses Exposed DSL and Flyway.
+- Spring-managed Exposed flows use service or implement-layer `@Transactional` and avoid redundant repository `transaction {}` blocks.
 - Tests use Kotest and mockk where mocks are needed.
 - DTO, validation, API URI, response body, repository naming, domain, facade, and implement-layer rules follow `AGENTS.md`.
 - Web code stays under `apps/web` unless it is intentional shared code under `packages`.

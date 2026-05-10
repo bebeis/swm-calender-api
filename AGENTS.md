@@ -93,6 +93,9 @@
 - Implement Layer는 Repository 조회, 저장, 추가 등 구체적인 작업을 담당한다.
 - Implement Layer는 순수 Repository interface를 필드로 가진다.
 - Repository 구현체는 `storage-db` 모듈을 runtime dependency로 둔다.
+- Spring-managed application flow의 트랜잭션 경계는 Service 또는 Implement Layer의 `@Transactional`로 관리한다.
+- `storage-db`의 Exposed Repository adapter는 Spring-managed flow에서 중첩 `transaction {}`을 열지 않는다.
+  - 테스트 보조, standalone storage utility처럼 Spring-managed flow 밖에서만 명시적 Exposed `transaction {}`을 사용할 수 있다.
 - 다른 도메인의 Service Layer 참조는 금지한다.
 - 다른 도메인의 Implement Layer 참조는 재사용성을 위해 허용한다.
 

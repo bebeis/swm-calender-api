@@ -9,6 +9,7 @@
 - Manage schema changes with Flyway migrations.
 - Use explicit Exposed DSL joins or read models for cross-table reads.
 - Keep other aggregates referenced by id, not storage-object relationships.
+- Spring-managed application flows use service/implement-layer `@Transactional`; Exposed repositories do not open redundant `transaction {}` blocks.
 - Do not introduce JPA, `JpaRepository`, Querydsl, `@DataJpaTest`, `FetchType.LAZY`, fetch joins, or `ddl-auto` guidance in new active rules.
 
 ## Domain And Layering

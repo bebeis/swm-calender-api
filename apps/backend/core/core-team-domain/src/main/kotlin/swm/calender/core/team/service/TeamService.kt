@@ -1,6 +1,7 @@
 package swm.calender.core.team.service
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import swm.calender.core.common.id.TeamId
 import swm.calender.core.common.id.TeamMemberId
 import swm.calender.core.common.id.UserId
@@ -24,6 +25,7 @@ class TeamService(
     private val teamInviteCodeGenerator: TeamInviteCodeGenerator,
     private val clock: Clock = Clock.systemUTC(),
 ) {
+    @Transactional
     fun createTeam(request: TeamCreateRequest): TeamResponse {
         teamReader.ensureUserHasNoActiveTeam(request.ownerUserId)
 
@@ -40,6 +42,7 @@ class TeamService(
         return TeamResponse.from(teamWriter.save(createdTeam))
     }
 
+    @Transactional
     fun joinTeam(request: TeamJoinRequest): TeamResponse {
         teamReader.ensureUserHasNoActiveTeam(request.userId)
 
@@ -54,6 +57,7 @@ class TeamService(
         return TeamResponse.from(teamWriter.save(joinedTeam))
     }
 
+    @Transactional
     fun changeSubServiceActivation(request: TeamSubServiceActivationRequest): SubServiceActivationResponse {
         val team = teamReader.getById(request.teamId)
             .changeSubServiceActivation(
@@ -66,6 +70,7 @@ class TeamService(
         return SubServiceActivationResponse.from(teamWriter.save(team))
     }
 
+    @Transactional(readOnly = true)
     fun getMembers(
         teamId: TeamId,
         actorUserId: UserId,
@@ -77,6 +82,7 @@ class TeamService(
             .map(TeamMemberResponse::from)
     }
 
+    @Transactional
     fun changeMemberRole(
         teamId: TeamId,
         memberId: TeamMemberId,

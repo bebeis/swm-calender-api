@@ -37,6 +37,7 @@ Use this skill for non-trivial swm-teams work that benefits from a repeatable Co
    - Cross-stack API, shared type, auth, or error-shape work uses `swm-fullstack-contract`.
 3. Keep AGENTS.md constraints loaded while editing:
    - Exposed/Flyway for persistence.
+   - Spring-managed Exposed flow uses service/implement-layer `@Transactional`, not redundant repository `transaction {}` blocks.
    - Kotest/mockk for tests.
    - DTO, API, domain, implement-layer, and repository boundaries.
 4. Preserve deterministic handoffs for large work under `_workspace/` when the workflow spans multiple phases.

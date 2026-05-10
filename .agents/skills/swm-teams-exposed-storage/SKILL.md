@@ -21,7 +21,9 @@ Use this skill for persistence work in `storage:db-core`.
 - Use Exposed `Table` objects named `XXXTable`.
 - Use row mapping objects named `XXXEntity` only when a storage-side row shape is useful.
 - Prefer `internal` for storage implementation details that should not leak outside the module.
-- Keep Exposed transactions at the repository/adapter boundary for standalone storage code. In Spring-managed flows, prefer service/implement-layer `@Transactional` and avoid redundant nested `transaction {}` unless there is a clear reason.
+- In Spring-managed application flows, put transaction boundaries on the service or implement layer with `@Transactional`.
+- Do not wrap Exposed repository adapter methods in `transaction {}` when they are called from Spring-managed flows.
+- Use explicit Exposed `transaction {}` only for tests, standalone storage utilities, or narrowly justified non-Spring-managed code.
 - Map DB rows to domain concepts at the persistence boundary. Do not leak Exposed types upward.
 - Manage real schema changes with Flyway migrations. Use Exposed `SchemaUtils` only as test support or local schema-diff assistance.
 

@@ -11,5 +11,7 @@ interface TeamRepository {
 
     fun findByInviteCode(inviteCode: String): Team?
 
+    fun findActiveByUserId(userId: UserId): Team?
+
     fun existsActiveMembershipByUserId(userId: UserId): Boolean
 }

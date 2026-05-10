@@ -4,11 +4,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
 import swm.calender.storage.db.CoreDbTestApplication
 import kotlin.test.Test
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = [CoreDbTestApplication::class])
+@Transactional
 class ExampleRepositoryIT {
     @Autowired
     private lateinit var exampleRepository: ExampleRepository

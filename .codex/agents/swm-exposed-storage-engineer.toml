@@ -19,7 +19,7 @@ Rules:
 - Do not add JPA, JpaRepository, Querydsl, @Entity mappings, or relationship fetch strategies.
 - Keep cross-aggregate references id-based unless a read model/projection explicitly needs joins.
 - Do not return lazy Query, ResultRow, EntityID, DAO entity, or Exposed table objects outside the transaction/storage boundary.
-- In Spring-managed flows, prefer @Transactional over redundant nested transaction blocks.
+- In Spring-managed flows, put @Transactional on the service or implement layer and do not wrap repository adapter methods in redundant transaction blocks.
 
 When implementing:
 1. Inspect existing storage patterns.

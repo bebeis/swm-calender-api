@@ -5,7 +5,6 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.insert
 import org.jetbrains.exposed.v1.jdbc.selectAll
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.jdbc.update
 import org.springframework.stereotype.Repository
 import swm.calender.core.common.id.TeamId
@@ -18,30 +17,43 @@ import swm.calender.core.team.exception.TeamErrorMessage
 
 @Repository
 class TeamExposedRepository : TeamRepository {
-    override fun save(team: Team): Team = transaction {
-        if (team.id == null) {
+    override fun save(team: Team): Team {
+        return if (team.id == null) {
             create(team)
         } else {
             update(team)
         }
     }
 
-    override fun findById(teamId: TeamId): Team? = transaction {
-        findByIdInternal(teamId)
+    override fun findById(teamId: TeamId): Team? {
+        return findByIdInternal(teamId)
     }
 
-    override fun findByInviteCode(inviteCode: String): Team? = transaction {
+    override fun findByInviteCode(inviteCode: String): Team? {
         val teamId = teamJoinQuery()
             .selectAll()
             .where { TeamTable.inviteCode eq inviteCode }
             .singleOrNull()
             ?.get(TeamTable.id)
 
-        teamId?.let { findByIdInternal(TeamId(it)) }
+        return teamId?.let { findByIdInternal(TeamId(it)) }
     }
 
-    override fun existsActiveMembershipByUserId(userId: UserId): Boolean = transaction {
-        activeMembershipExists(userId)
+    override fun findActiveByUserId(userId: UserId): Team? {
+        val teamId = TeamMemberTable
+            .selectAll()
+            .where {
+                (TeamMemberTable.userId eq userId.value) and
+                    (TeamMemberTable.removedAt eq null)
+            }
+            .singleOrNull()
+            ?.get(TeamMemberTable.teamId)
+
+        return teamId?.let { findByIdInternal(TeamId(it)) }
+    }
+
+    override fun existsActiveMembershipByUserId(userId: UserId): Boolean {
+        return activeMembershipExists(userId)
     }
 
     private fun create(team: Team): Team {

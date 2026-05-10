@@ -27,5 +27,6 @@ This repository keeps reusable Codex workflow contracts under `docs/harness/`.
 
 - Keep `AGENTS.md` focused on repo-wide rules.
 - Put workflow-specific detail in skills, team specs, or role briefs.
+- Keep Spring/Exposed transaction guidance aligned: service or implement-layer `@Transactional` for Spring-managed flows, explicit `transaction {}` only for tests or standalone storage utilities.
 - Keep model-specific recovery logic removable.
 - Update the harness validator when `AGENTS.md` changes in a way that affects Exposed, Flyway, Kotest, mockk, or agent asset contracts.

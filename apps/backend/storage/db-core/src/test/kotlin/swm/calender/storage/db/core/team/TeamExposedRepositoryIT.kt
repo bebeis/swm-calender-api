@@ -17,6 +17,10 @@ import swm.calender.core.team.domain.model.Team
 import swm.calender.core.team.exception.TeamDomainException
 import swm.calender.core.team.exception.TeamErrorMessage
 import swm.calender.storage.db.core.RepositoryTestSupport
+import swm.calender.storage.db.core.calendar.AvailabilitySlotTable
+import swm.calender.storage.db.core.calendar.MentoringScheduleTable
+import swm.calender.storage.db.core.calendar.TeamCalendarTable
+import swm.calender.storage.db.core.calendar.When2meetLinkTable
 import java.time.Instant
 
 class TeamExposedRepositoryIT : RepositoryTestSupport() {
@@ -30,6 +34,10 @@ class TeamExposedRepositoryIT : RepositoryTestSupport() {
 
         beforeTest {
             transaction {
+                AvailabilitySlotTable.deleteAll()
+                MentoringScheduleTable.deleteAll()
+                When2meetLinkTable.deleteAll()
+                TeamCalendarTable.deleteAll()
                 TeamMemberTable.deleteAll()
                 SubServiceActivationTable.deleteAll()
                 TeamTable.deleteAll()
@@ -80,6 +88,32 @@ class TeamExposedRepositoryIT : RepositoryTestSupport() {
 
             // when
             val foundTeam = teamExposedRepository.findByInviteCode("BRAVO-CODE")
+
+            // then
+            foundTeam shouldBe savedTeam
+        }
+
+        test("findActiveByUserId returns the active team for a member") {
+            // given
+            val savedTeam = teamExposedRepository.save(
+                Team.create(
+                    ownerUserId = UserId(103L),
+                    ownerName = "Owner India",
+                    ownerEmail = "owner-india@swm.app",
+                    name = "Team India",
+                    description = null,
+                    inviteCode = "INDIA-CODE",
+                    createdAt = createdAt,
+                ).addMember(
+                    userId = UserId(104L),
+                    name = "Member India",
+                    email = "member-india@swm.app",
+                    joinedAt = createdAt.plusSeconds(60),
+                ),
+            )
+
+            // when
+            val foundTeam = teamExposedRepository.findActiveByUserId(UserId(104L))
 
             // then
             foundTeam shouldBe savedTeam

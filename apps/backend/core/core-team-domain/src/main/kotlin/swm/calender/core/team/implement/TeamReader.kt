@@ -27,4 +27,9 @@ class TeamReader(
         return teamRepository.findByInviteCode(inviteCode)
             ?: throw TeamDomainException(TeamErrorMessage.INVALID_INVITE_CODE)
     }
+
+    fun getActiveByUserId(userId: UserId): Team {
+        return teamRepository.findActiveByUserId(userId)
+            ?: throw TeamDomainException(TeamErrorMessage.TEAM_NOT_FOUND)
+    }
 }
