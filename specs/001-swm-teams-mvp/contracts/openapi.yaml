@@ -661,6 +661,8 @@ components:
         url:
           type: string
           format: uri
+          pattern: '^https://when2meet\.com(:443)?(/.*)?$'
+          description: Only `https://when2meet.com` URLs are accepted.
     When2meetLinkResponse:
       type: object
       required: [url, status]
@@ -725,6 +727,8 @@ components:
             $ref: '#/components/schemas/Platform'
         screenshotUrls:
           type: array
+          nullable: true
+          default: []
           items:
             type: string
             format: uri
@@ -734,6 +738,8 @@ components:
           nullable: true
         public:
           type: boolean
+          nullable: true
+          default: true
     ServiceProfileResponse:
       type: object
       required: [serviceProfileId, teamId, active, public, name, summary, category, platforms]

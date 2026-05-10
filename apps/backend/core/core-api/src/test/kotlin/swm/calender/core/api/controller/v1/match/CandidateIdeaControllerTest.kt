@@ -160,6 +160,42 @@ class CandidateIdeaControllerTest : FunSpec() {
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$.data.items.length()").value(1))
                 .andExpect(jsonPath("$.data.items[0].candidateIdeaId").value(31L))
+                .andDo(
+                    document(
+                        "match-candidate-ideas-list",
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                            fieldWithPath("result").type(JsonFieldType.STRING).description("API result"),
+                            fieldWithPath("data.items").type(JsonFieldType.ARRAY)
+                                .description("Private candidate ideas"),
+                            fieldWithPath("data.items[].candidateIdeaId").type(JsonFieldType.NUMBER)
+                                .description("Candidate idea id"),
+                            fieldWithPath("data.items[].teamId").type(JsonFieldType.NUMBER)
+                                .description("Team id"),
+                            fieldWithPath("data.items[].title").type(JsonFieldType.STRING)
+                                .description("Idea title"),
+                            fieldWithPath("data.items[].summary").type(JsonFieldType.STRING)
+                                .description("Idea summary"),
+                            fieldWithPath("data.items[].problem").type(JsonFieldType.STRING)
+                                .description("Problem statement"),
+                            fieldWithPath("data.items[].targetUsers").type(JsonFieldType.STRING)
+                                .description("Target users"),
+                            fieldWithPath("data.items[].solution").type(JsonFieldType.STRING)
+                                .description("Solution summary"),
+                            fieldWithPath("data.items[].category").type(JsonFieldType.STRING)
+                                .description("Category"),
+                            fieldWithPath("data.items[].platforms").type(JsonFieldType.ARRAY)
+                                .description("Platforms"),
+                            fieldWithPath("data.items[].visibility").type(JsonFieldType.STRING)
+                                .description("Visibility"),
+                            fieldWithPath("data.items[].createdAt").type(JsonFieldType.STRING)
+                                .description("Created time"),
+                            fieldWithPath("data.items[].updatedAt").type(JsonFieldType.STRING)
+                                .description("Updated time"),
+                            fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                        ),
+                    ),
+                )
         }
 
         test("run duplicate analysis returns redacted private matches and documents the endpoint") {

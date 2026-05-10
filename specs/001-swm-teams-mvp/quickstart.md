@@ -20,6 +20,25 @@
 ./gradlew test
 ```
 
+Generate and validate the public API documentation after controller contract changes:
+
+```bash
+./gradlew :core:core-api:test
+./gradlew :core:core-api:asciidoctor
+```
+
+The AsciiDoc build must complete without missing `include::` failures, which confirms that
+`apps/backend/core/core-api/src/docs/asciidoc/index.adoc` references generated RestDocs snippets that exist.
+
+Recommended local fixtures:
+
+- Two allowlisted users and at least two teams.
+- One OWNER-driven team creation, invite join, sub-service activation, and team administration flow.
+- One cross-team Match flow covering candidate idea privacy, duplicate-analysis redaction, beta request acceptance,
+  assignment creation, feedback submission, notifications, and test history.
+- Valid and invalid When2meet URLs, including rejection of any URL outside `https://when2meet.com`.
+- Cross-team authorization attempts for private candidate ideas, requests, feedback, availability, and team resources.
+
 ### 2. Validate Team Onboarding
 
 1. Authenticate as a cohort-allowlisted user.
@@ -79,3 +98,23 @@
 - Controller tests generate RestDocs snippets for public API contracts.
 - Repository tests verify important uniqueness and mapping rules.
 - `./gradlew ktlintCheck` and `./gradlew test` pass.
+
+## Validation Log
+
+| Date | Command | Result | Notes |
+|------|---------|--------|-------|
+| 2026-05-10 | `./gradlew :core:core-api:test :match:match-domain:test :storage:db-core:test` | PASS | Regenerated RestDocs snippets and verified notification, Match contract, service, and repository changes. |
+| 2026-05-10 | `./gradlew :core:core-api:asciidoctor` | PASS | Rendered `index.adoc` successfully against generated snippets. |
+| 2026-05-10 | `./gradlew ktlintCheck` | PASS | Kotlin style check passed after import ordering fix. |
+| 2026-05-10 | `./gradlew test` | PASS | Full multi-module test suite passed. |
+
+## Contract Validation Notes
+
+- OpenAPI paths match implemented MVP controllers, including `GET /api/v1/notifications`.
+- Sample `ExampleController` endpoints were removed from the runtime API surface because they are not part of the
+  MVP OpenAPI contract.
+- `PATCH /api/v1/match/requests/{requestId}/status` accepts only `ACCEPTED`, `REJECTED`, or `CANCELED` at the
+  controller DTO boundary.
+- `When2meetLinkRequest.url` is documented and validated as `https://when2meet.com` only.
+- `ServiceProfileCreateRequest.screenshotUrls` and `public` are optional/defaulted request fields; response Boolean
+  fields remain non-null.

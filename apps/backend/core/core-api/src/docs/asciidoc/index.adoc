@@ -1,4 +1,4 @@
-= API Docs
+= SWM Teams MVP API Docs
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -7,32 +7,236 @@
 :sectlinks:
 :snippets: build/generated-snippets
 
-== Introduce
+== Teams
 
-This is the Core API documentation.
-
-== Example API
-
-=== Example GET API
+=== Create Team
 ==== Curl Request
-include::{snippets}/exampleGet/curl-request.adoc[]
-==== Path Parameters
-include::{snippets}/exampleGet/path-parameters.adoc[]
-==== Query Parameters
-include::{snippets}/exampleGet/query-parameters.adoc[]
-==== Http Response
-include::{snippets}/exampleGet/http-response.adoc[]
-==== Response Fields
-include::{snippets}/exampleGet/response-fields.adoc[]
-
-'''
-
-=== Example POST API
-==== Curl Request
-include::{snippets}/examplePost/curl-request.adoc[]
+include::{snippets}/teams-create/curl-request.adoc[]
 ==== Request Fields
-include::{snippets}/examplePost/request-fields.adoc[]
-==== Http Response
-include::{snippets}/examplePost/http-response.adoc[]
+include::{snippets}/teams-create/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/teams-create/http-response.adoc[]
 ==== Response Fields
-include::{snippets}/examplePost/response-fields.adoc[]
+include::{snippets}/teams-create/response-fields.adoc[]
+
+=== Join Team
+==== Curl Request
+include::{snippets}/teams-join/curl-request.adoc[]
+==== Request Fields
+include::{snippets}/teams-join/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/teams-join/http-response.adoc[]
+==== Response Fields
+include::{snippets}/teams-join/response-fields.adoc[]
+
+=== List Team Members
+==== Curl Request
+include::{snippets}/teams-members-list/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/teams-members-list/path-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/teams-members-list/http-response.adoc[]
+==== Response Fields
+include::{snippets}/teams-members-list/response-fields.adoc[]
+
+=== Update Sub-Service Activation
+==== Curl Request
+include::{snippets}/teams-sub-service-update/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/teams-sub-service-update/path-parameters.adoc[]
+==== Request Fields
+include::{snippets}/teams-sub-service-update/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/teams-sub-service-update/http-response.adoc[]
+==== Response Fields
+include::{snippets}/teams-sub-service-update/response-fields.adoc[]
+
+=== Change Team Member Role
+==== Curl Request
+include::{snippets}/teams-member-role-change/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/teams-member-role-change/path-parameters.adoc[]
+==== Request Fields
+include::{snippets}/teams-member-role-change/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/teams-member-role-change/http-response.adoc[]
+==== Response Fields
+include::{snippets}/teams-member-role-change/response-fields.adoc[]
+
+=== Remove Team Member
+==== Curl Request
+include::{snippets}/teams-member-remove/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/teams-member-remove/path-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/teams-member-remove/http-response.adoc[]
+==== Response Fields
+include::{snippets}/teams-member-remove/response-fields.adoc[]
+
+== Calendar
+
+=== Bulk Push Mentoring Schedules
+==== Curl Request
+include::{snippets}/calendar-mentoring-schedules-bulk-push/curl-request.adoc[]
+==== Request Fields
+include::{snippets}/calendar-mentoring-schedules-bulk-push/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/calendar-mentoring-schedules-bulk-push/http-response.adoc[]
+==== Response Fields
+include::{snippets}/calendar-mentoring-schedules-bulk-push/response-fields.adoc[]
+
+=== Register When2meet Link
+==== Curl Request
+include::{snippets}/calendar-when2meet-link-put/curl-request.adoc[]
+==== Request Fields
+include::{snippets}/calendar-when2meet-link-put/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/calendar-when2meet-link-put/http-response.adoc[]
+==== Response Fields
+include::{snippets}/calendar-when2meet-link-put/response-fields.adoc[]
+
+=== Get Unified Availability
+==== Curl Request
+include::{snippets}/calendar-availability-get/curl-request.adoc[]
+==== Query Parameters
+include::{snippets}/calendar-availability-get/query-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/calendar-availability-get/http-response.adoc[]
+==== Response Fields
+include::{snippets}/calendar-availability-get/response-fields.adoc[]
+
+== Match
+
+=== Create Or Replace Service Profile
+==== Curl Request
+include::{snippets}/match-service-profile-create/curl-request.adoc[]
+==== Request Fields
+include::{snippets}/match-service-profile-create/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/match-service-profile-create/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-service-profile-create/response-fields.adoc[]
+
+=== Search Campaigns
+==== Curl Request
+include::{snippets}/match-campaigns-search/curl-request.adoc[]
+==== Query Parameters
+include::{snippets}/match-campaigns-search/query-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/match-campaigns-search/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-campaigns-search/response-fields.adoc[]
+
+=== Create Campaign
+==== Curl Request
+include::{snippets}/match-campaign-create/curl-request.adoc[]
+==== Request Fields
+include::{snippets}/match-campaign-create/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/match-campaign-create/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-campaign-create/response-fields.adoc[]
+
+=== Change Campaign Status
+==== Curl Request
+include::{snippets}/match-campaign-status-change/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/match-campaign-status-change/path-parameters.adoc[]
+==== Request Fields
+include::{snippets}/match-campaign-status-change/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/match-campaign-status-change/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-campaign-status-change/response-fields.adoc[]
+
+=== Create Candidate Idea
+==== Curl Request
+include::{snippets}/match-candidate-idea-create/curl-request.adoc[]
+==== Request Fields
+include::{snippets}/match-candidate-idea-create/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/match-candidate-idea-create/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-candidate-idea-create/response-fields.adoc[]
+
+=== List Candidate Ideas
+==== Curl Request
+include::{snippets}/match-candidate-ideas-list/curl-request.adoc[]
+==== HTTP Response
+include::{snippets}/match-candidate-ideas-list/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-candidate-ideas-list/response-fields.adoc[]
+
+=== Run Duplicate Analysis
+==== Curl Request
+include::{snippets}/match-candidate-idea-duplicate-analysis-run/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/match-candidate-idea-duplicate-analysis-run/path-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/match-candidate-idea-duplicate-analysis-run/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-candidate-idea-duplicate-analysis-run/response-fields.adoc[]
+
+=== Create Match Request
+==== Curl Request
+include::{snippets}/match-request-create/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/match-request-create/path-parameters.adoc[]
+==== Request Fields
+include::{snippets}/match-request-create/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/match-request-create/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-request-create/response-fields.adoc[]
+
+=== Change Match Request Status
+==== Curl Request
+include::{snippets}/match-request-status-change/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/match-request-status-change/path-parameters.adoc[]
+==== Request Fields
+include::{snippets}/match-request-status-change/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/match-request-status-change/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-request-status-change/response-fields.adoc[]
+
+=== Get Assignment
+==== Curl Request
+include::{snippets}/match-assignment-get/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/match-assignment-get/path-parameters.adoc[]
+==== HTTP Response
+include::{snippets}/match-assignment-get/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-assignment-get/response-fields.adoc[]
+
+=== Submit Feedback
+==== Curl Request
+include::{snippets}/match-feedback-submit/curl-request.adoc[]
+==== Path Parameters
+include::{snippets}/match-feedback-submit/path-parameters.adoc[]
+==== Request Fields
+include::{snippets}/match-feedback-submit/request-fields.adoc[]
+==== HTTP Response
+include::{snippets}/match-feedback-submit/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-feedback-submit/response-fields.adoc[]
+
+=== Get Team Test History
+==== Curl Request
+include::{snippets}/match-test-history-get/curl-request.adoc[]
+==== HTTP Response
+include::{snippets}/match-test-history-get/http-response.adoc[]
+==== Response Fields
+include::{snippets}/match-test-history-get/response-fields.adoc[]
+
+== Notifications
+
+=== List Notifications
+==== Curl Request
+include::{snippets}/notifications-list/curl-request.adoc[]
+==== HTTP Response
+include::{snippets}/notifications-list/http-response.adoc[]
+==== Response Fields
+include::{snippets}/notifications-list/response-fields.adoc[]

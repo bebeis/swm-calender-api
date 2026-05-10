@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import swm.calender.core.api.controller.v1.calendar.request.MentoringScheduleBulkPushRequest
 import swm.calender.core.api.controller.v1.calendar.request.When2meetLinkRequest
 import swm.calender.core.common.time.DateTimeRange
+import java.net.URI
 import java.time.OffsetDateTime
 
 @Component
@@ -36,9 +37,12 @@ class CalendarRequestValidator(
 
     fun validateWhen2meetLink(request: When2meetLinkRequest) {
         validateBean(request)
-        if (request.url.isNullOrBlank()) {
+        val url = request.url
+        if (url.isNullOrBlank()) {
             throw CalendarApiException.badRequest("url must not be blank.")
         }
+
+        validateAllowedWhen2meetUrl(url)
     }
 
     fun parseRange(
@@ -77,5 +81,25 @@ class CalendarRequestValidator(
         if (violations.isNotEmpty()) {
             throw CalendarApiException.badRequest(violations.first().message)
         }
+    }
+
+    private fun validateAllowedWhen2meetUrl(url: String) {
+        val uri = runCatching { URI(url.trim()) }
+            .getOrElse { throw CalendarApiException.badRequest("url must be a valid When2meet URL.") }
+
+        if (
+            uri.scheme != ALLOWED_WHEN2MEET_SCHEME ||
+            !uri.host.equals(ALLOWED_WHEN2MEET_HOST, ignoreCase = true) ||
+            uri.userInfo != null ||
+            (uri.port != -1 && uri.port != HTTPS_PORT)
+        ) {
+            throw CalendarApiException.badRequest("url must be an https://when2meet.com URL.")
+        }
+    }
+
+    companion object {
+        private const val ALLOWED_WHEN2MEET_SCHEME = "https"
+        private const val ALLOWED_WHEN2MEET_HOST = "when2meet.com"
+        private const val HTTPS_PORT = 443
     }
 }

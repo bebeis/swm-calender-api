@@ -1,5 +1,6 @@
 package swm.calender.storage.db.core.match
 
+import org.jetbrains.exposed.v1.core.SortOrder
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
@@ -102,6 +103,17 @@ class MatchRequestExposedRepository : MatchRequestRepository {
         }[MatchNotificationTable.id]
 
         return notification.copy(id = notificationId)
+    }
+
+    override fun findNotificationsByTeamId(teamId: TeamId): List<Notification> {
+        return MatchNotificationTable
+            .selectAll()
+            .where { MatchNotificationTable.teamId eq teamId.value }
+            .orderBy(
+                MatchNotificationTable.createdAt to SortOrder.DESC,
+                MatchNotificationTable.id to SortOrder.DESC,
+            )
+            .map { it.toNotificationEntity().toDomain() }
     }
 
     private fun insertRequest(matchRequest: MatchRequest): Long {

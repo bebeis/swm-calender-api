@@ -14,5 +14,13 @@ data class MatchRequestCreateRequest(
 
 data class MatchRequestStatusChangeRequest(
     @field:NotNull
-    val status: MatchRequestStatus?,
+    val status: MatchRequestStatusChangeAction?,
 )
+
+enum class MatchRequestStatusChangeAction(
+    val domainStatus: MatchRequestStatus,
+) {
+    ACCEPTED(MatchRequestStatus.ACCEPTED),
+    REJECTED(MatchRequestStatus.REJECTED),
+    CANCELED(MatchRequestStatus.CANCELED),
+}

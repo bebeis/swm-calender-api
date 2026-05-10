@@ -240,11 +240,11 @@ public campaign discovery.
 
 **Purpose**: Validate contracts, docs, security, and performance across all selected stories.
 
-- [ ] T125 Update generated API docs index in `apps/backend/core/core-api/src/docs/asciidoc/index.adoc`
-- [ ] T126 Validate OpenAPI contract against implemented DTOs in `specs/001-swm-teams-mvp/contracts/openapi.yaml`
-- [ ] T127 Add quickstart validation notes in `specs/001-swm-teams-mvp/quickstart.md`
-- [ ] T128 Run full test suite with `./gradlew test` and record result in `specs/001-swm-teams-mvp/quickstart.md`
-- [ ] T129 Run ktlint with `./gradlew ktlintCheck` and record result in `specs/001-swm-teams-mvp/quickstart.md`
+- [X] T125 Update generated API docs index in `apps/backend/core/core-api/src/docs/asciidoc/index.adoc`
+- [X] T126 Validate OpenAPI contract against implemented DTOs in `specs/001-swm-teams-mvp/contracts/openapi.yaml`
+- [X] T127 Add quickstart validation notes in `specs/001-swm-teams-mvp/quickstart.md`
+- [X] T128 Run full test suite with `./gradlew test` and record result in `specs/001-swm-teams-mvp/quickstart.md`
+- [X] T129 Run ktlint with `./gradlew ktlintCheck` and record result in `specs/001-swm-teams-mvp/quickstart.md`
 
 ## Dependencies And Execution Order
 

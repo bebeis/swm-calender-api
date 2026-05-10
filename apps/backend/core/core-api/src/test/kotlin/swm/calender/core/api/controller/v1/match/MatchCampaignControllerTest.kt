@@ -16,6 +16,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
+import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.restdocs.request.RequestDocumentation.queryParameters
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.test.web.servlet.MockMvc
@@ -236,6 +237,42 @@ class MatchCampaignControllerTest : FunSpec() {
             )
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$.data.status").value("OPEN"))
+                .andDo(
+                    document(
+                        "match-campaign-create",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                            fieldWithPath("title").type(JsonFieldType.STRING).description("Campaign title"),
+                            fieldWithPath("description").type(JsonFieldType.STRING)
+                                .description("Campaign description"),
+                            fieldWithPath("targetTeamCount").type(JsonFieldType.NUMBER)
+                                .description("Target beta tester team count"),
+                            fieldWithPath("deadline").type(JsonFieldType.STRING).description("Campaign deadline"),
+                            fieldWithPath("reciprocalAvailable").type(JsonFieldType.BOOLEAN)
+                                .description("Whether reciprocal beta testing is available"),
+                            fieldWithPath("requirements").type(JsonFieldType.STRING)
+                                .description("Optional tester requirements").optional(),
+                        ),
+                        responseFields(
+                            fieldWithPath("result").type(JsonFieldType.STRING).description("API result"),
+                            fieldWithPath("data.campaignId").type(JsonFieldType.NUMBER)
+                                .description("Campaign id"),
+                            fieldWithPath("data.serviceProfileId").type(JsonFieldType.NUMBER)
+                                .description("Service profile id"),
+                            fieldWithPath("data.title").type(JsonFieldType.STRING).description("Campaign title"),
+                            fieldWithPath("data.targetTeamCount").type(JsonFieldType.NUMBER)
+                                .description("Target team count"),
+                            fieldWithPath("data.deadline").type(JsonFieldType.STRING)
+                                .description("Campaign deadline"),
+                            fieldWithPath("data.reciprocalAvailable").type(JsonFieldType.BOOLEAN)
+                                .description("Reciprocal beta availability"),
+                            fieldWithPath("data.status").type(JsonFieldType.STRING)
+                                .description("Campaign status"),
+                            fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                        ),
+                    ),
+                )
 
             mockMvc.perform(
                 org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch(
@@ -248,6 +285,37 @@ class MatchCampaignControllerTest : FunSpec() {
             )
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$.data.status").value("CLOSED"))
+                .andDo(
+                    document(
+                        "match-campaign-status-change",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                            parameterWithName("campaignId").description("Campaign id"),
+                        ),
+                        requestFields(
+                            fieldWithPath("status").type(JsonFieldType.STRING)
+                                .description("New campaign status"),
+                        ),
+                        responseFields(
+                            fieldWithPath("result").type(JsonFieldType.STRING).description("API result"),
+                            fieldWithPath("data.campaignId").type(JsonFieldType.NUMBER)
+                                .description("Campaign id"),
+                            fieldWithPath("data.serviceProfileId").type(JsonFieldType.NUMBER)
+                                .description("Service profile id"),
+                            fieldWithPath("data.title").type(JsonFieldType.STRING).description("Campaign title"),
+                            fieldWithPath("data.targetTeamCount").type(JsonFieldType.NUMBER)
+                                .description("Target team count"),
+                            fieldWithPath("data.deadline").type(JsonFieldType.STRING)
+                                .description("Campaign deadline"),
+                            fieldWithPath("data.reciprocalAvailable").type(JsonFieldType.BOOLEAN)
+                                .description("Reciprocal beta availability"),
+                            fieldWithPath("data.status").type(JsonFieldType.STRING)
+                                .description("Campaign status"),
+                            fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
+                        ),
+                    ),
+                )
         }
     }
 

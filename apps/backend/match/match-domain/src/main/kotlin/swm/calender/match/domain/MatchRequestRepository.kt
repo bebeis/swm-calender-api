@@ -28,4 +28,6 @@ interface MatchRequestRepository {
     fun findAssignmentById(assignmentId: AssignmentId): Assignment?
 
     fun saveNotification(notification: Notification): Notification
+
+    fun findNotificationsByTeamId(teamId: TeamId): List<Notification>
 }

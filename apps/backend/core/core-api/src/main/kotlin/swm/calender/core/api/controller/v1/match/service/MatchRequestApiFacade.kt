@@ -47,7 +47,7 @@ class MatchRequestApiFacade(
                 swm.calender.match.service.request.MatchRequestStatusChangeRequest(
                     actorUserId = user.userId,
                     requestId = RequestId(requestId),
-                    status = requireNotNull(request.status),
+                    status = requireNotNull(request.status).domainStatus,
                 ),
             ),
         )

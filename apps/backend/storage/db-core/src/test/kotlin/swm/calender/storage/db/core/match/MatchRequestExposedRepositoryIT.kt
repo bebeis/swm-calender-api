@@ -118,6 +118,7 @@ class MatchRequestExposedRepositoryIT : RepositoryTestSupport() {
             assignment.requestId shouldBe acceptedRequest.requireId()
             matchRequestExposedRepository.findAssignmentByRequestId(acceptedRequest.requireId())?.id shouldBe assignment.id
             notification.teamId shouldBe requestingTeamId
+            matchRequestExposedRepository.findNotificationsByTeamId(requestingTeamId).single().id shouldBe notification.id
             transaction {
                 MatchRequestStatusHistoryTable.selectAll().count()
             } shouldBe 2L

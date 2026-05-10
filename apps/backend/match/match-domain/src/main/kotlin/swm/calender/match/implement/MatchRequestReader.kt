@@ -8,6 +8,7 @@ import swm.calender.core.common.id.TeamId
 import swm.calender.match.domain.MatchRequestRepository
 import swm.calender.match.domain.model.Assignment
 import swm.calender.match.domain.model.MatchRequest
+import swm.calender.match.domain.model.Notification
 import swm.calender.match.exception.MatchDomainException
 import swm.calender.match.exception.MatchErrorMessage
 
@@ -36,5 +37,9 @@ class MatchRequestReader(
     fun getAssignment(assignmentId: AssignmentId): Assignment {
         return matchRequestRepository.findAssignmentById(assignmentId)
             ?: throw MatchDomainException(MatchErrorMessage.ASSIGNMENT_NOT_FOUND)
+    }
+
+    fun findNotificationsByTeamId(teamId: TeamId): List<Notification> {
+        return matchRequestRepository.findNotificationsByTeamId(teamId)
     }
 }
