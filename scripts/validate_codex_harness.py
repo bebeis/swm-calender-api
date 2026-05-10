@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_FILES = [
     "AGENTS.md",
+    "DESIGN.md",
     ".agents/skills/harness/SKILL.md",
     ".agents/skills/harness/agents/openai.yaml",
     ".agents/skills/harness/references/agent-design-patterns.md",
@@ -57,6 +58,7 @@ AGENTS_REQUIRED_TOKENS = [
     "apps/web",
     "apps/extension",
     "packages",
+    "DESIGN.md",
 ]
 
 AGENTS_STALE_TOKENS = [
@@ -92,6 +94,18 @@ TEAM_SPEC_REQUIRED_TOKENS = [
     "apps/web",
     "apps/extension",
     "swm-fullstack-contract",
+    "DESIGN.md",
+]
+
+DESIGN_REQUIRED_TOKENS = [
+    "SWM Teams",
+    "apps/web",
+    "Calendar",
+    "Match",
+    "loading",
+    "empty",
+    "error",
+    "responsive",
 ]
 
 STORAGE_SKILL_REQUIRED_TOKENS = [
@@ -189,6 +203,13 @@ def check_harness_docs(failures: list[str]) -> None:
             fail(f"Storage skill is missing transaction guidance token: {token}", failures)
 
 
+def check_design_guidance(failures: list[str]) -> None:
+    text = read_text("DESIGN.md")
+    for token in DESIGN_REQUIRED_TOKENS:
+        if token not in text:
+            fail(f"DESIGN.md is missing required guidance token: {token}", failures)
+
+
 def check_codex_agents(failures: list[str]) -> None:
     agent_paths = sorted((ROOT / ".codex/agents").glob("*.toml"))
     if not agent_paths:
@@ -213,7 +234,7 @@ def check_codex_agents(failures: list[str]) -> None:
             fail(f"Compliance reviewer profile is missing token: {token}", failures)
 
     frontend_text = read_text(".codex/agents/swm-frontend-web-engineer.toml")
-    for token in ("AGENTS.md", "apps/web", "packages", "swm-fullstack-contract"):
+    for token in ("AGENTS.md", "DESIGN.md", "apps/web", "packages", "swm-fullstack-contract"):
         if token not in frontend_text:
             fail(f"Frontend engineer profile is missing token: {token}", failures)
 
@@ -230,6 +251,7 @@ def main() -> int:
     if not failures:
         check_skill_frontmatter(failures)
         check_agents_guidance(failures)
+        check_design_guidance(failures)
         check_gradle_dependencies(failures)
         check_harness_docs(failures)
         check_codex_agents(failures)

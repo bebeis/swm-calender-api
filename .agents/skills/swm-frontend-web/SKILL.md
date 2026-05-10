@@ -20,6 +20,7 @@ Use this skill for web frontend work in the swm-teams monorepo.
 - Existing frontend framework and package manager, if already present.
 - Backend API contract or mock contract when the UI depends on server data.
 - Existing design system, component conventions, assets, and test setup.
+- Root `DESIGN.md` for product UI direction, visual tokens, layout, and interaction rules.
 
 ## Repository Boundaries
 
@@ -31,11 +32,12 @@ Use this skill for web frontend work in the swm-teams monorepo.
 ## Workflow
 
 1. Inspect `apps/web`, root package manifests, lockfiles, and any shared packages before choosing patterns.
-2. Identify the relevant screen, route, state model, API calls, loading state, empty state, error state, and responsive layout.
-3. Compare any API usage against backend DTOs or documented contracts. Use `swm-fullstack-contract` for cross-stack changes.
-4. Implement with existing app conventions. Keep UI state local unless shared state is already established or the workflow requires it.
-5. Add or update tests that match the existing frontend toolchain. Prefer component or route-level tests for user-visible behavior.
-6. Run the narrowest useful frontend verification commands, then broaden to build-level checks for meaningful UI or shared-package work.
+2. Read root `DESIGN.md` before creating or changing user-facing UI.
+3. Identify the relevant screen, route, state model, API calls, loading state, empty state, error state, and responsive layout.
+4. Compare any API usage against backend DTOs or documented contracts. Use `swm-fullstack-contract` for cross-stack changes.
+5. Implement with existing app conventions and `DESIGN.md` guidance. Keep UI state local unless shared state is already established or the workflow requires it.
+6. Add or update tests that match the existing frontend toolchain. Prefer component or route-level tests for user-visible behavior.
+7. Run the narrowest useful frontend verification commands, then broaden to build-level checks for meaningful UI or shared-package work.
 
 ## Outputs
 
@@ -56,4 +58,3 @@ Typical checks:
 - `build`
 
 For broad full-stack changes, also run the relevant backend Gradle checks from `swm-codex-harness`.
-

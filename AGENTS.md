@@ -24,6 +24,7 @@
 - subagent는 자동 실행을 전제로 하지 않는다. 큰 작업에서 명시적으로 역할을 나눌 때 사용한다.
 - Codex harness 문서는 `docs/harness/`에 둔다.
 - harness 또는 agent 지침을 수정하면 `python3 scripts/validate_codex_harness.py`를 실행한다.
+- 웹 프론트엔드 UI를 만들거나 수정할 때는 루트 `DESIGN.md`를 읽고 시각/UX 지침을 따른다.
 
 ## Monorepo Boundaries
 

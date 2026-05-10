@@ -13,6 +13,7 @@ Use this skill for non-trivial swm-teams work that benefits from a repeatable Co
 - `docs/harness/swm-codex/team-spec.md` defines the reusable phase order, role topology, and handoff files.
 - `references/agents-compliance-checklist.md` turns `AGENTS.md` into a concrete review gate.
 - `references/validation-commands.md` lists the verification commands and when to run each one.
+- `DESIGN.md` defines web frontend UI direction and must be loaded for user-facing `apps/web` work.
 
 ## Required Inputs
 
@@ -40,10 +41,11 @@ Use this skill for non-trivial swm-teams work that benefits from a repeatable Co
    - Spring-managed Exposed flow uses service/implement-layer `@Transactional`, not redundant repository `transaction {}` blocks.
    - Kotest/mockk for tests.
    - DTO, API, domain, implement-layer, and repository boundaries.
-4. Preserve deterministic handoffs for large work under `_workspace/` when the workflow spans multiple phases.
-5. Run an AGENTS compliance review before final verification.
-6. Run `python3 scripts/validate_codex_harness.py` after changing harness assets or agent guidance.
-7. Run the narrowest useful Gradle command while iterating, then broaden when the change risk warrants it.
+4. Keep `DESIGN.md` loaded while editing user-facing web UI.
+5. Preserve deterministic handoffs for large work under `_workspace/` when the workflow spans multiple phases.
+6. Run an AGENTS compliance review before final verification.
+7. Run `python3 scripts/validate_codex_harness.py` after changing harness assets or agent guidance.
+8. Run the narrowest useful Gradle command while iterating, then broaden when the change risk warrants it.
 
 ## Handoff Artifacts
 

@@ -7,6 +7,7 @@ This repository keeps reusable Codex workflow contracts under `docs/harness/`.
 - Reusable skills: `.agents/skills/`
 - Codex subagent profiles: `.codex/agents/`
 - Harness team specs: `docs/harness/{domain}/team-spec.md`
+- Product UI design contract: `DESIGN.md`
 - Optional role briefs: `docs/harness/{domain}/roles/`
 - Optional intermediate handoffs: `_workspace/`
 - Harness validation scripts: `scripts/`
@@ -18,6 +19,7 @@ This repository keeps reusable Codex workflow contracts under `docs/harness/`.
 - `.agents/skills/swm-codex-harness/SKILL.md` is the top-level orchestration skill.
 - `.agents/skills/swm-agents-compliance/SKILL.md` is the AGENTS.md review gate.
 - `.agents/skills/swm-frontend-web/SKILL.md` covers web frontend work in `apps/web`.
+- `DESIGN.md` defines the product UI direction for user-facing web frontend work.
 - `.agents/skills/swm-browser-extension/SKILL.md` covers browser extension work in `apps/extension`.
 - `.agents/skills/swm-fullstack-contract/SKILL.md` covers backend/frontend API contract work.
 - `scripts/validate_codex_harness.py` validates harness structure and AGENTS-related tool choices.
@@ -27,6 +29,7 @@ This repository keeps reusable Codex workflow contracts under `docs/harness/`.
 
 - Keep `AGENTS.md` focused on repo-wide rules.
 - Put workflow-specific detail in skills, team specs, or role briefs.
+- Keep durable product UI direction in `DESIGN.md`.
 - Keep Spring/Exposed transaction guidance aligned: service or implement-layer `@Transactional` for Spring-managed flows, explicit `transaction {}` only for tests or standalone storage utilities.
 - Keep model-specific recovery logic removable.
 - Update the harness validator when `AGENTS.md` changes in a way that affects Exposed, Flyway, Kotest, mockk, or agent asset contracts.

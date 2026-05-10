@@ -4,7 +4,7 @@
 
 Provide a reusable Codex workflow for swm-teams monorepo changes across backend, web frontend, browser extension, shared packages, docs, and harness assets while keeping implementation work aligned with `AGENTS.md`.
 
-Backend quality remains anchored on Exposed/Flyway persistence and Kotest/mockk tests. Frontend quality is anchored on app boundaries, explicit API contracts, package-script validation, and extension permission hygiene.
+Backend quality remains anchored on Exposed/Flyway persistence and Kotest/mockk tests. Frontend quality is anchored on app boundaries, explicit API contracts, `DESIGN.md`, package-script validation, and extension permission hygiene.
 
 ## Architecture Pattern
 
@@ -25,6 +25,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 
 - User request and acceptance criteria.
 - `AGENTS.md`.
+- `DESIGN.md` for user-facing web frontend UI direction.
 - Existing project skills under `.agents/skills/`.
 - Existing Codex subagent profiles under `.codex/agents/`.
 - Relevant source files, tests, docs, Gradle configuration, package manifests, lockfiles, and app configuration.
@@ -45,7 +46,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 | Domain/API engineer | Implement API, DTO, domain, service, implement-layer, and module-boundary changes. | `.agents/skills/swm-teams-architecture/SKILL.md`, `.codex/agents/swm-domain-feature-engineer.toml` | Backend source and tests in owned modules |
 | Storage engineer | Implement Exposed tables, repositories, queries, Flyway migrations, and repository tests. | `.agents/skills/swm-teams-exposed-storage/SKILL.md`, `.codex/agents/swm-exposed-storage-engineer.toml` | `apps/backend/storage/db-core/**` and migrations |
 | Test engineer | Add or update Kotest, mockk, RestDocs, and repository tests. | `.agents/skills/swm-teams-testing/SKILL.md`, `.codex/agents/swm-kotest-test-engineer.toml` | `**/src/test/**` and API docs tests |
-| Web frontend engineer | Implement web UI, routing, client state, API clients, shared UI, accessibility, and frontend tests. | `.agents/skills/swm-frontend-web/SKILL.md`, `.codex/agents/swm-frontend-web-engineer.toml` | `apps/web/**` and intentional `packages/**` shared files |
+| Web frontend engineer | Implement web UI, routing, client state, API clients, shared UI, accessibility, and frontend tests using `DESIGN.md` for product UI direction. | `.agents/skills/swm-frontend-web/SKILL.md`, `.codex/agents/swm-frontend-web-engineer.toml` | `apps/web/**` and intentional `packages/**` shared files |
 | Extension engineer | Implement browser extension manifest, popup, options, content scripts, background/service worker logic, permissions, and tests. | `.agents/skills/swm-browser-extension/SKILL.md`, `.codex/agents/swm-extension-engineer.toml` | `apps/extension/**` and intentional `packages/**` shared files |
 | Full-stack contract reviewer | Review backend/frontend API contracts, shared types, auth assumptions, error behavior, and cross-app verification coverage. | `.agents/skills/swm-fullstack-contract/SKILL.md`, `.codex/agents/swm-fullstack-contract-reviewer.toml` | Optional `_workspace/03_review/fullstack-contract.md` |
 | AGENTS compliance reviewer | Review the diff against `AGENTS.md` before final verification. | `.agents/skills/swm-agents-compliance/SKILL.md`, `.codex/agents/swm-agents-compliance-reviewer.toml` | Optional `_workspace/03_review/agents-compliance.md` |
@@ -58,7 +59,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 | Backend API, DTO, service, domain | `swm-teams-architecture` | `swm-agents-compliance` | `./gradlew :core:core-api:test`, then broader Gradle checks as needed |
 | Backend persistence | `swm-teams-exposed-storage` | `swm-agents-compliance` | `./gradlew :storage:db-core:test`, Flyway-aware checks, Spring `@Transactional` boundary review |
 | Backend tests and API docs | `swm-teams-testing` | `swm-agents-compliance` | Targeted Gradle test task |
-| Web frontend | `swm-frontend-web` | `swm-fullstack-contract` when API-dependent | Existing `apps/web/package.json` scripts |
+| Web frontend | `swm-frontend-web` plus `DESIGN.md` | `swm-fullstack-contract` when API-dependent | Existing `apps/web/package.json` scripts |
 | Browser extension | `swm-browser-extension` | `swm-fullstack-contract` when API-dependent | Existing `apps/extension/package.json` scripts and permission review |
 | Shared frontend package | `swm-frontend-web` or `swm-browser-extension` based on consumer | `swm-fullstack-contract` when API-dependent | Owning package scripts under `packages/**` |
 | Backend + frontend contract | `swm-fullstack-contract` plus owning producer skill | `swm-agents-compliance` and `swm-fullstack-contract` | Backend Gradle checks plus frontend package scripts |
@@ -71,7 +72,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 - Read `AGENTS.md`.
 - Read relevant project skill files.
 - Inspect the current diff and changed surface.
-- For frontend work, inspect package manifests, lockfiles, app folders, and shared packages.
+- For frontend work, read `DESIGN.md` and inspect package manifests, lockfiles, app folders, and shared packages.
 - Output: optional `_workspace/00_input/request-summary.md`.
 
 ### Phase 2: Routing And Plan
@@ -89,6 +90,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 - Keep Spring-managed Exposed transactions at the service or implement layer with `@Transactional`; avoid repository adapter `transaction {}` wrappers except in tests or standalone utilities.
 - Keep tests aligned with Kotest and mockk.
 - Keep web code in `apps/web`, extension code in `apps/extension`, and shared code in `packages` only when intentionally reused.
+- Keep user-facing web UI aligned with `DESIGN.md` unless a user request explicitly overrides the product direction.
 - Keep frontend API clients aligned with backend DTOs and documented endpoint behavior.
 - Output: code, docs, or harness assets.
 
@@ -121,6 +123,7 @@ The workflow stays repo-local and file-based. It does not require a separate run
 - Tests use Kotest and mockk where mocks are needed.
 - DTO, validation, API URI, response body, repository naming, domain, facade, and implement-layer rules follow `AGENTS.md`.
 - Web code stays under `apps/web` unless it is intentional shared code under `packages`.
+- User-facing web UI follows `DESIGN.md` for visual tokens, layout, states, and interaction patterns.
 - Extension code stays under `apps/extension` unless it is intentional shared code under `packages`.
 - Frontend apps do not import backend implementation code.
 - Browser extension permissions are minimal, and secrets are not stored in extension source or browser storage.
@@ -163,7 +166,7 @@ Forbidden overlaps:
 ### Normal Frontend Flow
 
 - Request: add or modify a web or extension user flow.
-- Expected outputs: changed app files, package-script verification summary, and full-stack contract review when API-dependent.
+- Expected outputs: changed app files, `DESIGN.md`-aligned UI states, package-script verification summary, and full-stack contract review when API-dependent.
 
 ### Full-Stack Contract Flow
 
