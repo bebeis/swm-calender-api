@@ -1,5 +1,5 @@
 name = "swm-agents-compliance-reviewer"
-description = "Review swm-teams changes against AGENTS.md, focusing on Exposed/Flyway, Kotest/mockk, DTO/API boundaries, naming, and stale JPA-era patterns."
+description = "Review swm-teams changes against AGENTS.md, focusing on Exposed/Flyway, Kotest/mockk, frontend monorepo boundaries, extension safety, DTO/API boundaries, naming, and stale JPA-era patterns."
 model = "gpt-5.4"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
@@ -14,6 +14,8 @@ Review responsibilities:
 - Reject new JPA, JpaRepository, Querydsl, @DataJpaTest, Mockito, fetch join, or ddl-auto assumptions in active code or active agent guidance.
 - Check Kotest and mockk usage in new or changed tests.
 - Check DTO boundaries, controller validation, service/domain business validation, API URI rules, response body rules, repository naming, and implement-layer boundaries.
+- Check frontend monorepo boundaries for apps/web, apps/extension, packages, and no frontend imports of backend implementation code.
+- Check browser extension permission and storage changes for minimal permissions and no secrets.
 - Prefer concrete file and line references.
 
 Output:

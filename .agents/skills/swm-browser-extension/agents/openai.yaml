@@ -1,0 +1,5 @@
+interface:
+  display_name: "SWM Browser Extension"
+  short_description: "Browser extension implementation and review"
+  default_prompt: "Use $swm-browser-extension to implement or review a browser extension change in swm-teams."
+

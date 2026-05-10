@@ -1,6 +1,6 @@
 ---
 name: swm-codex-harness
-description: Use when running a reusable Codex workflow for swm-teams changes, coordinating project skills, handoff artifacts, AGENTS.md compliance review, and verification commands.
+description: Use when running a reusable Codex workflow for swm-teams backend, web frontend, extension, full-stack contract, docs, or harness changes.
 ---
 
 # SWM Codex Harness
@@ -22,12 +22,19 @@ Use this skill for non-trivial swm-teams work that benefits from a repeatable Co
   - `swm-teams-architecture` for API, DTO, domain, service, implement-layer, and module-boundary work.
   - `swm-teams-exposed-storage` for Exposed, Flyway, repository, and storage query work.
   - `swm-teams-testing` for Kotest, mockk, RestDocs, and repository tests.
+  - `swm-frontend-web` for web frontend work under `apps/web`.
+  - `swm-browser-extension` for browser extension work under `apps/extension`.
+  - `swm-fullstack-contract` for backend/frontend API contract work and review.
   - `swm-agents-compliance` for final AGENTS.md compliance review.
 
 ## Workflow
 
 1. Summarize the request, affected modules, and likely verification commands.
 2. Route the work to the smallest relevant project skill set.
+   - Backend API/domain/storage/test work uses the backend skills.
+   - Web work uses `swm-frontend-web`.
+   - Extension work uses `swm-browser-extension`.
+   - Cross-stack API, shared type, auth, or error-shape work uses `swm-fullstack-contract`.
 3. Keep AGENTS.md constraints loaded while editing:
    - Exposed/Flyway for persistence.
    - Kotest/mockk for tests.
@@ -45,6 +52,7 @@ Use these files only when the task is large enough to justify durable intermedia
 - `_workspace/01_context/context-map.md`
 - `_workspace/02_plan/change-plan.md`
 - `_workspace/03_review/agents-compliance.md`
+- `_workspace/03_review/fullstack-contract.md`
 - `_workspace/final/result-summary.md`
 
 Do not create handoff files for simple edits where they would add noise.
@@ -57,6 +65,8 @@ Good parallel slices:
 
 - Architecture/API review independent from storage implementation.
 - Storage query review independent from service test authoring.
+- Web UI implementation independent from extension work after the API contract is stable.
+- Full-stack contract review after backend and frontend draft changes exist.
 - AGENTS compliance review after a draft diff exists.
 
 Avoid parallel slices that edit the same file or require each other's unfinished output.
@@ -66,5 +76,7 @@ Avoid parallel slices that edit the same file or require each other's unfinished
 - The diff follows `AGENTS.md`.
 - Any new persistence code uses Exposed/Flyway conventions.
 - Any new tests use Kotest and mockk where mocks are needed.
+- Web and extension code stays inside `apps/web`, `apps/extension`, or intentional `packages` shared modules.
+- Backend/frontend API contracts match on path, method, DTO fields, nullability, enum values, and error behavior.
 - Harness structure validates with `python3 scripts/validate_codex_harness.py`.
 - The final response reports the verification commands that passed or could not be run.

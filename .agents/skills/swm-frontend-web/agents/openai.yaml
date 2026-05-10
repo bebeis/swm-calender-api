@@ -1,0 +1,5 @@
+interface:
+  display_name: "SWM Frontend Web"
+  short_description: "Web frontend implementation and review"
+  default_prompt: "Use $swm-frontend-web to implement or review a web frontend change in swm-teams."
+

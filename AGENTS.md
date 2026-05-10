@@ -17,10 +17,22 @@
   - `swm-teams-architecture`: API, DTO, 도메인, 모듈 경계 작업에 사용한다.
   - `swm-teams-exposed-storage`: Exposed/Flyway 기반 storage 작업에 사용한다.
   - `swm-teams-testing`: Kotest/mockk/RestDocs/Repository 테스트 작업에 사용한다.
+  - `swm-frontend-web`: `apps/web` 웹 프론트엔드 작업에 사용한다.
+  - `swm-browser-extension`: `apps/extension` 브라우저 확장 작업에 사용한다.
+  - `swm-fullstack-contract`: 백엔드 API와 프론트엔드 클라이언트 계약을 함께 변경하거나 검토할 때 사용한다.
 - 프로젝트 전용 Codex subagent는 `.codex/agents/`에 둔다.
 - subagent는 자동 실행을 전제로 하지 않는다. 큰 작업에서 명시적으로 역할을 나눌 때 사용한다.
 - Codex harness 문서는 `docs/harness/`에 둔다.
 - harness 또는 agent 지침을 수정하면 `python3 scripts/validate_codex_harness.py`를 실행한다.
+
+## Monorepo Boundaries
+
+- 백엔드 Kotlin/Spring Boot 코드는 `apps/backend` 아래에 둔다.
+- 웹 프론트엔드 코드는 `apps/web` 아래에 둔다.
+- 브라우저 확장 코드는 `apps/extension` 아래에 둔다.
+- 여러 앱이 공유하는 타입, 유틸, UI 조각은 필요할 때만 `packages` 아래에 둔다.
+- 프론트엔드는 백엔드 구현 코드를 직접 import하지 않고 API contract나 shared package를 통해 연동한다.
+- 브라우저 확장은 필요한 최소 권한만 선언하고 secret이나 백엔드 private 설정을 소스 또는 브라우저 저장소에 두지 않는다.
 
 ## DTO Boundaries
 

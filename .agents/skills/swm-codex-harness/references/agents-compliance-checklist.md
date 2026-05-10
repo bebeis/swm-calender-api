@@ -46,6 +46,16 @@
 - Use enums for limited string values.
 - Return empty arrays for empty collections.
 
+## Frontend And Extension Boundaries
+
+- Keep web frontend code under `apps/web`.
+- Keep browser extension code under `apps/extension`.
+- Keep shared types, utilities, and UI pieces under `packages` only when they are intentionally reused.
+- Do not import backend Kotlin implementation code from frontend apps or shared frontend packages.
+- Keep frontend API clients aligned with backend endpoint paths, methods, DTO fields, nullability, enum values, and error behavior.
+- Keep browser extension permissions minimal and specific.
+- Do not store secrets or backend private configuration in extension source or browser storage.
+
 ## Naming
 
 - Domain repository interface: `[Domain]Repository`.

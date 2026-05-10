@@ -24,7 +24,16 @@ REQUIRED_FILES = [
     ".agents/skills/swm-teams-architecture/SKILL.md",
     ".agents/skills/swm-teams-exposed-storage/SKILL.md",
     ".agents/skills/swm-teams-testing/SKILL.md",
+    ".agents/skills/swm-frontend-web/SKILL.md",
+    ".agents/skills/swm-frontend-web/agents/openai.yaml",
+    ".agents/skills/swm-browser-extension/SKILL.md",
+    ".agents/skills/swm-browser-extension/agents/openai.yaml",
+    ".agents/skills/swm-fullstack-contract/SKILL.md",
+    ".agents/skills/swm-fullstack-contract/agents/openai.yaml",
     ".codex/agents/swm-agents-compliance-reviewer.toml",
+    ".codex/agents/swm-frontend-web-engineer.toml",
+    ".codex/agents/swm-extension-engineer.toml",
+    ".codex/agents/swm-fullstack-contract-reviewer.toml",
     "docs/harness/README.md",
     "docs/harness/swm-codex/team-spec.md",
     "docs/harness/swm-codex/roles/agents-compliance-reviewer.md",
@@ -43,6 +52,9 @@ AGENTS_REQUIRED_TOKENS = [
     "[도메인명]ExposedRepository",
     "XXXTable",
     "Spring Boot 4.0",
+    "apps/web",
+    "apps/extension",
+    "packages",
 ]
 
 AGENTS_STALE_TOKENS = [
@@ -73,6 +85,10 @@ TEAM_SPEC_REQUIRED_TOKENS = [
     "Exposed",
     "Kotest",
     "mockk",
+    "Expert Pool",
+    "apps/web",
+    "apps/extension",
+    "swm-fullstack-contract",
 ]
 
 
@@ -181,6 +197,16 @@ def check_codex_agents(failures: list[str]) -> None:
     for token in ("AGENTS.md", "Exposed", "Kotest", "mockk"):
         if token not in compliance_text:
             fail(f"Compliance reviewer profile is missing token: {token}", failures)
+
+    frontend_text = read_text(".codex/agents/swm-frontend-web-engineer.toml")
+    for token in ("AGENTS.md", "apps/web", "packages", "swm-fullstack-contract"):
+        if token not in frontend_text:
+            fail(f"Frontend engineer profile is missing token: {token}", failures)
+
+    extension_text = read_text(".codex/agents/swm-extension-engineer.toml")
+    for token in ("AGENTS.md", "apps/extension", "permissions", "swm-fullstack-contract"):
+        if token not in extension_text:
+            fail(f"Extension engineer profile is missing token: {token}", failures)
 
 
 def main() -> int:

@@ -1,0 +1,5 @@
+interface:
+  display_name: "SWM Fullstack Contract"
+  short_description: "Backend and frontend API contract review"
+  default_prompt: "Use $swm-fullstack-contract to review or implement backend/frontend contract changes in swm-teams."
+
