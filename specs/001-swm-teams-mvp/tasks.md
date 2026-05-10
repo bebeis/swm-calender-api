@@ -115,41 +115,41 @@ from another team.
 
 ### Tests for User Story 3
 
-- [ ] T054 [P] [US3] Add ServiceProfile domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/ServiceProfileTest.kt`
-- [ ] T055 [P] [US3] Add BetaCampaign domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/BetaCampaignTest.kt`
-- [ ] T056 [P] [US3] Add MatchService campaign tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/MatchCampaignServiceTest.kt`
-- [ ] T057 [P] [US3] Add MatchController profile/campaign RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/MatchCampaignControllerTest.kt`
-- [ ] T058 [P] [US3] Add Match campaign repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/MatchCampaignExposedRepositoryIT.kt`
-- [ ] T059 [P] [US3] Add CandidateIdea domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/CandidateIdeaTest.kt`
-- [ ] T060 [P] [US3] Add DuplicateAnalysis service tests with redacted private-source results in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/DuplicateAnalysisServiceTest.kt`
-- [ ] T061 [P] [US3] Add CandidateIdeaController RestDocs tests for candidate ideas and duplicate analysis in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/CandidateIdeaControllerTest.kt`
-- [ ] T062 [P] [US3] Add candidate idea and duplicate analysis repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/CandidateIdeaExposedRepositoryIT.kt`
+- [X] T054 [P] [US3] Add ServiceProfile domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/ServiceProfileTest.kt`
+- [X] T055 [P] [US3] Add BetaCampaign domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/BetaCampaignTest.kt`
+- [X] T056 [P] [US3] Add MatchService campaign tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/MatchCampaignServiceTest.kt`
+- [X] T057 [P] [US3] Add MatchController profile/campaign RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/MatchCampaignControllerTest.kt`
+- [X] T058 [P] [US3] Add Match campaign repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/MatchCampaignExposedRepositoryIT.kt`
+- [X] T059 [P] [US3] Add CandidateIdea domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/CandidateIdeaTest.kt`
+- [X] T060 [P] [US3] Add DuplicateAnalysis service tests with redacted private-source results in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/DuplicateAnalysisServiceTest.kt`
+- [X] T061 [P] [US3] Add CandidateIdeaController RestDocs tests for candidate ideas and duplicate analysis in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/CandidateIdeaControllerTest.kt`
+- [X] T062 [P] [US3] Add candidate idea and duplicate analysis repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/CandidateIdeaExposedRepositoryIT.kt`
 
 ### Implementation for User Story 3
 
-- [ ] T063 [P] [US3] Add ServiceProfile model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/ServiceProfile.kt`
-- [ ] T064 [P] [US3] Add BetaCampaign model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/BetaCampaign.kt`
-- [ ] T065 [P] [US3] Add CandidateIdea model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/CandidateIdea.kt`
-- [ ] T066 [P] [US3] Add DuplicateAnalysis and DuplicateAnalysisMatch models in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/DuplicateAnalysis.kt`
-- [ ] T067 [US3] Add MatchCampaignRepository interface in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/MatchCampaignRepository.kt`
-- [ ] T068 [US3] Add CandidateIdeaRepository and DuplicateAnalysisRepository interfaces in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/`
-- [ ] T069 [US3] Add MatchCampaignReader and MatchCampaignWriter in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/MatchCampaignReader.kt`
-- [ ] T070 [US3] Add CandidateIdeaReader/Writer and DuplicateAnalysisReader/Writer implement-layer components in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/`
-- [ ] T071 [US3] Add AI duplicate analyzer port in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/DuplicateIdeaAnalyzer.kt`
-- [ ] T072 [US3] Add MatchCampaignService in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/MatchCampaignService.kt`
-- [ ] T073 [US3] Add CandidateIdeaService and DuplicateAnalysisService in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/`
-- [ ] T074 [US3] Add Match campaign request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/CampaignCreateRequest.kt`
-- [ ] T075 [US3] Add Match campaign response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/CampaignResponse.kt`
-- [ ] T076 [US3] Add candidate idea and duplicate analysis DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/`
-- [ ] T077 [US3] Add MatchCampaignController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/MatchCampaignController.kt`
-- [ ] T078 [US3] Add CandidateIdeaController endpoints for create/list and duplicate analysis in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/CandidateIdeaController.kt`
-- [ ] T079 [US3] Add Match campaign Exposed tables in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchCampaignTable.kt`
-- [ ] T080 [US3] Add CandidateIdeaTable and DuplicateAnalysisTable in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/CandidateIdeaTable.kt`
+- [X] T063 [P] [US3] Add ServiceProfile model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/ServiceProfile.kt`
+- [X] T064 [P] [US3] Add BetaCampaign model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/BetaCampaign.kt`
+- [X] T065 [P] [US3] Add CandidateIdea model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/CandidateIdea.kt`
+- [X] T066 [P] [US3] Add DuplicateAnalysis and DuplicateAnalysisMatch models in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/DuplicateAnalysis.kt`
+- [X] T067 [US3] Add MatchCampaignRepository interface in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/MatchCampaignRepository.kt`
+- [X] T068 [US3] Add CandidateIdeaRepository and DuplicateAnalysisRepository interfaces in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/`
+- [X] T069 [US3] Add MatchCampaignReader and MatchCampaignWriter in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/MatchCampaignReader.kt`
+- [X] T070 [US3] Add CandidateIdeaReader/Writer and DuplicateAnalysisReader/Writer implement-layer components in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/`
+- [X] T071 [US3] Add AI duplicate analyzer port in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/DuplicateIdeaAnalyzer.kt`
+- [X] T072 [US3] Add MatchCampaignService in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/MatchCampaignService.kt`
+- [X] T073 [US3] Add CandidateIdeaService and DuplicateAnalysisService in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/`
+- [X] T074 [US3] Add Match campaign request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/CampaignCreateRequest.kt`
+- [X] T075 [US3] Add Match campaign response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/CampaignResponse.kt`
+- [X] T076 [US3] Add candidate idea and duplicate analysis DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/`
+- [X] T077 [US3] Add MatchCampaignController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/MatchCampaignController.kt`
+- [X] T078 [US3] Add CandidateIdeaController endpoints for create/list and duplicate analysis in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/CandidateIdeaController.kt`
+- [X] T079 [US3] Add Match campaign Exposed tables in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchCampaignTable.kt`
+- [X] T080 [US3] Add CandidateIdeaTable and DuplicateAnalysisTable in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/CandidateIdeaTable.kt`
   and `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/DuplicateAnalysisTable.kt`
-- [ ] T081 [US3] Add MatchCampaignExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchCampaignExposedRepository.kt`
-- [ ] T082 [US3] Add CandidateIdeaExposedRepository and DuplicateAnalysisExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/`
-- [ ] T083 [US3] Add match campaign Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V4__create_match_campaign_tables.sql`
-- [ ] T084 [US3] Add candidate idea and duplicate analysis Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V5__create_candidate_idea_tables.sql`
+- [X] T081 [US3] Add MatchCampaignExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchCampaignExposedRepository.kt`
+- [X] T082 [US3] Add CandidateIdeaExposedRepository and DuplicateAnalysisExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/`
+- [X] T083 [US3] Add match campaign Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V4__create_match_campaign_tables.sql`
+- [X] T084 [US3] Add candidate idea and duplicate analysis Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V5__create_candidate_idea_tables.sql`
 
 **Checkpoint**: US3 works independently for profile publishing, private candidate ideas, duplicate analysis, and
 public campaign discovery.

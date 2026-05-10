@@ -75,6 +75,15 @@ enum class SimilarityLevel {
     HIGH,
 }
 
+enum class OverlapDimension {
+    PROBLEM,
+    TARGET_USER,
+    SOLUTION,
+    FEATURE,
+    PLATFORM,
+    BUSINESS_MODEL,
+}
+
 enum class CampaignStatus {
     DRAFT,
     OPEN,
