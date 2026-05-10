@@ -112,6 +112,7 @@ data class AssignmentSnapshot(
     val testerTeamId: Long,
     val targetTeamId: Long,
     val status: AssignmentStatus,
+    val feedback: FeedbackSnapshot?,
 ) {
     companion object {
         fun from(response: AssignmentServiceResponse): AssignmentSnapshot {
@@ -121,6 +122,7 @@ data class AssignmentSnapshot(
                 testerTeamId = response.testerTeamId.value,
                 targetTeamId = response.targetTeamId.value,
                 status = response.status,
+                feedback = response.feedback?.let(FeedbackSnapshot::from),
             )
         }
     }

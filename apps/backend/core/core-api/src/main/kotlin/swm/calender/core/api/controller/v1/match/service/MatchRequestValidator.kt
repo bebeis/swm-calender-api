@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import swm.calender.core.api.controller.v1.match.request.CampaignCreateRequest
 import swm.calender.core.api.controller.v1.match.request.CampaignStatusChangeRequest
 import swm.calender.core.api.controller.v1.match.request.CandidateIdeaCreateRequest
+import swm.calender.core.api.controller.v1.match.request.FeedbackSubmitRequest
 import swm.calender.core.api.controller.v1.match.request.MatchRequestCreateRequest
 import swm.calender.core.api.controller.v1.match.request.MatchRequestStatusChangeRequest
 import swm.calender.core.api.controller.v1.match.request.ServiceProfileCreateRequest
@@ -60,6 +61,10 @@ class MatchRequestValidator(
     fun validateMatchRequestStatusChange(request: MatchRequestStatusChangeRequest) {
         validateBean(request)
         request.status ?: throw MatchApiException.badRequest("status is required.")
+    }
+
+    fun validateFeedbackSubmit(request: FeedbackSubmitRequest) {
+        validateBean(request)
     }
 
     fun parseCategory(value: String?): CampaignCategory? {

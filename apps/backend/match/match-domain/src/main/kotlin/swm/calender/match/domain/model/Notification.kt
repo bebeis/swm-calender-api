@@ -1,5 +1,6 @@
 package swm.calender.match.domain.model
 
+import swm.calender.core.common.id.AssignmentId
 import swm.calender.core.common.id.RequestId
 import swm.calender.core.common.id.TeamId
 import swm.calender.core.enums.NotificationType
@@ -9,6 +10,7 @@ import java.time.Instant
 
 enum class NotificationReferenceType {
     MATCH_REQUEST,
+    ASSIGNMENT,
 }
 
 data class Notification(
@@ -80,6 +82,21 @@ data class Notification(
                 type = NotificationType.REQUEST_CANCELED,
                 requestId = requestId,
                 message = "Beta request canceled.",
+                createdAt = createdAt,
+            )
+        }
+
+        fun feedbackSubmitted(
+            teamId: TeamId,
+            assignmentId: AssignmentId,
+            createdAt: Instant,
+        ): Notification {
+            return Notification(
+                teamId = teamId,
+                type = NotificationType.FEEDBACK_SUBMITTED,
+                referenceType = NotificationReferenceType.ASSIGNMENT,
+                referenceId = assignmentId.value,
+                message = "Beta test feedback submitted.",
                 createdAt = createdAt,
             )
         }

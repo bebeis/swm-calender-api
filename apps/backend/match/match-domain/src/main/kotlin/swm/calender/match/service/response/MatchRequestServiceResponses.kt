@@ -5,6 +5,7 @@ import swm.calender.core.enums.AssignmentStatus
 import swm.calender.core.enums.MatchRequestStatus
 import swm.calender.core.enums.MatchRequestType
 import swm.calender.match.domain.model.Assignment
+import swm.calender.match.domain.model.Feedback
 import swm.calender.match.domain.model.MatchRequest
 
 data class MatchRequestResponse(
@@ -41,15 +42,20 @@ data class AssignmentResponse(
     val testerTeamId: TeamId,
     val targetTeamId: TeamId,
     val status: AssignmentStatus,
+    val feedback: FeedbackResponse?,
 ) {
     companion object {
-        fun from(assignment: Assignment): AssignmentResponse {
+        fun from(
+            assignment: Assignment,
+            feedback: Feedback?,
+        ): AssignmentResponse {
             return AssignmentResponse(
                 assignmentId = requireNotNull(assignment.id).value,
                 requestId = assignment.requestId.value,
                 testerTeamId = assignment.testerTeamId,
                 targetTeamId = assignment.targetTeamId,
                 status = assignment.status,
+                feedback = feedback?.let(FeedbackResponse::from),
             )
         }
     }

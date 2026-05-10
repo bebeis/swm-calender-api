@@ -4,6 +4,7 @@ import swm.calender.core.common.id.AssignmentId
 import swm.calender.core.common.id.CampaignId
 import swm.calender.core.common.id.CandidateIdeaId
 import swm.calender.core.common.id.DuplicateAnalysisId
+import swm.calender.core.common.id.FeedbackId
 import swm.calender.core.common.id.RequestId
 import swm.calender.core.common.id.TeamId
 import swm.calender.core.common.id.UserId
@@ -25,6 +26,8 @@ import swm.calender.match.domain.model.BetaCampaign
 import swm.calender.match.domain.model.CandidateIdea
 import swm.calender.match.domain.model.DuplicateAnalysis
 import swm.calender.match.domain.model.DuplicateAnalysisMatch
+import swm.calender.match.domain.model.Feedback
+import swm.calender.match.domain.model.FeedbackScores
 import swm.calender.match.domain.model.MatchRequest
 import swm.calender.match.domain.model.MatchRequestStatusHistory
 import swm.calender.match.domain.model.Notification
@@ -254,6 +257,38 @@ internal data class AssignmentEntity(
             status = status,
             createdAt = createdAt.toInstant(),
             updatedAt = updatedAt.toInstant(),
+        )
+    }
+}
+
+internal data class FeedbackEntity(
+    val id: Long,
+    val assignmentId: Long,
+    val submittedByTeamId: Long,
+    val submittedByUserId: Long,
+    val usabilityScore: Int,
+    val valueScore: Int,
+    val reliabilityScore: Int,
+    val recommendationScore: Int,
+    val summary: String,
+    val improvementSuggestion: String?,
+    val submittedAt: LocalDateTime,
+) {
+    fun toDomain(): Feedback {
+        return Feedback(
+            id = FeedbackId(id),
+            assignmentId = AssignmentId(assignmentId),
+            submittedByTeamId = TeamId(submittedByTeamId),
+            submittedByUserId = UserId(submittedByUserId),
+            scores = FeedbackScores(
+                usability = usabilityScore,
+                value = valueScore,
+                reliability = reliabilityScore,
+                recommendation = recommendationScore,
+            ),
+            summary = summary,
+            improvementSuggestion = improvementSuggestion,
+            submittedAt = submittedAt.toInstant(),
         )
     }
 }

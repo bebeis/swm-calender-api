@@ -24,6 +24,21 @@ data class Assignment(
         }
     }
 
+    fun submitFeedback(submittedAt: Instant): Assignment {
+        if (status != AssignmentStatus.ASSIGNED) {
+            throw MatchDomainException(MatchErrorMessage.ASSIGNMENT_FEEDBACK_UNAVAILABLE)
+        }
+
+        return copy(
+            status = AssignmentStatus.FEEDBACK_SUBMITTED,
+            updatedAt = submittedAt,
+        )
+    }
+
+    fun requireId(): AssignmentId {
+        return id ?: throw MatchDomainException(MatchErrorMessage.ASSIGNMENT_NOT_FOUND)
+    }
+
     companion object {
         fun createFrom(
             request: MatchRequest,

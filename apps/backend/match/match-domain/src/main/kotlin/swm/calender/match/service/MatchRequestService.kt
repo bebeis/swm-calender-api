@@ -16,6 +16,7 @@ import swm.calender.match.domain.model.MatchRequestStatusHistory
 import swm.calender.match.domain.model.Notification
 import swm.calender.match.exception.MatchDomainException
 import swm.calender.match.exception.MatchErrorMessage
+import swm.calender.match.implement.FeedbackReader
 import swm.calender.match.implement.MatchCampaignReader
 import swm.calender.match.implement.MatchRequestReader
 import swm.calender.match.implement.MatchRequestWriter
@@ -34,6 +35,7 @@ class MatchRequestService(
     private val matchCampaignReader: MatchCampaignReader,
     private val matchRequestReader: MatchRequestReader,
     private val matchRequestWriter: MatchRequestWriter,
+    private val feedbackReader: FeedbackReader,
     private val clock: Clock = Clock.systemUTC(),
 ) {
     @Transactional
@@ -139,7 +141,10 @@ class MatchRequestService(
             throw MatchDomainException(MatchErrorMessage.ASSIGNMENT_NOT_FOUND)
         }
 
-        return AssignmentResponse.from(assignment)
+        return AssignmentResponse.from(
+            assignment = assignment,
+            feedback = feedbackReader.findByAssignmentId(assignment.requireId()),
+        )
     }
 
     private fun validateReciprocalRequest(

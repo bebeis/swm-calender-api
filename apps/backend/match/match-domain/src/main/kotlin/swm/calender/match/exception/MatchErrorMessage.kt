@@ -39,5 +39,12 @@ enum class MatchErrorMessage(
     ASSIGNMENT_NOT_FOUND("Assignment not found."),
     ASSIGNMENT_REQUEST_NOT_ACCEPTED("Assignment can only be created from an accepted request."),
     ASSIGNMENT_SELF_ASSIGNMENT_NOT_ALLOWED("Assignment tester team and target team must be different."),
+    ASSIGNMENT_FEEDBACK_UNAVAILABLE("Feedback can only be submitted for an assigned assignment."),
+    FEEDBACK_NOT_FOUND("Feedback not found."),
+    FEEDBACK_DUPLICATED("Feedback already exists for this assignment."),
+    FEEDBACK_SCORE_INVALID("Feedback scores must be between 1 and 5."),
+    FEEDBACK_SUMMARY_LENGTH_INVALID("Feedback summary must be between 10 and 1000 characters."),
+    FEEDBACK_IMPROVEMENT_SUGGESTION_TOO_LONG("Feedback improvement suggestion must be 1000 characters or less."),
+    FEEDBACK_SUBMITTER_NOT_TESTER_TEAM("Only the assigned tester team can submit feedback."),
     NOTIFICATION_MESSAGE_REQUIRED("Notification message is required."),
 }

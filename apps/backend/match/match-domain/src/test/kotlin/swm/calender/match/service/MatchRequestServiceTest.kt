@@ -10,10 +10,12 @@ import io.mockk.slot
 import io.mockk.verify
 import swm.calender.core.common.id.AssignmentId
 import swm.calender.core.common.id.CampaignId
+import swm.calender.core.common.id.FeedbackId
 import swm.calender.core.common.id.RequestId
 import swm.calender.core.common.id.TeamId
 import swm.calender.core.common.id.TeamMemberId
 import swm.calender.core.common.id.UserId
+import swm.calender.core.enums.AssignmentStatus
 import swm.calender.core.enums.CampaignStatus
 import swm.calender.core.enums.MatchRequestStatus
 import swm.calender.core.enums.MatchRequestType
@@ -23,12 +25,16 @@ import swm.calender.core.team.domain.model.Team
 import swm.calender.core.team.implement.TeamReader
 import swm.calender.match.domain.model.Assignment
 import swm.calender.match.domain.model.BetaCampaign
+import swm.calender.match.domain.model.Feedback
+import swm.calender.match.domain.model.FeedbackScores
 import swm.calender.match.domain.model.MatchRequest
 import swm.calender.match.domain.model.MatchRequestStatusHistory
 import swm.calender.match.domain.model.Notification
+import swm.calender.match.implement.FeedbackReader
 import swm.calender.match.implement.MatchCampaignReader
 import swm.calender.match.implement.MatchRequestReader
 import swm.calender.match.implement.MatchRequestWriter
+import swm.calender.match.service.request.AssignmentGetRequest
 import swm.calender.match.service.request.MatchRequestCreateRequest
 import swm.calender.match.service.request.MatchRequestStatusChangeRequest
 import java.time.Clock
@@ -45,6 +51,7 @@ class MatchRequestServiceTest :
         lateinit var matchCampaignReader: MatchCampaignReader
         lateinit var matchRequestReader: MatchRequestReader
         lateinit var matchRequestWriter: MatchRequestWriter
+        lateinit var feedbackReader: FeedbackReader
         lateinit var matchRequestService: MatchRequestService
 
         beforeTest {
@@ -52,11 +59,13 @@ class MatchRequestServiceTest :
             matchCampaignReader = mockk()
             matchRequestReader = mockk()
             matchRequestWriter = mockk()
+            feedbackReader = mockk()
             matchRequestService = MatchRequestService(
                 teamReader = teamReader,
                 matchCampaignReader = matchCampaignReader,
                 matchRequestReader = matchRequestReader,
                 matchRequestWriter = matchRequestWriter,
+                feedbackReader = feedbackReader,
                 clock = fixedClock,
             )
         }
@@ -156,6 +165,46 @@ class MatchRequestServiceTest :
             assignmentSlot.captured.requestId shouldBe requestId
             verify(exactly = 1) { matchRequestWriter.saveAssignment(any()) }
         }
+
+        test("getAssignment includes submitted feedback for participant team") {
+            // given
+            val actorUserId = UserId(10L)
+            val testerTeamId = TeamId(1L)
+            val targetTeamId = TeamId(2L)
+            val assignmentId = AssignmentId(31L)
+            val assignment = Assignment(
+                id = assignmentId,
+                requestId = RequestId(11L),
+                testerTeamId = testerTeamId,
+                targetTeamId = targetTeamId,
+                status = AssignmentStatus.FEEDBACK_SUBMITTED,
+                createdAt = fixedInstant.minusSeconds(60),
+                updatedAt = fixedInstant,
+            )
+            every { teamReader.getActiveByUserId(actorUserId) } returns matchEnabledTeam(
+                teamId = testerTeamId,
+                ownerUserId = actorUserId,
+            )
+            every { matchRequestReader.getAssignment(assignmentId) } returns assignment
+            every { feedbackReader.findByAssignmentId(assignmentId) } returns feedback(
+                assignmentId = assignmentId,
+                submittedByTeamId = testerTeamId,
+                submittedByUserId = actorUserId,
+                submittedAt = fixedInstant,
+            )
+
+            // when
+            val response = matchRequestService.getAssignment(
+                AssignmentGetRequest(
+                    actorUserId = actorUserId,
+                    assignmentId = assignmentId,
+                ),
+            )
+
+            // then
+            response.feedback?.summary shouldBe "The service was useful during testing."
+            verify(exactly = 1) { feedbackReader.findByAssignmentId(assignmentId) }
+        }
     }) {
     companion object {
         private val baseInstant: Instant = Instant.parse("2026-05-09T23:00:00Z")
@@ -224,6 +273,29 @@ class MatchRequestServiceTest :
                 message = null,
                 createdAt = createdAt,
             ).copy(id = requestId)
+        }
+
+        private fun feedback(
+            assignmentId: AssignmentId,
+            submittedByTeamId: TeamId,
+            submittedByUserId: UserId,
+            submittedAt: Instant,
+        ): Feedback {
+            return Feedback(
+                id = FeedbackId(41L),
+                assignmentId = assignmentId,
+                submittedByTeamId = submittedByTeamId,
+                submittedByUserId = submittedByUserId,
+                scores = FeedbackScores(
+                    usability = 5,
+                    value = 4,
+                    reliability = 5,
+                    recommendation = 4,
+                ),
+                summary = "The service was useful during testing.",
+                improvementSuggestion = "Add onboarding.",
+                submittedAt = submittedAt,
+            )
         }
     }
 }

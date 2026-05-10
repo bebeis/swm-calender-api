@@ -193,23 +193,23 @@ public campaign discovery.
 
 ### Tests for User Story 5
 
-- [ ] T102 [P] [US5] Add Feedback domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/FeedbackTest.kt`
-- [ ] T103 [P] [US5] Add FeedbackService mockk tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/FeedbackServiceTest.kt`
-- [ ] T104 [P] [US5] Add FeedbackController RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/FeedbackControllerTest.kt`
-- [ ] T105 [P] [US5] Add feedback repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/FeedbackExposedRepositoryIT.kt`
+- [X] T102 [P] [US5] Add Feedback domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/FeedbackTest.kt`
+- [X] T103 [P] [US5] Add FeedbackService mockk tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/FeedbackServiceTest.kt`
+- [X] T104 [P] [US5] Add FeedbackController RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/FeedbackControllerTest.kt`
+- [X] T105 [P] [US5] Add feedback repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/FeedbackExposedRepositoryIT.kt`
 
 ### Implementation for User Story 5
 
-- [ ] T106 [P] [US5] Add Feedback model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Feedback.kt`
-- [ ] T107 [US5] Add FeedbackRepository interface in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/FeedbackRepository.kt`
-- [ ] T108 [US5] Add FeedbackReader and FeedbackWriter in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/FeedbackReader.kt`
-- [ ] T109 [US5] Add FeedbackService in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/FeedbackService.kt`
-- [ ] T110 [US5] Add feedback request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/FeedbackSubmitRequest.kt`
-- [ ] T111 [US5] Add feedback response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/FeedbackResponse.kt`
-- [ ] T112 [US5] Add FeedbackController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/FeedbackController.kt`
-- [ ] T113 [US5] Add FeedbackTable in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/FeedbackTable.kt`
-- [ ] T114 [US5] Add FeedbackExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/FeedbackExposedRepository.kt`
-- [ ] T115 [US5] Add feedback Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V7__create_feedback_tables.sql`
+- [X] T106 [P] [US5] Add Feedback model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Feedback.kt`
+- [X] T107 [US5] Add FeedbackRepository interface in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/FeedbackRepository.kt`
+- [X] T108 [US5] Add FeedbackReader and FeedbackWriter in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/FeedbackReader.kt`
+- [X] T109 [US5] Add FeedbackService in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/FeedbackService.kt`
+- [X] T110 [US5] Add feedback request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/FeedbackSubmitRequest.kt`
+- [X] T111 [US5] Add feedback response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/FeedbackResponse.kt`
+- [X] T112 [US5] Add FeedbackController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/FeedbackController.kt`
+- [X] T113 [US5] Add FeedbackTable in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/FeedbackTable.kt`
+- [X] T114 [US5] Add FeedbackExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/FeedbackExposedRepository.kt`
+- [X] T115 [US5] Add feedback Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V7__create_feedback_tables.sql`
 
 **Checkpoint**: US5 feedback and test history work without exposing other teams' private data.
 

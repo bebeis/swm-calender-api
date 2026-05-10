@@ -4,22 +4,19 @@ import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
 import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.insert
-import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.springframework.beans.factory.annotation.Autowired
-import swm.calender.core.common.id.CampaignId
 import swm.calender.core.common.id.TeamId
 import swm.calender.core.common.id.UserId
 import swm.calender.core.enums.CampaignCategory
 import swm.calender.core.enums.CampaignStatus
-import swm.calender.core.enums.MatchRequestStatus
 import swm.calender.core.enums.MatchRequestType
 import swm.calender.core.enums.Platform
 import swm.calender.match.domain.model.Assignment
 import swm.calender.match.domain.model.BetaCampaign
+import swm.calender.match.domain.model.Feedback
+import swm.calender.match.domain.model.FeedbackScores
 import swm.calender.match.domain.model.MatchRequest
-import swm.calender.match.domain.model.MatchRequestStatusHistory
-import swm.calender.match.domain.model.Notification
 import swm.calender.match.domain.model.ServiceProfile
 import swm.calender.storage.db.core.RepositoryTestSupport
 import swm.calender.storage.db.core.team.SubServiceActivationTable
@@ -28,12 +25,15 @@ import swm.calender.storage.db.core.team.TeamTable
 import java.time.Instant
 import java.time.OffsetDateTime
 
-class MatchRequestExposedRepositoryIT : RepositoryTestSupport() {
+class FeedbackExposedRepositoryIT : RepositoryTestSupport() {
     @Autowired
     private lateinit var matchCampaignExposedRepository: MatchCampaignExposedRepository
 
     @Autowired
     private lateinit var matchRequestExposedRepository: MatchRequestExposedRepository
+
+    @Autowired
+    private lateinit var feedbackExposedRepository: FeedbackExposedRepository
 
     init {
         extension(SpringExtension())
@@ -44,82 +44,51 @@ class MatchRequestExposedRepositoryIT : RepositoryTestSupport() {
             cleanMatchTables()
         }
 
-        test("saveRequest stores pending request and detects active duplicate") {
+        test("save stores assignment feedback") {
             // given
-            val requestingTeamId = createTeam("Requester", "REQUESTER")
-            val targetTeamId = createTeam("Target", "TARGET")
-            val campaign = createCampaign(targetTeamId, baseInstant)
+            val fixture = createAcceptedAssignmentFixture(baseInstant)
 
             // when
-            val savedRequest = matchRequestExposedRepository.saveRequest(
-                pendingRequest(
-                    campaignId = requireNotNull(campaign.id),
-                    requestingTeamId = requestingTeamId,
-                    targetTeamId = targetTeamId,
-                    createdAt = baseInstant,
+            val savedFeedback = feedbackExposedRepository.save(
+                feedback(
+                    assignment = fixture.assignment,
+                    submittedByTeamId = fixture.requestingTeamId,
+                    submittedByUserId = UserId(10L),
+                    submittedAt = baseInstant.plusSeconds(60),
                 ),
             )
 
             // then
-            savedRequest.status shouldBe MatchRequestStatus.PENDING
-            matchRequestExposedRepository.existsActiveRequestByCampaignIdAndRequestingTeamId(
-                campaignId = requireNotNull(campaign.id),
-                requestingTeamId = requestingTeamId,
-            ) shouldBe true
+            savedFeedback.assignmentId shouldBe fixture.assignment.requireId()
+            savedFeedback.scores.usability shouldBe 5
+            feedbackExposedRepository.existsByAssignmentId(fixture.assignment.requireId()) shouldBe true
+            feedbackExposedRepository.findByAssignmentId(fixture.assignment.requireId())?.summary shouldBe
+                "The service was useful during testing."
         }
 
-        test("accepted request can persist status history, assignment, and notification") {
+        test("findTeamTestHistoryByTeamId returns completed assignment with feedback summary") {
             // given
-            val requestingTeamId = createTeam("Requester", "REQUESTER")
-            val targetTeamId = createTeam("Target", "TARGET")
-            val campaign = createCampaign(targetTeamId, baseInstant)
-            val savedRequest = matchRequestExposedRepository.saveRequest(
-                pendingRequest(
-                    campaignId = requireNotNull(campaign.id),
-                    requestingTeamId = requestingTeamId,
-                    targetTeamId = targetTeamId,
-                    createdAt = baseInstant,
+            val fixture = createAcceptedAssignmentFixture(baseInstant)
+            val savedFeedback = feedbackExposedRepository.save(
+                feedback(
+                    assignment = fixture.assignment,
+                    submittedByTeamId = fixture.requestingTeamId,
+                    submittedByUserId = UserId(10L),
+                    submittedAt = baseInstant.plusSeconds(60),
                 ),
             )
-            matchRequestExposedRepository.saveStatusHistory(
-                MatchRequestStatusHistory.created(
-                    requestId = savedRequest.requireId(),
-                    changedByUserId = UserId(10L),
-                    createdAt = baseInstant,
-                ),
+            matchRequestExposedRepository.saveAssignment(
+                fixture.assignment.submitFeedback(baseInstant.plusSeconds(60)),
             )
 
             // when
-            val acceptedRequest = matchRequestExposedRepository.saveRequest(
-                savedRequest.accept(baseInstant.plusSeconds(60)),
-            )
-            matchRequestExposedRepository.saveStatusHistory(
-                MatchRequestStatusHistory.changed(
-                    requestId = acceptedRequest.requireId(),
-                    fromStatus = MatchRequestStatus.PENDING,
-                    toStatus = MatchRequestStatus.ACCEPTED,
-                    changedByUserId = UserId(20L),
-                    createdAt = baseInstant.plusSeconds(60),
-                ),
-            )
-            val assignment = matchRequestExposedRepository.saveAssignment(
-                Assignment.createFrom(acceptedRequest, baseInstant.plusSeconds(120)),
-            )
-            val notification = matchRequestExposedRepository.saveNotification(
-                Notification.requestAccepted(
-                    teamId = requestingTeamId,
-                    requestId = acceptedRequest.requireId(),
-                    createdAt = baseInstant.plusSeconds(120),
-                ),
-            )
+            val history = feedbackExposedRepository.findTeamTestHistoryByTeamId(fixture.requestingTeamId)
 
             // then
-            assignment.requestId shouldBe acceptedRequest.requireId()
-            matchRequestExposedRepository.findAssignmentByRequestId(acceptedRequest.requireId())?.id shouldBe assignment.id
-            notification.teamId shouldBe requestingTeamId
-            transaction {
-                MatchRequestStatusHistoryTable.selectAll().count()
-            } shouldBe 2L
+            history.size shouldBe 1
+            history.single().campaignId shouldBe requireNotNull(fixture.campaign.id)
+            history.single().serviceName shouldBe "Service"
+            history.single().feedback?.id shouldBe savedFeedback.id
         }
     }
 
@@ -144,6 +113,32 @@ class MatchRequestExposedRepositoryIT : RepositoryTestSupport() {
             SubServiceActivationTable.deleteAll()
             TeamTable.deleteAll()
         }
+    }
+
+    private fun createAcceptedAssignmentFixture(createdAt: Instant): AssignmentFixture {
+        val requestingTeamId = createTeam("Requester", "REQUESTER")
+        val targetTeamId = createTeam("Target", "TARGET")
+        val campaign = createCampaign(targetTeamId, createdAt)
+        val request = matchRequestExposedRepository.saveRequest(
+            MatchRequest.createPending(
+                campaignId = requireNotNull(campaign.id),
+                requestingTeamId = requestingTeamId,
+                targetTeamId = targetTeamId,
+                type = MatchRequestType.ONE_WAY,
+                message = "Please test this service.",
+                createdAt = createdAt,
+            ).accept(createdAt.plusSeconds(30)),
+        )
+        val assignment = matchRequestExposedRepository.saveAssignment(
+            Assignment.createFrom(request, createdAt.plusSeconds(30)),
+        )
+
+        return AssignmentFixture(
+            requestingTeamId = requestingTeamId,
+            targetTeamId = targetTeamId,
+            campaign = campaign,
+            assignment = assignment,
+        )
     }
 
     private fun createTeam(
@@ -207,19 +202,32 @@ class MatchRequestExposedRepositoryIT : RepositoryTestSupport() {
         )
     }
 
-    private fun pendingRequest(
-        campaignId: CampaignId,
-        requestingTeamId: TeamId,
-        targetTeamId: TeamId,
-        createdAt: Instant,
-    ): MatchRequest {
-        return MatchRequest.createPending(
-            campaignId = campaignId,
-            requestingTeamId = requestingTeamId,
-            targetTeamId = targetTeamId,
-            type = MatchRequestType.ONE_WAY,
-            message = "Please test this service.",
-            createdAt = createdAt,
+    private fun feedback(
+        assignment: Assignment,
+        submittedByTeamId: TeamId,
+        submittedByUserId: UserId,
+        submittedAt: Instant,
+    ): Feedback {
+        return Feedback.submit(
+            assignment = assignment,
+            submittedByTeamId = submittedByTeamId,
+            submittedByUserId = submittedByUserId,
+            scores = FeedbackScores(
+                usability = 5,
+                value = 4,
+                reliability = 5,
+                recommendation = 4,
+            ),
+            summary = "The service was useful during testing.",
+            improvementSuggestion = "Add onboarding.",
+            submittedAt = submittedAt,
         )
     }
+
+    private data class AssignmentFixture(
+        val requestingTeamId: TeamId,
+        val targetTeamId: TeamId,
+        val campaign: BetaCampaign,
+        val assignment: Assignment,
+    )
 }

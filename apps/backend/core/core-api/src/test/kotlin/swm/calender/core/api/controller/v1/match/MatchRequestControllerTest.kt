@@ -32,7 +32,10 @@ import swm.calender.core.enums.AssignmentStatus
 import swm.calender.core.enums.MatchRequestStatus
 import swm.calender.core.enums.MatchRequestType
 import swm.calender.match.service.MatchRequestService
+import java.time.Instant
 import swm.calender.match.service.response.AssignmentResponse as AssignmentServiceResponse
+import swm.calender.match.service.response.FeedbackResponse as FeedbackServiceResponse
+import swm.calender.match.service.response.FeedbackScoresResponse as FeedbackScoresServiceResponse
 import swm.calender.match.service.response.MatchRequestResponse as MatchRequestServiceResponse
 import swm.calender.match.service.response.MatchRequestStatusChangeResponse as MatchRequestStatusChangeServiceResponse
 
@@ -181,14 +184,28 @@ class MatchRequestControllerTest : FunSpec() {
                 )
         }
 
-        test("get assignment returns assignment detail") {
+        test("get assignment returns assignment detail with feedback") {
             // given
             every { matchRequestService.getAssignment(any()) } returns AssignmentServiceResponse(
                 assignmentId = 31L,
                 requestId = 11L,
                 testerTeamId = TeamId(1L),
                 targetTeamId = TeamId(2L),
-                status = AssignmentStatus.ASSIGNED,
+                status = AssignmentStatus.FEEDBACK_SUBMITTED,
+                feedback = FeedbackServiceResponse(
+                    feedbackId = 41L,
+                    assignmentId = 31L,
+                    submittedByTeamId = TeamId(1L),
+                    scores = FeedbackScoresServiceResponse(
+                        usability = 5,
+                        value = 4,
+                        reliability = 5,
+                        recommendation = 4,
+                    ),
+                    summary = "The service was useful during testing.",
+                    improvementSuggestion = "Add onboarding.",
+                    submittedAt = Instant.parse("2026-05-10T00:00:00Z"),
+                ),
             )
 
             // when & then
@@ -201,7 +218,8 @@ class MatchRequestControllerTest : FunSpec() {
             )
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$.data.assignmentId").value(31L))
-                .andExpect(jsonPath("$.data.status").value("ASSIGNED"))
+                .andExpect(jsonPath("$.data.status").value("FEEDBACK_SUBMITTED"))
+                .andExpect(jsonPath("$.data.feedback.feedbackId").value(41L))
                 .andDo(
                     document(
                         "match-assignment-get",
@@ -222,6 +240,28 @@ class MatchRequestControllerTest : FunSpec() {
                                 .description("Target team id"),
                             fieldWithPath("data.status").type(JsonFieldType.STRING)
                                 .description("Assignment status"),
+                            fieldWithPath("data.feedback").type(JsonFieldType.OBJECT)
+                                .description("Submitted feedback when available").optional(),
+                            fieldWithPath("data.feedback.feedbackId").type(JsonFieldType.NUMBER)
+                                .description("Feedback id").optional(),
+                            fieldWithPath("data.feedback.assignmentId").type(JsonFieldType.NUMBER)
+                                .description("Assignment id for the feedback").optional(),
+                            fieldWithPath("data.feedback.submittedByTeamId").type(JsonFieldType.NUMBER)
+                                .description("Submitting tester team id").optional(),
+                            fieldWithPath("data.feedback.scores.usability").type(JsonFieldType.NUMBER)
+                                .description("Usability score").optional(),
+                            fieldWithPath("data.feedback.scores.value").type(JsonFieldType.NUMBER)
+                                .description("Value score").optional(),
+                            fieldWithPath("data.feedback.scores.reliability").type(JsonFieldType.NUMBER)
+                                .description("Reliability score").optional(),
+                            fieldWithPath("data.feedback.scores.recommendation").type(JsonFieldType.NUMBER)
+                                .description("Recommendation score").optional(),
+                            fieldWithPath("data.feedback.summary").type(JsonFieldType.STRING)
+                                .description("Feedback summary").optional(),
+                            fieldWithPath("data.feedback.improvementSuggestion").type(JsonFieldType.STRING)
+                                .description("Improvement suggestion").optional(),
+                            fieldWithPath("data.feedback.submittedAt").type(JsonFieldType.STRING)
+                                .description("Feedback submission time").optional(),
                             fieldWithPath("error").type(JsonFieldType.NULL).ignored(),
                         ),
                     ),

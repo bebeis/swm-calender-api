@@ -40,6 +40,21 @@ class AssignmentTest :
                 Assignment.createFrom(pendingRequest, baseInstant.plusSeconds(60))
             }
         }
+
+        test("submitFeedback changes assigned assignment to feedback submitted") {
+            // given
+            val assignment = Assignment.createFrom(
+                pendingRequest(baseInstant).accept(baseInstant.plusSeconds(60)),
+                baseInstant.plusSeconds(120),
+            ).copy(id = swm.calender.core.common.id.AssignmentId(31L))
+
+            // when
+            val changedAssignment = assignment.submitFeedback(baseInstant.plusSeconds(180))
+
+            // then
+            changedAssignment.status shouldBe AssignmentStatus.FEEDBACK_SUBMITTED
+            changedAssignment.updatedAt shouldBe baseInstant.plusSeconds(180)
+        }
     }) {
     companion object {
         private fun pendingRequest(createdAt: Instant): MatchRequest {
