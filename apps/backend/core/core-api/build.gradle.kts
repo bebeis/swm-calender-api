@@ -11,11 +11,17 @@ tasks.named("jar").configure {
 }
 
 dependencies {
+    add("implementation", project(":core:core-common"))
     add("implementation", project(":core:core-enum"))
+    add("implementation", project(":core:core-team-domain"))
+    add("implementation", project(":calendar:calendar-domain"))
+    add("implementation", project(":match:match-domain"))
     add("implementation", project(":support:monitoring"))
     add("implementation", project(":support:logging"))
-    add("implementation", project(":storage:db-core"))
+    add("implementation", project(":clients:google-calendar"))
+    add("implementation", project(":clients:when2meet"))
     add("implementation", project(":clients:client-example"))
+    add("runtimeOnly", project(":storage:db-core"))
 
     add("testImplementation", project(":tests:api-docs"))
 

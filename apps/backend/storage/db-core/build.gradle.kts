@@ -1,4 +1,9 @@
 dependencies {
+    add("implementation", project(":core:core-common"))
+    add("implementation", project(":core:core-enum"))
+    add("implementation", project(":core:core-team-domain"))
+    add("implementation", project(":calendar:calendar-domain"))
+    add("implementation", project(":match:match-domain"))
     add("implementation", platform("org.jetbrains.exposed:exposed-bom:${property("exposedVersion")}"))
     add("implementation", "org.springframework.boot:spring-boot-starter-jdbc")
     add("implementation", "org.springframework.boot:spring-boot-starter-flyway")

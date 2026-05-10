@@ -13,15 +13,15 @@ the foundational phase.
 
 **Purpose**: Add the module skeleton and shared build structure required by the MVP domains.
 
-- [ ] T001 Add `core:core-common`, `core:core-team-domain`, `calendar:calendar-domain`, `match:match-domain`, `clients:google-calendar`, and `clients:when2meet` includes in `settings.gradle.kts`
-- [ ] T002 [P] Create `apps/backend/core/core-common/build.gradle.kts` with Kotlin library settings and no runnable Boot jar
-- [ ] T003 [P] Create `apps/backend/core/core-team-domain/build.gradle.kts` with dependency on `core:core-common`
-- [ ] T004 [P] Create `apps/backend/calendar/calendar-domain/build.gradle.kts` with dependency on `core:core-team-domain`
-- [ ] T005 [P] Create `apps/backend/match/match-domain/build.gradle.kts` with dependency on `core:core-team-domain`
-- [ ] T006 [P] Create `apps/backend/clients/google-calendar/build.gradle.kts` for the Calendar API client module
-- [ ] T007 [P] Create `apps/backend/clients/when2meet/build.gradle.kts` for the When2meet parser client module
-- [ ] T008 Update `apps/backend/core/core-api/build.gradle.kts` to depend on the new domain/client modules and use `runtimeOnly` for `storage:db-core`
-- [ ] T009 Update `apps/backend/storage/db-core/build.gradle.kts` to compile against the new domain modules in `apps/backend/storage/db-core/build.gradle.kts`
+- [X] T001 Add `core:core-common`, `core:core-team-domain`, `calendar:calendar-domain`, `match:match-domain`, `clients:google-calendar`, and `clients:when2meet` includes in `settings.gradle.kts`
+- [X] T002 [P] Create `apps/backend/core/core-common/build.gradle.kts` with Kotlin library settings and no runnable Boot jar
+- [X] T003 [P] Create `apps/backend/core/core-team-domain/build.gradle.kts` with dependency on `core:core-common`
+- [X] T004 [P] Create `apps/backend/calendar/calendar-domain/build.gradle.kts` with dependency on `core:core-team-domain`
+- [X] T005 [P] Create `apps/backend/match/match-domain/build.gradle.kts` with dependency on `core:core-team-domain`
+- [X] T006 [P] Create `apps/backend/clients/google-calendar/build.gradle.kts` for the Calendar API client module
+- [X] T007 [P] Create `apps/backend/clients/when2meet/build.gradle.kts` for the When2meet parser client module
+- [X] T008 Update `apps/backend/core/core-api/build.gradle.kts` to depend on the new domain/client modules and use `runtimeOnly` for `storage:db-core`
+- [X] T009 Update `apps/backend/storage/db-core/build.gradle.kts` to compile against the new domain modules in `apps/backend/storage/db-core/build.gradle.kts`
 
 **Checkpoint**: Gradle recognizes all feature modules.
 
@@ -29,15 +29,15 @@ the foundational phase.
 
 **Purpose**: Shared types, security context, error conventions, and persistence conventions that block all stories.
 
-- [ ] T010 [P] Add shared id value objects in `apps/backend/core/core-common/src/main/kotlin/swm/calender/core/common/id/DomainIds.kt`
-- [ ] T011 [P] Add common time range value object in `apps/backend/core/core-common/src/main/kotlin/swm/calender/core/common/time/DateTimeRange.kt`
-- [ ] T012 [P] Add MVP enum types in `apps/backend/core/core-enum/src/main/kotlin/swm/calender/core/enums/TeamsEnums.kt`
-- [ ] T013 Add authenticated user context model in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/security/AuthenticatedUser.kt`
-- [ ] T014 Add team-scope authorization component in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/security/TeamAuthorization.kt`
-- [ ] T015 Add feature error codes and messages in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/support/error/ErrorType.kt`
-- [ ] T016 Add API version base path convention tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/ApiVersioningTest.kt`
-- [ ] T017 Add Exposed transaction configuration for repositories in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/config/ExposedTransactionConfig.kt`
-- [ ] T018 Add shared repository test support in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/RepositoryTestSupport.kt`
+- [X] T010 [P] Add shared id value objects in `apps/backend/core/core-common/src/main/kotlin/swm/calender/core/common/id/DomainIds.kt`
+- [X] T011 [P] Add common time range value object in `apps/backend/core/core-common/src/main/kotlin/swm/calender/core/common/time/DateTimeRange.kt`
+- [X] T012 [P] Add MVP enum types in `apps/backend/core/core-enum/src/main/kotlin/swm/calender/core/enums/TeamsEnums.kt`
+- [X] T013 Add authenticated user context model in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/security/AuthenticatedUser.kt`
+- [X] T014 Add team-scope authorization component in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/security/TeamAuthorization.kt`
+- [X] T015 Add feature error codes and messages in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/support/error/ErrorType.kt`
+- [X] T016 Add API version base path convention tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/ApiVersioningTest.kt`
+- [X] T017 Add Exposed transaction configuration for repositories in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/config/ExposedTransactionConfig.kt`
+- [X] T018 Add shared repository test support in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/RepositoryTestSupport.kt`
 
 **Checkpoint**: Shared domain, API, and persistence foundations are ready for story work.
 
@@ -49,25 +49,25 @@ the foundational phase.
 
 ### Tests for User Story 1
 
-- [ ] T019 [P] [US1] Add Team domain behavior tests in `apps/backend/core/core-team-domain/src/test/kotlin/swm/calender/core/team/domain/TeamTest.kt`
-- [ ] T020 [P] [US1] Add TeamService mockk tests in `apps/backend/core/core-team-domain/src/test/kotlin/swm/calender/core/team/service/TeamServiceTest.kt`
-- [ ] T021 [P] [US1] Add TeamController RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/team/TeamControllerTest.kt`
-- [ ] T022 [P] [US1] Add Team repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/team/TeamExposedRepositoryIT.kt`
+- [X] T019 [P] [US1] Add Team domain behavior tests in `apps/backend/core/core-team-domain/src/test/kotlin/swm/calender/core/team/domain/TeamTest.kt`
+- [X] T020 [P] [US1] Add TeamService mockk tests in `apps/backend/core/core-team-domain/src/test/kotlin/swm/calender/core/team/service/TeamServiceTest.kt`
+- [X] T021 [P] [US1] Add TeamController RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/team/TeamControllerTest.kt`
+- [X] T022 [P] [US1] Add Team repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/team/TeamExposedRepositoryIT.kt`
 
 ### Implementation for User Story 1
 
-- [ ] T023 [P] [US1] Add Team domain models in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/domain/model/Team.kt`
-- [ ] T024 [P] [US1] Add TeamMember domain models in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/domain/model/TeamMember.kt`
-- [ ] T025 [P] [US1] Add SubServiceActivation domain model in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/domain/model/SubServiceActivation.kt`
-- [ ] T026 [US1] Add TeamRepository interface in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/domain/TeamRepository.kt`
-- [ ] T027 [US1] Add TeamReader and TeamWriter implement-layer components in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/implement/TeamReader.kt`
-- [ ] T028 [US1] Add TeamService onboarding and activation flow in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/service/TeamService.kt`
-- [ ] T029 [US1] Add team controller request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/request/TeamCreateRequest.kt`
-- [ ] T030 [US1] Add team controller response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/response/TeamResponse.kt`
-- [ ] T031 [US1] Add TeamController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/TeamController.kt`
-- [ ] T032 [US1] Add TeamTable and TeamMemberTable in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/team/TeamTable.kt`
-- [ ] T033 [US1] Add TeamExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/team/TeamExposedRepository.kt`
-- [ ] T034 [US1] Add team Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V2__create_team_tables.sql`
+- [X] T023 [P] [US1] Add Team domain models in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/domain/model/Team.kt`
+- [X] T024 [P] [US1] Add TeamMember domain models in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/domain/model/TeamMember.kt`
+- [X] T025 [P] [US1] Add SubServiceActivation domain model in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/domain/model/SubServiceActivation.kt`
+- [X] T026 [US1] Add TeamRepository interface in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/domain/TeamRepository.kt`
+- [X] T027 [US1] Add TeamReader and TeamWriter implement-layer components in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/implement/TeamReader.kt`
+- [X] T028 [US1] Add TeamService onboarding and activation flow in `apps/backend/core/core-team-domain/src/main/kotlin/swm/calender/core/team/service/TeamService.kt`
+- [X] T029 [US1] Add team controller request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/request/TeamCreateRequest.kt`
+- [X] T030 [US1] Add team controller response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/response/TeamResponse.kt`
+- [X] T031 [US1] Add TeamController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/team/TeamController.kt`
+- [X] T032 [US1] Add TeamTable and TeamMemberTable in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/team/TeamTable.kt`
+- [X] T033 [US1] Add TeamExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/team/TeamExposedRepository.kt`
+- [X] T034 [US1] Add team Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V2__create_team_tables.sql`
 
 **Checkpoint**: US1 works independently through API, domain, and repository tests.
 
