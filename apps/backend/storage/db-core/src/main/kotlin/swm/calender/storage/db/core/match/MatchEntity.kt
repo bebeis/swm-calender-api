@@ -1,23 +1,34 @@
 package swm.calender.storage.db.core.match
 
+import swm.calender.core.common.id.AssignmentId
 import swm.calender.core.common.id.CampaignId
 import swm.calender.core.common.id.CandidateIdeaId
 import swm.calender.core.common.id.DuplicateAnalysisId
+import swm.calender.core.common.id.RequestId
 import swm.calender.core.common.id.TeamId
 import swm.calender.core.common.id.UserId
+import swm.calender.core.enums.AssignmentStatus
 import swm.calender.core.enums.CampaignCategory
 import swm.calender.core.enums.CampaignStatus
 import swm.calender.core.enums.CandidateIdeaVisibility
 import swm.calender.core.enums.DuplicateAnalysisSourceType
 import swm.calender.core.enums.DuplicateAnalysisStatus
+import swm.calender.core.enums.MatchRequestStatus
+import swm.calender.core.enums.MatchRequestType
+import swm.calender.core.enums.NotificationType
 import swm.calender.core.enums.OverlapDimension
 import swm.calender.core.enums.Platform
 import swm.calender.core.enums.SimilarityLevel
 import swm.calender.core.enums.SourceDisclosure
+import swm.calender.match.domain.model.Assignment
 import swm.calender.match.domain.model.BetaCampaign
 import swm.calender.match.domain.model.CandidateIdea
 import swm.calender.match.domain.model.DuplicateAnalysis
 import swm.calender.match.domain.model.DuplicateAnalysisMatch
+import swm.calender.match.domain.model.MatchRequest
+import swm.calender.match.domain.model.MatchRequestStatusHistory
+import swm.calender.match.domain.model.Notification
+import swm.calender.match.domain.model.NotificationReferenceType
 import swm.calender.match.domain.model.ServiceProfile
 import java.time.Instant
 import java.time.LocalDateTime
@@ -175,6 +186,98 @@ internal data class DuplicateAnalysisMatchEntity(
             similarityLevel = similarityLevel,
             overlapDimensions = overlapDimensions,
             overlapSummary = overlapSummary,
+        )
+    }
+}
+
+internal data class MatchRequestEntity(
+    val id: Long,
+    val campaignId: Long,
+    val requestingTeamId: Long,
+    val targetTeamId: Long,
+    val type: MatchRequestType,
+    val status: MatchRequestStatus,
+    val message: String?,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
+) {
+    fun toDomain(): MatchRequest {
+        return MatchRequest(
+            id = RequestId(id),
+            campaignId = CampaignId(campaignId),
+            requestingTeamId = TeamId(requestingTeamId),
+            targetTeamId = TeamId(targetTeamId),
+            type = type,
+            status = status,
+            message = message,
+            createdAt = createdAt.toInstant(),
+            updatedAt = updatedAt.toInstant(),
+        )
+    }
+}
+
+internal data class MatchRequestStatusHistoryEntity(
+    val id: Long,
+    val requestId: Long,
+    val fromStatus: MatchRequestStatus?,
+    val toStatus: MatchRequestStatus,
+    val changedByUserId: Long,
+    val createdAt: LocalDateTime,
+) {
+    fun toDomain(): MatchRequestStatusHistory {
+        return MatchRequestStatusHistory(
+            id = id,
+            requestId = RequestId(requestId),
+            fromStatus = fromStatus,
+            toStatus = toStatus,
+            changedByUserId = UserId(changedByUserId),
+            createdAt = createdAt.toInstant(),
+        )
+    }
+}
+
+internal data class AssignmentEntity(
+    val id: Long,
+    val requestId: Long,
+    val testerTeamId: Long,
+    val targetTeamId: Long,
+    val status: AssignmentStatus,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
+) {
+    fun toDomain(): Assignment {
+        return Assignment(
+            id = AssignmentId(id),
+            requestId = RequestId(requestId),
+            testerTeamId = TeamId(testerTeamId),
+            targetTeamId = TeamId(targetTeamId),
+            status = status,
+            createdAt = createdAt.toInstant(),
+            updatedAt = updatedAt.toInstant(),
+        )
+    }
+}
+
+internal data class NotificationEntity(
+    val id: Long,
+    val teamId: Long,
+    val type: NotificationType,
+    val referenceType: NotificationReferenceType,
+    val referenceId: Long,
+    val message: String,
+    val readAt: LocalDateTime?,
+    val createdAt: LocalDateTime,
+) {
+    fun toDomain(): Notification {
+        return Notification(
+            id = id,
+            teamId = TeamId(teamId),
+            type = type,
+            referenceType = referenceType,
+            referenceId = referenceId,
+            message = message,
+            readAt = readAt?.toInstant(),
+            createdAt = createdAt.toInstant(),
         )
     }
 }

@@ -30,6 +30,15 @@ class MatchCampaignReader(
             ?: throw MatchDomainException(MatchErrorMessage.CAMPAIGN_NOT_FOUND)
     }
 
+    fun getOpenPublicCampaign(campaignId: CampaignId): BetaCampaign {
+        return matchCampaignRepository.findOpenPublicCampaignById(campaignId)
+            ?: throw MatchDomainException(MatchErrorMessage.CAMPAIGN_NOT_FOUND)
+    }
+
+    fun hasOpenPublicCampaign(teamId: TeamId): Boolean {
+        return matchCampaignRepository.existsOpenPublicCampaignByTeamId(teamId)
+    }
+
     fun searchOpenCampaigns(filter: CampaignSearchFilter): List<CampaignSearchResult> {
         return matchCampaignRepository.searchOpenCampaigns(filter)
     }

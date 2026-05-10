@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component
 import swm.calender.core.api.controller.v1.match.request.CampaignCreateRequest
 import swm.calender.core.api.controller.v1.match.request.CampaignStatusChangeRequest
 import swm.calender.core.api.controller.v1.match.request.CandidateIdeaCreateRequest
+import swm.calender.core.api.controller.v1.match.request.MatchRequestCreateRequest
+import swm.calender.core.api.controller.v1.match.request.MatchRequestStatusChangeRequest
 import swm.calender.core.api.controller.v1.match.request.ServiceProfileCreateRequest
 import swm.calender.core.enums.CampaignCategory
 import swm.calender.core.enums.Platform
@@ -48,6 +50,16 @@ class MatchRequestValidator(
         if (request.solution.isNullOrBlank()) throw MatchApiException.badRequest("solution must not be blank.")
         request.category ?: throw MatchApiException.badRequest("category is required.")
         validatePlatforms(request.platforms)
+    }
+
+    fun validateMatchRequestCreate(request: MatchRequestCreateRequest) {
+        validateBean(request)
+        request.type ?: throw MatchApiException.badRequest("type is required.")
+    }
+
+    fun validateMatchRequestStatusChange(request: MatchRequestStatusChangeRequest) {
+        validateBean(request)
+        request.status ?: throw MatchApiException.badRequest("status is required.")
     }
 
     fun parseCategory(value: String?): CampaignCategory? {

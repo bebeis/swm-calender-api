@@ -129,6 +129,10 @@ class MatchCampaignExposedRepositoryIT : RepositoryTestSupport() {
 
     private fun cleanMatchTables() {
         transaction {
+            MatchNotificationTable.deleteAll()
+            AssignmentTable.deleteAll()
+            MatchRequestStatusHistoryTable.deleteAll()
+            MatchRequestTable.deleteAll()
             DuplicateAnalysisMatchDimensionTable.deleteAll()
             DuplicateAnalysisMatchTable.deleteAll()
             DuplicateAnalysisTable.deleteAll()

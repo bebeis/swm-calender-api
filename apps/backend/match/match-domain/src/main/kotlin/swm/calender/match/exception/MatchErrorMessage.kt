@@ -28,4 +28,16 @@ enum class MatchErrorMessage(
     DUPLICATE_ANALYSIS_PRIVATE_SOURCE_REDACTION_REQUIRED(
         "Other team's private candidate idea match must be redacted.",
     ),
+    MATCH_REQUEST_NOT_FOUND("Match request not found."),
+    MATCH_REQUEST_SELF_REQUEST_NOT_ALLOWED("A team cannot request beta testing for its own campaign."),
+    MATCH_REQUEST_DUPLICATED("Pending or accepted match request already exists for this campaign."),
+    MATCH_REQUEST_RECIPROCAL_CAMPAIGN_REQUIRED("Reciprocal requests require an active public campaign."),
+    MATCH_REQUEST_RECIPROCAL_UNAVAILABLE("This campaign does not allow reciprocal requests."),
+    MATCH_REQUEST_MESSAGE_TOO_LONG("Match request message must be 1000 characters or less."),
+    MATCH_REQUEST_STATUS_CHANGE_UNSUPPORTED("Match request status must change to accepted, rejected, or canceled."),
+    MATCH_REQUEST_FINAL_STATUS("Final match request status cannot be changed."),
+    ASSIGNMENT_NOT_FOUND("Assignment not found."),
+    ASSIGNMENT_REQUEST_NOT_ACCEPTED("Assignment can only be created from an accepted request."),
+    ASSIGNMENT_SELF_ASSIGNMENT_NOT_ALLOWED("Assignment tester team and target team must be different."),
+    NOTIFICATION_MESSAGE_REQUIRED("Notification message is required."),
 }

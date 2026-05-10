@@ -43,9 +43,21 @@ private fun MatchErrorMessage.toErrorType(): ErrorType {
         MatchErrorMessage.CAMPAIGN_NOT_FOUND,
         MatchErrorMessage.CANDIDATE_IDEA_NOT_FOUND,
         MatchErrorMessage.DUPLICATE_ANALYSIS_NOT_FOUND,
+        MatchErrorMessage.MATCH_REQUEST_NOT_FOUND,
+        MatchErrorMessage.ASSIGNMENT_NOT_FOUND,
         -> ErrorType.RESOURCE_NOT_FOUND
 
-        MatchErrorMessage.CAMPAIGN_DEADLINE_MUST_BE_FUTURE -> ErrorType.INVALID_TEAM_STATE
+        MatchErrorMessage.MATCH_REQUEST_DUPLICATED -> ErrorType.DUPLICATE_RESOURCE
+
+        MatchErrorMessage.CAMPAIGN_DEADLINE_MUST_BE_FUTURE,
+        MatchErrorMessage.MATCH_REQUEST_SELF_REQUEST_NOT_ALLOWED,
+        MatchErrorMessage.MATCH_REQUEST_RECIPROCAL_CAMPAIGN_REQUIRED,
+        MatchErrorMessage.MATCH_REQUEST_RECIPROCAL_UNAVAILABLE,
+        MatchErrorMessage.MATCH_REQUEST_STATUS_CHANGE_UNSUPPORTED,
+        MatchErrorMessage.MATCH_REQUEST_FINAL_STATUS,
+        MatchErrorMessage.ASSIGNMENT_REQUEST_NOT_ACCEPTED,
+        MatchErrorMessage.ASSIGNMENT_SELF_ASSIGNMENT_NOT_ALLOWED,
+        -> ErrorType.INVALID_TEAM_STATE
 
         MatchErrorMessage.SERVICE_PROFILE_NAME_REQUIRED,
         MatchErrorMessage.SERVICE_PROFILE_SUMMARY_REQUIRED,
@@ -64,6 +76,8 @@ private fun MatchErrorMessage.toErrorType(): ErrorType {
         MatchErrorMessage.CANDIDATE_IDEA_PLATFORMS_REQUIRED,
         MatchErrorMessage.DUPLICATE_ANALYSIS_MATCH_DIMENSIONS_REQUIRED,
         MatchErrorMessage.DUPLICATE_ANALYSIS_PRIVATE_SOURCE_REDACTION_REQUIRED,
+        MatchErrorMessage.MATCH_REQUEST_MESSAGE_TOO_LONG,
+        MatchErrorMessage.NOTIFICATION_MESSAGE_REQUIRED,
         -> ErrorType.VALIDATION_ERROR
     }
 }

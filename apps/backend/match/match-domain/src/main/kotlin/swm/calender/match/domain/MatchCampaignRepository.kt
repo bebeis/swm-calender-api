@@ -18,6 +18,10 @@ interface MatchCampaignRepository {
 
     fun findCampaignById(campaignId: CampaignId): BetaCampaign?
 
+    fun findOpenPublicCampaignById(campaignId: CampaignId): BetaCampaign?
+
+    fun existsOpenPublicCampaignByTeamId(teamId: TeamId): Boolean
+
     fun searchOpenCampaigns(filter: CampaignSearchFilter): List<CampaignSearchResult>
 
     fun findReleasedServiceProfiles(): List<ReleasedServiceProfile>

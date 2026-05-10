@@ -73,6 +73,31 @@ class MatchCampaignExposedRepository : MatchCampaignRepository {
             ?.toDomain()
     }
 
+    override fun findOpenPublicCampaignById(campaignId: CampaignId): BetaCampaign? {
+        return publicOpenCampaignJoin()
+            .selectAll()
+            .where {
+                (BetaCampaignTable.id eq campaignId.value) and
+                    (BetaCampaignTable.status eq CampaignStatus.OPEN) and
+                    (ServiceProfileTable.isPublic eq true)
+            }
+            .singleOrNull()
+            ?.toBetaCampaignEntity()
+            ?.toDomain()
+    }
+
+    override fun existsOpenPublicCampaignByTeamId(teamId: TeamId): Boolean {
+        return publicOpenCampaignJoin()
+            .selectAll()
+            .where {
+                (BetaCampaignTable.teamId eq teamId.value) and
+                    (BetaCampaignTable.status eq CampaignStatus.OPEN) and
+                    (ServiceProfileTable.isPublic eq true)
+            }
+            .limit(1)
+            .any()
+    }
+
     override fun searchOpenCampaigns(filter: CampaignSearchFilter): List<CampaignSearchResult> {
         val serviceProfileIdsByPlatform = filter.platform?.let(::findServiceProfileIdsByPlatform)
         if (serviceProfileIdsByPlatform != null && serviceProfileIdsByPlatform.isEmpty()) {
@@ -423,5 +448,19 @@ class MatchCampaignExposedRepository : MatchCampaignRepository {
             joinType = JoinType.INNER,
             onColumn = BetaCampaignTable.teamId,
             otherColumn = TeamTable.id,
+        )
+
+    private fun publicOpenCampaignJoin() = BetaCampaignTable
+        .join(
+            otherTable = ServiceProfileTable,
+            joinType = JoinType.INNER,
+            onColumn = BetaCampaignTable.serviceProfileId,
+            otherColumn = ServiceProfileTable.id,
+        )
+        .join(
+            otherTable = ActiveServiceProfileTable,
+            joinType = JoinType.INNER,
+            onColumn = ServiceProfileTable.id,
+            otherColumn = ActiveServiceProfileTable.serviceProfileId,
         )
 }

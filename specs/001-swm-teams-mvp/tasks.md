@@ -162,26 +162,26 @@ public campaign discovery.
 
 ### Tests for User Story 4
 
-- [ ] T085 [P] [US4] Add MatchRequest domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/MatchRequestTest.kt`
-- [ ] T086 [P] [US4] Add Assignment domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/AssignmentTest.kt`
-- [ ] T087 [P] [US4] Add MatchRequestService mockk tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/MatchRequestServiceTest.kt`
-- [ ] T088 [P] [US4] Add MatchRequestController RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/MatchRequestControllerTest.kt`
-- [ ] T089 [P] [US4] Add Match request repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/MatchRequestExposedRepositoryIT.kt`
+- [X] T085 [P] [US4] Add MatchRequest domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/MatchRequestTest.kt`
+- [X] T086 [P] [US4] Add Assignment domain tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/domain/AssignmentTest.kt`
+- [X] T087 [P] [US4] Add MatchRequestService mockk tests in `apps/backend/match/match-domain/src/test/kotlin/swm/calender/match/service/MatchRequestServiceTest.kt`
+- [X] T088 [P] [US4] Add MatchRequestController RestDocs tests in `apps/backend/core/core-api/src/test/kotlin/swm/calender/core/api/controller/v1/match/MatchRequestControllerTest.kt`
+- [X] T089 [P] [US4] Add Match request repository integration tests in `apps/backend/storage/db-core/src/test/kotlin/swm/calender/storage/db/core/match/MatchRequestExposedRepositoryIT.kt`
 
 ### Implementation for User Story 4
 
-- [ ] T090 [P] [US4] Add MatchRequest model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/MatchRequest.kt`
-- [ ] T091 [P] [US4] Add Assignment model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Assignment.kt`
-- [ ] T092 [P] [US4] Add Notification model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Notification.kt`
-- [ ] T093 [US4] Add MatchRequestRepository interface in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/MatchRequestRepository.kt`
-- [ ] T094 [US4] Add MatchRequestReader and MatchRequestWriter in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/MatchRequestReader.kt`
-- [ ] T095 [US4] Add MatchRequestService in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/MatchRequestService.kt`
-- [ ] T096 [US4] Add Match request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/MatchRequestCreateRequest.kt`
-- [ ] T097 [US4] Add Match request response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/MatchRequestResponse.kt`
-- [ ] T098 [US4] Add MatchRequestController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/MatchRequestController.kt`
-- [ ] T099 [US4] Add Match request Exposed tables in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchRequestTable.kt`
-- [ ] T100 [US4] Add MatchRequestExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchRequestExposedRepository.kt`
-- [ ] T101 [US4] Add match request Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V6__create_match_request_tables.sql`
+- [X] T090 [P] [US4] Add MatchRequest model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/MatchRequest.kt`
+- [X] T091 [P] [US4] Add Assignment model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Assignment.kt`
+- [X] T092 [P] [US4] Add Notification model in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/model/Notification.kt`
+- [X] T093 [US4] Add MatchRequestRepository interface in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/domain/MatchRequestRepository.kt`
+- [X] T094 [US4] Add MatchRequestReader and MatchRequestWriter in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/implement/MatchRequestReader.kt`
+- [X] T095 [US4] Add MatchRequestService in `apps/backend/match/match-domain/src/main/kotlin/swm/calender/match/service/MatchRequestService.kt`
+- [X] T096 [US4] Add Match request DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/request/MatchRequestCreateRequest.kt`
+- [X] T097 [US4] Add Match request response DTOs in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/response/MatchRequestResponse.kt`
+- [X] T098 [US4] Add MatchRequestController endpoints in `apps/backend/core/core-api/src/main/kotlin/swm/calender/core/api/controller/v1/match/MatchRequestController.kt`
+- [X] T099 [US4] Add Match request Exposed tables in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchRequestTable.kt`
+- [X] T100 [US4] Add MatchRequestExposedRepository in `apps/backend/storage/db-core/src/main/kotlin/swm/calender/storage/db/core/match/MatchRequestExposedRepository.kt`
+- [X] T101 [US4] Add match request Flyway migration in `apps/backend/storage/db-core/src/main/resources/db/migration/V6__create_match_request_tables.sql`
 
 **Checkpoint**: US4 request lifecycle works and accepted requests create assignments exactly once.
 
