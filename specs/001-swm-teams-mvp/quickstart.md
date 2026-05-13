@@ -104,12 +104,32 @@ result shape.
 5. Try to parse a non-When2meet URL and expect validation failure.
 6. Try to submit feedback from a team that is not assigned and expect validation failure.
 
+### 7. Validate Web And Extension MVP
+
+1. Run `npm run web:dev` and open `http://localhost:3000/apps/web/`.
+2. Enter the backend API base URL and a bearer access token for the page session.
+3. Create or join a team, then toggle `Calendar` and `Match` sub-services.
+4. Use the Calendar screen to register a When2meet link, push one mentoring schedule, and query availability.
+5. Use the Match screen to publish a service profile, create/search campaigns, create a candidate idea, and run
+   duplicate analysis.
+6. Use the Requests and Feedback screens to send requests, change request status, inspect assignments, submit
+   feedback, and list test history.
+7. Load `apps/extension` as an unpacked Chrome extension.
+8. Open `https://www.swmaestro.ai/sw/mypage/userAnswer/history.do?menuNo=200047` or the Busan equivalent.
+9. Confirm the extension inserts the `SWM Teams Calendar` panel into the page, parses completed mentoring
+   applications, and can push selected items through `POST /api/v1/calendar/mentoring-schedules:bulk-push`.
+10. Register a When2meet URL from the injected panel through `PUT /api/v1/calendar/when2meet-link`.
+11. Confirm the panel can query team availability through `GET /api/v1/calendar/availability` for the selected
+    mentoring schedule range. The local MVP host permission allows `http://localhost:8080`; adding another API
+    origin requires updating the manifest, popup copy, and frontend verifier together.
+
 ## Done Criteria
 
 - All story-level validation flows pass.
 - Controller tests generate RestDocs snippets for public API contracts.
 - Repository tests verify important uniqueness and mapping rules.
 - `./gradlew ktlintCheck` and `./gradlew test` pass.
+- `npm run frontend:check` passes for the dependency-free web and extension MVP.
 
 ## Validation Log
 
@@ -122,6 +142,7 @@ result shape.
 | 2026-05-10 | `./gradlew :clients:gemini:test :match:match-domain:test` | PASS | Verified Gemini duplicate-analysis adapter mapping and analyzer failure persistence. |
 | 2026-05-10 | `./gradlew ktlintCheck` | PASS | Kotlin style check passed after Gemini adapter changes. |
 | 2026-05-10 | `./gradlew test` | PASS | Full multi-module test suite passed after adding `clients:gemini`. |
+| 2026-05-13 | `npm run frontend:check` | PASS | Verified dependency-free web app JS, extension popup/content/background JS, MV3 manifest guard, content script matches, permissions, and shared API client vendor sync. |
 
 ## Contract Validation Notes
 

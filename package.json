@@ -1,0 +1,14 @@
+{
+  "name": "swm-teams",
+  "private": true,
+  "type": "commonjs",
+  "workspaces": [
+    "apps/web",
+    "apps/extension",
+    "packages/api-client"
+  ],
+  "scripts": {
+    "web:dev": "python3 -m http.server 3000 --directory .",
+    "frontend:check": "node --check packages/api-client/src/swm-api-client.js && node --check apps/web/src/app.js && node --check apps/extension/src/popup.js && node --check apps/extension/src/background.js && node --check apps/extension/src/history-content.js && node scripts/verify-extension-vendor.mjs"
+  }
+}

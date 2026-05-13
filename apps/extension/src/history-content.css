@@ -1,0 +1,323 @@
+#swm-teams-calendar-panel {
+  --swm-canvas: #ffffff;
+  --swm-surface: #f7f8fa;
+  --swm-selected: #eef6ff;
+  --swm-border: #e5e7eb;
+  --swm-border-strong: #cbd5e1;
+  --swm-text: #111827;
+  --swm-muted: #4b5563;
+  --swm-subtle: #6b7280;
+  --swm-primary: #111827;
+  --swm-calendar: #2563eb;
+  --swm-success: #059669;
+  --swm-warning: #d97706;
+  --swm-danger: #dc2626;
+  width: 100%;
+  margin: 20px 0 28px;
+  border: 1px solid var(--swm-border);
+  border-radius: 8px;
+  background: var(--swm-canvas);
+  color: var(--swm-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+#swm-teams-calendar-panel * {
+  box-sizing: border-box;
+}
+
+#swm-teams-calendar-panel button,
+#swm-teams-calendar-panel input,
+#swm-teams-calendar-panel select {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+.swm-panel__header,
+.swm-panel__controls,
+.swm-panel__external,
+.swm-panel__status,
+.swm-layout {
+  padding: 14px 16px;
+}
+
+.swm-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--swm-border);
+}
+
+.swm-panel__header h2,
+.swm-side-panel h3 {
+  margin: 0;
+  color: var(--swm-text);
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 650;
+}
+
+.swm-eyebrow {
+  margin: 0 0 2px;
+  color: var(--swm-subtle);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.swm-panel__controls {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) minmax(220px, 1fr) auto auto auto;
+  align-items: end;
+  gap: 8px;
+  border-bottom: 1px solid var(--swm-border);
+  background: var(--swm-surface);
+}
+
+.swm-panel__external {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+  border-bottom: 1px solid var(--swm-border);
+  background: #ffffff;
+}
+
+.swm-panel__controls label,
+.swm-panel__external label {
+  display: grid;
+  gap: 5px;
+  color: var(--swm-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.swm-panel__controls input,
+.swm-panel__controls select,
+.swm-panel__external input {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--swm-border);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--swm-text);
+  padding: 7px 9px;
+}
+
+.swm-panel__controls input:focus,
+.swm-panel__controls select:focus,
+.swm-panel__external input:focus,
+.swm-button:focus-visible,
+.swm-lecture a:focus-visible {
+  outline: 2px solid var(--swm-calendar);
+  outline-offset: 2px;
+}
+
+.swm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.swm-button--primary {
+  background: var(--swm-primary);
+  color: #ffffff;
+}
+
+.swm-button--secondary {
+  border-color: var(--swm-border);
+  background: #ffffff;
+  color: var(--swm-text);
+}
+
+.swm-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.swm-panel__status {
+  min-height: 42px;
+  border-bottom: 1px solid var(--swm-border);
+  color: var(--swm-muted);
+}
+
+.swm-panel__status--error {
+  color: var(--swm-danger);
+}
+
+.swm-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 14px;
+  background: #ffffff;
+}
+
+.swm-calendar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.swm-day,
+.swm-side-panel {
+  min-width: 0;
+  border: 1px solid var(--swm-border);
+  border-radius: 8px;
+  background: var(--swm-surface);
+  padding: 10px;
+}
+
+.swm-day__title {
+  margin-bottom: 8px;
+  color: var(--swm-text);
+  font-weight: 650;
+}
+
+.swm-lecture {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  border: 1px solid var(--swm-border);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 9px;
+}
+
+.swm-lecture--conflict {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.swm-lecture--ended {
+  color: var(--swm-subtle);
+  opacity: 0.72;
+}
+
+.swm-lecture__check {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  color: var(--swm-text);
+  cursor: pointer;
+}
+
+.swm-lecture__check input {
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  flex: 0 0 auto;
+}
+
+.swm-lecture__check strong {
+  display: block;
+  color: var(--swm-text);
+  font-weight: 650;
+  word-break: keep-all;
+}
+
+.swm-lecture__check small,
+.swm-availability-slot small {
+  display: block;
+  color: var(--swm-subtle);
+  font-size: 12px;
+}
+
+.swm-lecture__meta,
+.swm-availability-slot__counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.swm-lecture a {
+  color: var(--swm-calendar);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.swm-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  border: 1px solid var(--swm-border);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--swm-muted);
+  padding: 2px 7px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.swm-badge--success {
+  border-color: #a7f3d0;
+  background: #ecfdf5;
+  color: var(--swm-success);
+}
+
+.swm-badge--warning {
+  border-color: #fed7aa;
+  background: #fff7ed;
+  color: var(--swm-warning);
+}
+
+.swm-badge--danger {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: var(--swm-danger);
+}
+
+.swm-side-panel {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.swm-availability-slot {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--swm-border);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 9px;
+}
+
+.swm-slot-bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e0f2fe;
+}
+
+.swm-slot-bar span {
+  display: block;
+  height: 100%;
+  background: var(--swm-calendar);
+}
+
+.swm-empty {
+  display: grid;
+  min-height: 72px;
+  place-items: center;
+  border: 1px dashed var(--swm-border-strong);
+  border-radius: 8px;
+  color: var(--swm-subtle);
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .swm-panel__controls,
+  .swm-panel__external,
+  .swm-layout {
+    grid-template-columns: 1fr;
+  }
+}

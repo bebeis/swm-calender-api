@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "SWM Teams",
+  "description": "SW Maestro 멘토링 신청 내역을 팀 캘린더 API와 연결합니다.",
+  "version": "0.1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SWM Teams"
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://swmaestro.ai/sw/mypage/userAnswer/history.do*",
+        "https://www.swmaestro.ai/sw/mypage/userAnswer/history.do*",
+        "https://swmaestro.ai/busan/sw/mypage/userAnswer/history.do*",
+        "https://www.swmaestro.ai/busan/sw/mypage/userAnswer/history.do*"
+      ],
+      "js": [
+        "src/history-content.js"
+      ],
+      "css": [
+        "src/history-content.css"
+      ]
+    }
+  ],
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost:8080/*"
+  ]
+}

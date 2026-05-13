@@ -1,0 +1,9 @@
+{
+  "name": "@swm-teams/web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "commonjs",
+  "scripts": {
+    "check": "node --check src/app.js"
+  }
+}

@@ -1,0 +1,71 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: swm-teams-mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_DATABASE: swm-teams
+      MYSQL_USER: ${DB_USERNAME:-swm_teams_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-test1234}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root1234}
+      TZ: Asia/Seoul
+    ports:
+      - "${MYSQL_HOST_PORT:-3306}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  api:
+    image: swm-teams-api:local
+    container_name: swm-teams-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-local}
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: ${DB_USERNAME:-swm_teams_user}
+      DB_PASSWORD: ${DB_PASSWORD:-test1234}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-local-google-client-id}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-local-google-client-secret}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://localhost:8080/login/oauth2/code/google}
+      DUPLICATE_ANALYSIS_PROVIDER: ${DUPLICATE_ANALYSIS_PROVIDER:-keyword}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_BASE_URL: ${GEMINI_BASE_URL:-https://generativelanguage.googleapis.com}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      TZ: Asia/Seoul
+    ports:
+      - "${API_HOST_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"'"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 45s
+
+  web:
+    image: nginx:1.27-alpine
+    container_name: swm-teams-web
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "${WEB_HOST_PORT:-3000}:80"
+    volumes:
+      - ./apps/web:/usr/share/nginx/html/apps/web:ro
+      - ./packages/api-client:/usr/share/nginx/html/packages/api-client:ro
+
+volumes:
+  mysql-data:

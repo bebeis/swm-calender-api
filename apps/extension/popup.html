@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SWM Teams</title>
+    <link rel="stylesheet" href="./src/popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header class="popup-header">
+        <div class="brand-mark" aria-hidden="true">S</div>
+        <div>
+          <h1>SWM Teams Calendar</h1>
+          <p>멘토링 내역 페이지 보강 도구</p>
+        </div>
+      </header>
+
+      <section class="panel">
+        <h2>작동 위치</h2>
+        <p class="muted">
+          확장 기능은 멘토링/특강 접수 내역 페이지 안에 팀 캘린더 패널을 추가합니다.
+        </p>
+        <div class="link-list">
+          <a href="https://www.swmaestro.ai/sw/mypage/userAnswer/history.do?menuNo=200047" target="_blank" rel="noreferrer">서울 센터 접수 내역</a>
+          <a href="https://www.swmaestro.ai/busan/sw/mypage/userAnswer/history.do?menuNo=200047" target="_blank" rel="noreferrer">부산 센터 접수 내역</a>
+        </div>
+      </section>
+
+      <form class="panel stack" id="settings-form">
+        <h2>API 연결</h2>
+        <label>
+          API origin
+          <select id="api-base-url" name="apiBaseUrl">
+            <option value="http://localhost:8080">Local API</option>
+          </select>
+        </label>
+        <p class="muted">
+          Bearer token은 popup에 저장하지 않습니다. 실제 접수 내역 페이지에 삽입되는 패널에서 현재 세션용으로 입력합니다.
+        </p>
+        <button class="button primary" type="submit">설정 저장</button>
+      </form>
+
+      <div class="status-line" id="status-line" role="status">설정을 불러오는 중입니다.</div>
+    </main>
+
+    <script src="./src/popup.js"></script>
+  </body>
+</html>

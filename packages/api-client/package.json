@@ -1,0 +1,10 @@
+{
+  "name": "@swm-teams/api-client",
+  "private": true,
+  "version": "0.1.0",
+  "type": "commonjs",
+  "main": "src/swm-api-client.js",
+  "scripts": {
+    "check": "node --check src/swm-api-client.js"
+  }
+}
