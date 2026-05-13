@@ -9,6 +9,7 @@
 - Gradle wrapper from this repository
 - Local profile configured for H2 or MySQL-compatible test settings
 - Google OAuth test credentials when validating Calendar integration
+- Gemini API key when validating AI duplicate analysis with the Gemini provider
 - A fixture or allowlist entry for at least two Software Maestro users
 
 ## Validation Flow
@@ -83,6 +84,17 @@ Recommended local fixtures:
 12. Submit feedback through `POST /api/v1/match/assignments/{assignmentId}/feedback`.
 13. Confirm team test history includes the assignment and feedback summary through `GET /api/v1/match/test-history`.
 
+To use Gemini for duplicate analysis instead of the local keyword analyzer, run the API with:
+
+```bash
+export DUPLICATE_ANALYSIS_PROVIDER=gemini
+export GEMINI_API_KEY=<google-ai-studio-api-key>
+export GEMINI_MODEL=gemini-2.5-flash
+```
+
+The Gemini adapter sends private candidate ideas server-side for comparison and persists only the redacted MVP
+result shape.
+
 ### 6. Validate Security And Isolation
 
 1. Call protected endpoints without authentication and expect 401.
@@ -107,6 +119,9 @@ Recommended local fixtures:
 | 2026-05-10 | `./gradlew :core:core-api:asciidoctor` | PASS | Rendered `index.adoc` successfully against generated snippets. |
 | 2026-05-10 | `./gradlew ktlintCheck` | PASS | Kotlin style check passed after import ordering fix. |
 | 2026-05-10 | `./gradlew test` | PASS | Full multi-module test suite passed. |
+| 2026-05-10 | `./gradlew :clients:gemini:test :match:match-domain:test` | PASS | Verified Gemini duplicate-analysis adapter mapping and analyzer failure persistence. |
+| 2026-05-10 | `./gradlew ktlintCheck` | PASS | Kotlin style check passed after Gemini adapter changes. |
+| 2026-05-10 | `./gradlew test` | PASS | Full multi-module test suite passed after adding `clients:gemini`. |
 
 ## Contract Validation Notes
 

@@ -6,6 +6,7 @@ spring:
       - optional:classpath:monitoring.yml
       - optional:classpath:logging.yml
       - optional:classpath:client-example.yml
+      - optional:classpath:gemini.yml
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/swm-teams?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
     username: ${DB_USERNAME:swm_teams_user}

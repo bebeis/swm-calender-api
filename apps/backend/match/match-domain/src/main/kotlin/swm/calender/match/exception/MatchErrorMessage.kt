@@ -28,6 +28,10 @@ enum class MatchErrorMessage(
     DUPLICATE_ANALYSIS_PRIVATE_SOURCE_REDACTION_REQUIRED(
         "Other team's private candidate idea match must be redacted.",
     ),
+    DUPLICATE_ANALYSIS_PROVIDER_API_KEY_REQUIRED("Duplicate analysis provider API key is required."),
+    DUPLICATE_ANALYSIS_PROVIDER_REQUEST_FAILED("Duplicate analysis provider request failed."),
+    DUPLICATE_ANALYSIS_PROVIDER_EMPTY_RESPONSE("Duplicate analysis provider returned an empty response."),
+    DUPLICATE_ANALYSIS_PROVIDER_RESPONSE_PARSE_FAILED("Duplicate analysis provider response could not be parsed."),
     MATCH_REQUEST_NOT_FOUND("Match request not found."),
     MATCH_REQUEST_SELF_REQUEST_NOT_ALLOWED("A team cannot request beta testing for its own campaign."),
     MATCH_REQUEST_DUPLICATED("Pending or accepted match request already exists for this campaign."),

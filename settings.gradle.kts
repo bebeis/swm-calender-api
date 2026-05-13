@@ -13,6 +13,7 @@ include(
     "support:monitoring",
     "clients:client-example",
     "clients:google-calendar",
+    "clients:gemini",
     "clients:when2meet",
 )
 
@@ -35,6 +36,7 @@ project(":support:monitoring").projectDir = file("apps/backend/support/monitorin
 project(":clients").projectDir = file("apps/backend/clients")
 project(":clients:client-example").projectDir = file("apps/backend/clients/client-example")
 project(":clients:google-calendar").projectDir = file("apps/backend/clients/google-calendar")
+project(":clients:gemini").projectDir = file("apps/backend/clients/gemini")
 project(":clients:when2meet").projectDir = file("apps/backend/clients/when2meet")
 
 pluginManagement {

@@ -8,6 +8,7 @@ import swm.calender.core.team.exception.TeamDomainException
 import swm.calender.core.team.exception.TeamErrorMessage
 import swm.calender.core.team.implement.TeamReader
 import swm.calender.match.domain.model.DuplicateAnalysis
+import swm.calender.match.exception.DuplicateIdeaAnalyzerException
 import swm.calender.match.exception.MatchDomainException
 import swm.calender.match.exception.MatchErrorMessage
 import swm.calender.match.implement.CandidateIdeaReader
@@ -40,31 +41,40 @@ class DuplicateAnalysisService(
             .requireOwnedBy(teamId)
         val releasedServices = matchCampaignReader.getReleasedServiceProfiles()
         val candidateIdeas = candidateIdeaReader.getAll()
-        val matches = duplicateIdeaAnalyzer.analyze(
-            DuplicateIdeaAnalysisRequest(
-                candidateIdea = candidateIdea,
-                releasedServices = releasedServices.map {
-                    DuplicateReleasedServiceInput(
-                        serviceProfile = it.serviceProfile,
-                        openCampaignDescriptions = it.openCampaignDescriptions,
-                    )
-                },
-                privateCandidateIdeas = candidateIdeas.map(::DuplicateCandidateIdeaInput),
-            ),
+        val analysisRequest = DuplicateIdeaAnalysisRequest(
+            candidateIdea = candidateIdea,
+            releasedServices = releasedServices.map {
+                DuplicateReleasedServiceInput(
+                    serviceProfile = it.serviceProfile,
+                    openCampaignDescriptions = it.openCampaignDescriptions,
+                )
+            },
+            privateCandidateIdeas = candidateIdeas.map(::DuplicateCandidateIdeaInput),
         )
+        val analysis = try {
+            DuplicateAnalysis.completed(
+                candidateIdeaId = request.candidateIdeaId,
+                requestedByTeamId = teamId,
+                requestedByUserId = request.actorUserId,
+                scannedReleasedServiceCount = releasedServices.size,
+                scannedCandidateIdeaCount = candidateIdeas.size,
+                matches = duplicateIdeaAnalyzer.analyze(analysisRequest),
+                generatedAt = now(),
+            )
+        } catch (exception: DuplicateIdeaAnalyzerException) {
+            DuplicateAnalysis.failed(
+                candidateIdeaId = request.candidateIdeaId,
+                requestedByTeamId = teamId,
+                requestedByUserId = request.actorUserId,
+                scannedReleasedServiceCount = releasedServices.size,
+                scannedCandidateIdeaCount = candidateIdeas.size,
+                failureReason = duplicateAnalysisFailureReason(exception),
+                generatedAt = now(),
+            )
+        }
 
         return DuplicateAnalysisResponse.from(
-            duplicateAnalysisWriter.save(
-                DuplicateAnalysis.completed(
-                    candidateIdeaId = request.candidateIdeaId,
-                    requestedByTeamId = teamId,
-                    requestedByUserId = request.actorUserId,
-                    scannedReleasedServiceCount = releasedServices.size,
-                    scannedCandidateIdeaCount = candidateIdeas.size,
-                    matches = matches,
-                    generatedAt = now(),
-                ),
-            ),
+            duplicateAnalysisWriter.save(analysis),
         )
     }
 
@@ -89,4 +99,12 @@ class DuplicateAnalysisService(
     }
 
     private fun now(): Instant = Instant.now(clock)
+
+    private fun duplicateAnalysisFailureReason(exception: DuplicateIdeaAnalyzerException): String {
+        return exception.errorMessage.message.take(MAX_FAILURE_REASON_LENGTH)
+    }
+
+    private companion object {
+        const val MAX_FAILURE_REASON_LENGTH = 300
+    }
 }

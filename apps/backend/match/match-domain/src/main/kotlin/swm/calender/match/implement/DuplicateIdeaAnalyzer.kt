@@ -1,5 +1,6 @@
 package swm.calender.match.implement
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import swm.calender.core.enums.OverlapDimension
 import swm.calender.core.enums.Platform
@@ -28,6 +29,12 @@ data class DuplicateCandidateIdeaInput(
 )
 
 @Component
+@ConditionalOnProperty(
+    prefix = "swm.match.duplicate-analysis",
+    name = ["provider"],
+    havingValue = "keyword",
+    matchIfMissing = true,
+)
 class KeywordDuplicateIdeaAnalyzer : DuplicateIdeaAnalyzer {
     override fun analyze(request: DuplicateIdeaAnalysisRequest): List<DuplicateAnalysisMatch> {
         val releasedMatches = request.releasedServices.mapNotNull {

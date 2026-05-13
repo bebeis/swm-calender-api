@@ -19,6 +19,7 @@ dependencies {
     add("implementation", project(":support:monitoring"))
     add("implementation", project(":support:logging"))
     add("implementation", project(":clients:google-calendar"))
+    add("implementation", project(":clients:gemini"))
     add("implementation", project(":clients:when2meet"))
     add("implementation", project(":clients:client-example"))
     add("runtimeOnly", project(":storage:db-core"))

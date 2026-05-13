@@ -5,12 +5,14 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import io.mockk.verify
 import swm.calender.core.common.id.CandidateIdeaId
 import swm.calender.core.common.id.DuplicateAnalysisId
 import swm.calender.core.common.id.TeamId
 import swm.calender.core.common.id.TeamMemberId
 import swm.calender.core.common.id.UserId
 import swm.calender.core.enums.CampaignCategory
+import swm.calender.core.enums.DuplicateAnalysisStatus
 import swm.calender.core.enums.Platform
 import swm.calender.core.enums.SourceDisclosure
 import swm.calender.core.enums.SubService
@@ -19,8 +21,11 @@ import swm.calender.core.team.domain.model.Team
 import swm.calender.core.team.implement.TeamReader
 import swm.calender.match.domain.model.CandidateIdea
 import swm.calender.match.domain.model.DuplicateAnalysis
+import swm.calender.match.exception.DuplicateIdeaAnalyzerException
+import swm.calender.match.exception.MatchErrorMessage
 import swm.calender.match.implement.CandidateIdeaReader
 import swm.calender.match.implement.DuplicateAnalysisWriter
+import swm.calender.match.implement.DuplicateIdeaAnalyzer
 import swm.calender.match.implement.KeywordDuplicateIdeaAnalyzer
 import swm.calender.match.implement.MatchCampaignReader
 import swm.calender.match.service.request.DuplicateAnalysisRunRequest
@@ -96,6 +101,54 @@ class DuplicateAnalysisServiceTest :
             response.matches.single().sourceId shouldBe null
             response.matches.single().sourceTeamId shouldBe null
             response.matches.single().sourceTitle shouldBe null
+        }
+
+        test("runDuplicateAnalysis persists failed result when analyzer fails") {
+            // given
+            val ownerUserId = UserId(10L)
+            val teamId = TeamId(1L)
+            val targetIdea = candidateIdea(
+                id = CandidateIdeaId(1L),
+                teamId = teamId,
+                title = "Study helper",
+                problem = "students lose study plan",
+                solution = "study plan automation",
+            )
+            val analysisSlot = slot<DuplicateAnalysis>()
+            val duplicateIdeaAnalyzer = mockk<DuplicateIdeaAnalyzer>()
+            val failingService = DuplicateAnalysisService(
+                teamReader = teamReader,
+                candidateIdeaReader = candidateIdeaReader,
+                duplicateAnalysisWriter = duplicateAnalysisWriter,
+                matchCampaignReader = matchCampaignReader,
+                duplicateIdeaAnalyzer = duplicateIdeaAnalyzer,
+                clock = fixedClock,
+            )
+            every { teamReader.getActiveByUserId(ownerUserId) } returns matchEnabledTeam(teamId, ownerUserId)
+            every { candidateIdeaReader.getById(CandidateIdeaId(1L)) } returns targetIdea
+            every { candidateIdeaReader.getAll() } returns listOf(targetIdea)
+            every { matchCampaignReader.getReleasedServiceProfiles() } returns emptyList()
+            every { duplicateIdeaAnalyzer.analyze(any()) } throws DuplicateIdeaAnalyzerException(
+                MatchErrorMessage.DUPLICATE_ANALYSIS_PROVIDER_REQUEST_FAILED,
+            )
+            every { duplicateAnalysisWriter.save(capture(analysisSlot)) } answers {
+                analysisSlot.captured.copy(id = DuplicateAnalysisId(10L))
+            }
+
+            // when
+            val response = failingService.runDuplicateAnalysis(
+                DuplicateAnalysisRunRequest(
+                    actorUserId = ownerUserId,
+                    candidateIdeaId = CandidateIdeaId(1L),
+                ),
+            )
+
+            // then
+            response.analysisId shouldBe 10L
+            response.status shouldBe DuplicateAnalysisStatus.FAILED
+            response.matches shouldBe emptyList()
+            response.failureReason shouldBe MatchErrorMessage.DUPLICATE_ANALYSIS_PROVIDER_REQUEST_FAILED.message
+            verify(exactly = 1) { duplicateIdeaAnalyzer.analyze(any()) }
         }
     }) {
     companion object {
